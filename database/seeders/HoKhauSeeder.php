@@ -18,7 +18,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK001',
                 'ma_ho'           => 'MH2024001',
-                'dia_chi_thuong_tru' => 'Số 15, Xóm 3, Thôn Đoàn Kết, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 15, Xóm 3, Thôn Đoàn Kết, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Đoàn Kết',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 4,
@@ -30,7 +30,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK002',
                 'ma_ho'           => 'MH2024002',
-                'dia_chi_thuong_tru' => 'Số 8, Xóm 1, Thôn Bình An, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 8, Xóm 1, Thôn Bình An, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Bình An',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 3,
@@ -42,7 +42,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK003',
                 'ma_ho'           => 'MH2024003',
-                'dia_chi_thuong_tru' => 'Số 42, Xóm 5, Thôn Phú Lợi, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 42, Xóm 5, Thôn Phú Lợi, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Phú Lợi',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 5,
@@ -54,7 +54,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK004',
                 'ma_ho'           => 'MH2024004',
-                'dia_chi_thuong_tru' => 'Số 7, Xóm 2, Thôn Hòa Bình, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 7, Xóm 2, Thôn Hòa Bình, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Hòa Bình',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 2,
@@ -66,7 +66,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK005',
                 'ma_ho'           => 'MH2024005',
-                'dia_chi_thuong_tru' => 'Số 23, Xóm 4, Thôn Đoàn Kết, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 23, Xóm 4, Thôn Đoàn Kết, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Đoàn Kết',
                 'phan_loai'       => 'tam_tru',
                 'so_thanh_vien'   => 2,
@@ -78,7 +78,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK006',
                 'ma_ho'           => 'MH2024006',
-                'dia_chi_thuong_tru' => 'Số 11, Xóm 3, Thôn Bình An, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 11, Xóm 3, Thôn Bình An, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Bình An',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 6,
@@ -90,7 +90,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK007',
                 'ma_ho'           => 'MH2024007',
-                'dia_chi_thuong_tru' => 'Số 56, Xóm 1, Thôn Phú Lợi, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 56, Xóm 1, Thôn Phú Lợi, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Phú Lợi',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 3,
@@ -102,7 +102,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK008',
                 'ma_ho'           => 'MH2024008',
-                'dia_chi_thuong_tru' => 'Số 3, Xóm 6, Thôn Hòa Bình, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 3, Xóm 6, Thôn Hòa Bình, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Hòa Bình',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 1,
@@ -114,7 +114,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK009',
                 'ma_ho'           => 'MH2024009',
-                'dia_chi_thuong_tru' => 'Số 18, Xóm 2, Thôn Đoàn Kết, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 18, Xóm 2, Thôn Đoàn Kết, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Đoàn Kết',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 4,
@@ -126,7 +126,7 @@ class HoKhauSeeder extends Seeder
             [
                 'so_so_ho_khau'   => 'HK010',
                 'ma_ho'           => 'MH2024010',
-                'dia_chi_thuong_tru' => 'Số 29, Xóm 5, Thôn Bình An, Xã An Phú',
+                'dia_chi_thuong_tru' => 'Số 29, Xóm 5, Thôn Bình An, Xã Quốc Oai',
                 'thon_xom'        => 'Thôn Bình An',
                 'phan_loai'       => 'thuong_tru',
                 'so_thanh_vien'   => 3,
