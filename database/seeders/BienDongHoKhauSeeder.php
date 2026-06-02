@@ -31,7 +31,7 @@ class BienDongHoKhauSeeder extends Seeder
             'nhan_khau_id'       => 15,
             'ngay_bien_dong'     => '2023-06-01',
             'ly_do'              => 'Chuyển đến làm việc tại khu công nghiệp địa phương',
-            'dia_chi_chuyen_den' => 'Số 23, Xóm 4, Thôn Đoàn Kết, Xã An Phú',
+            'dia_chi_chuyen_den' => 'Số 23, Xóm 4, Thôn Đoàn Kết, Xã Quốc Oai',
             'nguoi_thuc_hien_id' => 2,
             'created_at'         => $now,
             'updated_at'         => $now,
