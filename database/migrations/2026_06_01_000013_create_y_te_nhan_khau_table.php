@@ -33,13 +33,13 @@ return new class extends Migration
             $table->date('ngay_cap_the_bhyt')->nullable()->comment('Ngày cấp thẻ BHYT');
             $table->date('ngay_het_han_the_bhyt')->nullable()->comment('Ngày hết hạn thẻ BHYT');
             $table->string('noi_dang_ky_kham_chua_benh', 255)->nullable()
-                  ->comment('Nơi đăng ký khám chữa bệnh ban đầu');
+                ->comment('Nơi đăng ký khám chữa bệnh ban đầu');
 
             // Tiêm chủng mở rộng (chủ yếu cho trẻ em)
             $table->boolean('hoan_thanh_tiem_chung_mo_rong')->default(false)
-                  ->comment('Đã hoàn thành chương trình tiêm chủng mở rộng chưa?');
+                ->comment('Đã hoàn thành chương trình tiêm chủng mở rộng chưa?');
             $table->json('lich_su_tiem_chung')->nullable()
-                  ->comment('Chi tiết các mũi tiêm đã tiêm (JSON array)');
+                ->comment('Chi tiết các mũi tiêm đã tiêm (JSON array)');
 
             $table->text('ghi_chu_suc_khoe')->nullable()->comment('Ghi chú về tình trạng sức khỏe đặc biệt');
             $table->timestamps();

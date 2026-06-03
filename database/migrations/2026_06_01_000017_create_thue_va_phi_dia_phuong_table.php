@@ -35,8 +35,8 @@ return new class extends Migration
             $table->decimal('so_tien_da_nop', 15, 0)->default(0)->comment('Số tiền đã nộp');
 
             $table->enum('trang_thai_thanh_toan', ['chua_nop', 'nop_mot_phan', 'da_nop_du'])
-                  ->default('chua_nop')
-                  ->comment('Trạng thái thanh toán');
+                ->default('chua_nop')
+                ->comment('Trạng thái thanh toán');
 
             $table->date('han_nop')->nullable()->comment('Hạn nộp');
             $table->date('ngay_nop_thuc_te')->nullable()->comment('Ngày nộp thực tế');

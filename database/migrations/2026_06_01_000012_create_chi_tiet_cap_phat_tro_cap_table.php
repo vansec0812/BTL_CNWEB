@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamp('thoi_gian_nhan')->nullable()->comment('Thời gian nhận thực tế');
 
             $table->unsignedBigInteger('nguoi_xac_nhan_id')->nullable()
-                  ->comment('FK → users.id (cán bộ xác nhận đã nhận)');
+                ->comment('FK → users.id (cán bộ xác nhận đã nhận)');
             $table->foreign('nguoi_xac_nhan_id')->references('id')->on('users')->onDelete('set null');
 
             $table->text('ghi_chu')->nullable();

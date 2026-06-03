@@ -137,7 +137,7 @@ Route::get('/', function () use ($modules) {
     $count = static function (string $table, int $fallback = 0): int {
         try {
             return DB::table($table)->count();
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $fallback;
         }
     };
@@ -145,7 +145,7 @@ Route::get('/', function () use ($modules) {
     $sum = static function (string $table, string $column, int $fallback = 0): int {
         try {
             return (int) DB::table($table)->sum($column);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return $fallback;
         }
     };
@@ -175,7 +175,7 @@ Route::get('/modules/{module}', function (string $module) use ($modules) {
     $count = static function (string $table): int {
         try {
             return DB::table($table)->count();
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return 0;
         }
     };

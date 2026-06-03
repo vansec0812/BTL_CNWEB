@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 /**
  * UserSeeder - Người 1
@@ -17,28 +17,28 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'name'     => 'Admin Hệ thống',
-                'email'    => 'admin@ubnd-xa.vn',
+                'name' => 'Admin Hệ thống',
+                'email' => 'admin@ubnd-xa.vn',
                 'password' => Hash::make('Admin@123456'),
             ],
             [
-                'name'     => 'Cán bộ Tư pháp',
-                'email'    => 'tupháp@ubnd-xa.vn',
+                'name' => 'Cán bộ Tư pháp',
+                'email' => 'tupháp@ubnd-xa.vn',
                 'password' => Hash::make('CanBo@123456'),
             ],
             [
-                'name'     => 'Cán bộ Lao động - TB&XH',
-                'email'    => 'laodong@ubnd-xa.vn',
+                'name' => 'Cán bộ Lao động - TB&XH',
+                'email' => 'laodong@ubnd-xa.vn',
                 'password' => Hash::make('CanBo@123456'),
             ],
             [
-                'name'     => 'Cán bộ Địa chính',
-                'email'    => 'diachinh@ubnd-xa.vn',
+                'name' => 'Cán bộ Địa chính',
+                'email' => 'diachinh@ubnd-xa.vn',
                 'password' => Hash::make('CanBo@123456'),
             ],
             [
-                'name'     => 'Trưởng thôn Đoàn Kết',
-                'email'    => 'truongthon1@ubnd-xa.vn',
+                'name' => 'Trưởng thôn Đoàn Kết',
+                'email' => 'truongthon1@ubnd-xa.vn',
                 'password' => Hash::make('TruongThon@123'),
             ],
         ];
@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ Đã tạo ' . count($users) . ' tài khoản cán bộ mẫu.');
+        $this->command->info('✅ Đã tạo '.count($users).' tài khoản cán bộ mẫu.');
         $this->command->info('   👑 Admin: admin@ubnd-xa.vn / Admin@123456');
         $this->command->info('   👤 Cán bộ: *@ubnd-xa.vn / CanBo@123456');
     }
