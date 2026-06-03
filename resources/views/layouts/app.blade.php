@@ -88,8 +88,9 @@
                     @php
                         $isModuleActive = request()->routeIs('modules.show') && request()->route('module') === $module['slug'];
                         $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*') && $module['slug'] === 'an-sinh-y-te-giao-duc';
+                        $isHoKhauActive = request()->routeIs('ho-khau.*') && $module['slug'] === 'ho-tich-cu-tru';
                     @endphp
-                    <a class="nav-link {{ $isModuleActive || $isPolicyActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
+                    <a class="nav-link {{ $isModuleActive || $isPolicyActive || $isHoKhauActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
                         {{ $module['title'] }}
                     </a>
                 @endforeach
