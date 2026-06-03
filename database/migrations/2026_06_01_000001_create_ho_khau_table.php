@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('thon_xom', 100)->nullable()->comment('Tên thôn/xóm/đội');
 
             $table->enum('phan_loai', ['thuong_tru', 'tam_tru', 'tam_vang'])
-                  ->default('thuong_tru')
-                  ->comment('Phân loại hộ: thường trú / tạm trú / tạm vắng');
+                ->default('thuong_tru')
+                ->comment('Phân loại hộ: thường trú / tạm trú / tạm vắng');
 
             $table->integer('so_thanh_vien')->default(0)->comment('Số thành viên hiện tại trong hộ');
 
@@ -35,8 +35,8 @@ return new class extends Migration
 
             $table->text('ghi_chu')->nullable()->comment('Ghi chú thêm');
             $table->enum('trang_thai', ['hoat_dong', 'da_giai_the', 'chuyen_di'])
-                  ->default('hoat_dong')
-                  ->comment('Trạng thái sổ hộ khẩu');
+                ->default('hoat_dong')
+                ->comment('Trạng thái sổ hộ khẩu');
 
             $table->timestamps();
             $table->softDeletes();

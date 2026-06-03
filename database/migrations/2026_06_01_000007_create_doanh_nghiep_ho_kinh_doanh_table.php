@@ -37,7 +37,7 @@ return new class extends Migration
 
             // Người đại diện pháp luật (có thể là nhân khẩu trong hệ thống)
             $table->unsignedBigInteger('nguoi_dai_dien_nhan_khau_id')->nullable()
-                  ->comment('FK → nhan_khau.id (người đại diện nếu là dân địa phương)');
+                ->comment('FK → nhan_khau.id (người đại diện nếu là dân địa phương)');
             $table->foreign('nguoi_dai_dien_nhan_khau_id')->references('id')->on('nhan_khau')->onDelete('set null');
 
             $table->string('ten_nguoi_dai_dien', 255)->nullable()->comment('Tên người đại diện pháp luật');
@@ -48,8 +48,8 @@ return new class extends Migration
             $table->integer('so_vi_tri_tuyen_dung')->default(0)->comment('Số vị trí đang tuyển dụng');
 
             $table->enum('trang_thai', ['dang_hoat_dong', 'tam_ngung', 'da_giai_the'])
-                  ->default('dang_hoat_dong')
-                  ->comment('Trạng thái hoạt động của cơ sở');
+                ->default('dang_hoat_dong')
+                ->comment('Trạng thái hoạt động của cơ sở');
 
             $table->text('ghi_chu')->nullable();
             $table->timestamps();

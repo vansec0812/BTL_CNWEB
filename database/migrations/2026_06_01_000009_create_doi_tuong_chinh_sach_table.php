@@ -35,14 +35,14 @@ return new class extends Migration
             $table->string('co_quan_cap', 255)->nullable()->comment('Cơ quan ban hành quyết định');
 
             $table->decimal('ty_le_thuong_tat', 5, 2)->nullable()
-                  ->comment('Tỷ lệ thương tật (%) - dành cho thương binh, bệnh binh');
+                ->comment('Tỷ lệ thương tật (%) - dành cho thương binh, bệnh binh');
 
             $table->decimal('muc_tro_cap_hang_thang', 15, 0)->nullable()
-                  ->comment('Mức trợ cấp hàng tháng (VNĐ)');
+                ->comment('Mức trợ cấp hàng tháng (VNĐ)');
 
             $table->enum('trang_thai', ['dang_huong_che_do', 'ngung_huong', 'da_mat'])
-                  ->default('dang_huong_che_do')
-                  ->comment('Trạng thái hưởng chế độ');
+                ->default('dang_huong_che_do')
+                ->comment('Trạng thái hưởng chế độ');
 
             $table->text('ghi_chu')->nullable();
             $table->timestamps();
