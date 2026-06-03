@@ -48,4 +48,10 @@ class NhanKhau extends Model
     {
         return $this->belongsTo(HoKhau::class, 'ho_khau_id');
     }
+
+    public function nghiaVuQuanSu(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(NghiaVuQuanSu::class, 'nhan_khau_id');
+    }
 }
+
