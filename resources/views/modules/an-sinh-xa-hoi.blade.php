@@ -59,8 +59,8 @@
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-plus-lg small"></i></span>
-                        Thêm đối tượng chính sách
+                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-award small"></i></span>
+                        <a href="{{ route('doi-tuong-chinh-sach.index') }}" class="text-decoration-none text-dark fw-semibold">Quản lý diện chính sách</a>
                     </li>
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-heartbreak small"></i></span>
@@ -90,7 +90,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-table me-1"></i>Đợt trợ cấp gần đây</span>
-                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-plus-lg"></i> Tạo đợt mới</button>
+                <a href="{{ route('doi-tuong-chinh-sach.create') }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-plus-lg"></i> Thêm diện chính sách</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
