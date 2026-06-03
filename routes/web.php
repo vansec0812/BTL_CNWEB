@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NghiaVuQuanSuController;
+
 
 $modules = [
     [
@@ -191,3 +193,10 @@ Route::get('/modules/{module}', function (string $module) use ($modules) {
 
     return view($selected['view'] ?? 'modules.show', compact('modules', 'selected', 'metrics', 'stats'));
 })->name('modules.show');
+
+// Routes cho Module Quản lý Nghĩa vụ & An ninh quốc phòng (NVQS)
+Route::prefix('api')->group(function () {
+    Route::post('nghia-vu-quan-su/scan', [NghiaVuQuanSuController::class, 'scan'])->name('nghia-vu-quan-su.scan');
+    Route::apiResource('nghia-vu-quan-su', NghiaVuQuanSuController::class);
+});
+
