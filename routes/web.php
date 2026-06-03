@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoiTuongChinhSachController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -191,3 +192,8 @@ Route::get('/modules/{module}', function (string $module) use ($modules) {
 
     return view($selected['view'] ?? 'modules.show', compact('modules', 'selected', 'metrics', 'stats'));
 })->name('modules.show');
+
+Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+    ->except(['show'])
+    ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+    ->names('doi-tuong-chinh-sach');
