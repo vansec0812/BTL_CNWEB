@@ -11,6 +11,18 @@ class HoKhau extends Model
 {
     use SoftDeletes;
 
+    public const PHAN_LOAI = [
+        'thuong_tru' => 'Thường trú',
+        'tam_tru' => 'Tạm trú',
+        'tam_vang' => 'Tạm vắng',
+    ];
+
+    public const TRANG_THAI = [
+        'hoat_dong' => 'Hoạt động',
+        'da_giai_the' => 'Đã giải thể',
+        'chuyen_di' => 'Chuyển đi',
+    ];
+
     protected $table = 'ho_khau';
 
     protected $fillable = [
@@ -35,11 +47,21 @@ class HoKhau extends Model
 
     public function chuHo(): BelongsTo
     {
-        return $this->belongsTo(NhanKhau::class, 'chu_ho_nhan_khau_id');
+        return $this->belongsTo(NhanKhau::class, 'chu_ho_nhan_khau_id')->withTrashed();
     }
 
     public function thanhVien(): HasMany
     {
         return $this->hasMany(NhanKhau::class, 'ho_khau_id');
+    }
+
+    public function phanLoaiLabel(): string
+    {
+        return self::PHAN_LOAI[$this->phan_loai] ?? 'Không xác định';
+    }
+
+    public function trangThaiLabel(): string
+    {
+        return self::TRANG_THAI[$this->trang_thai] ?? 'Không xác định';
     }
 }
