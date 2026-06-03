@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DoiTuongChinhSachController;
+use App\Http\Controllers\HoKhauController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -189,11 +190,39 @@ Route::get('/modules/{module}', function (string $module) use ($modules) {
         ->all();
 
     $stats = [];
+    $extraData = [];
 
-    return view($selected['view'] ?? 'modules.show', compact('modules', 'selected', 'metrics', 'stats'));
+    if ($module === 'ho-tich-cu-tru') {
+        $stats = [
+            'so_ho_khau' => $count('ho_khau'),
+            'nhan_khau' => $count('nhan_khau'),
+            'tam_tru' => $count('tam_tru_tam_vang'),
+            'bien_dong' => $count('bien_dong_ho_khau'),
+        ];
+
+        $extraData['dsHoKhau'] = \App\Models\HoKhau::query()
+            ->with('chuHo')
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(function ($ho) {
+                $ho->chu_ho_ten = $ho->chuHo?->ho_ten;
+                return $ho;
+            });
+    }
+
+    return view($selected['view'] ?? 'modules.show', array_merge(
+        compact('modules', 'selected', 'metrics', 'stats'),
+        $extraData
+    ));
 })->name('modules.show');
 
 Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
     ->except(['show'])
     ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
     ->names('doi-tuong-chinh-sach');
+
+Route::resource('ho-tich/ho-khau', HoKhauController::class)
+    ->except(['show'])
+    ->parameters(['ho-khau' => 'hoKhau'])
+    ->names('ho-khau');
