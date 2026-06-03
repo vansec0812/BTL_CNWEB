@@ -85,7 +85,11 @@
                     Tổng quan điều hành
                 </a>
                 @foreach ($modules as $module)
-                    <a class="nav-link {{ request()->routeIs('modules.show') && request()->route('module') === $module['slug'] ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
+                    @php
+                        $isModuleActive = request()->routeIs('modules.show') && request()->route('module') === $module['slug'];
+                        $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*') && $module['slug'] === 'an-sinh-y-te-giao-duc';
+                    @endphp
+                    <a class="nav-link {{ $isModuleActive || $isPolicyActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
                         {{ $module['title'] }}
                     </a>
                 @endforeach

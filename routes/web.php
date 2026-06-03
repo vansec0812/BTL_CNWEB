@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoiTuongChinhSachController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NghiaVuQuanSuController;
@@ -200,3 +201,7 @@ Route::prefix('api')->group(function () {
     Route::apiResource('nghia-vu-quan-su', NghiaVuQuanSuController::class);
 });
 
+Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+    ->except(['show'])
+    ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+    ->names('doi-tuong-chinh-sach');
