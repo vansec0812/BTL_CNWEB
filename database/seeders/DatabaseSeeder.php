@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // ─── NGƯỜI 1: Hệ thống & Phân quyền ───────────────────────────
             UserSeeder::class,
+            RolesAndPermissionsSeeder::class,
 
             // ─── NGƯỜI 2: Hộ khẩu & Nhân khẩu ─────────────────────────────
             HoKhauSeeder::class,       // Tạo hộ trước (chưa có chu_ho)
