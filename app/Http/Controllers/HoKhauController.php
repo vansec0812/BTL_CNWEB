@@ -60,6 +60,14 @@ class HoKhauController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(HoKhau $hoKhau): View
+    {
+        return view('ho-tich.ho-khau.show', $this->formData($hoKhau));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(HoKhau $hoKhau): View

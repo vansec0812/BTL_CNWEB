@@ -27,6 +27,16 @@
     }
 
     /* Style cho các nút hành động (Edit/Delete) */
+    .btn-action-view {
+        background-color: rgba(108, 117, 125, 0.08);
+        color: #6c757d;
+        border: none;
+        transition: all 0.2s ease;
+    }
+    .btn-action-view:hover {
+        background-color: #6c757d;
+        color: #ffffff;
+    }
     .btn-action-edit {
         background-color: rgba(13, 110, 253, 0.08);
         color: #0d6efd;
@@ -172,6 +182,9 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
+                                    <a href="{{ route('ho-khau.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Xem">
+                                        <i class="bi bi-eye"></i> Xem
+                                    </a>
                                     <a href="{{ route('ho-khau.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
