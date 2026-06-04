@@ -159,7 +159,7 @@
                                     <a href="{{ route('doi-tuong-chinh-sach.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
-                                    <form method="POST" action="{{ route('doi-tuong-chinh-sach.destroy', $record) }}" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hồ sơ này?')">
+                                    <form method="POST" action="{{ route('doi-tuong-chinh-sach.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hồ sơ này?">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-action-delete d-inline-flex align-items-center gap-1" type="submit" title="Xóa">
