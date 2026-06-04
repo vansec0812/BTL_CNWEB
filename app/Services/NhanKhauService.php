@@ -19,7 +19,7 @@ class NhanKhauService
             $query->where(function ($q) use ($search) {
                 $q->where('ho_ten', 'like', "%{$search}%")
                   ->orWhere('cccd_cmnd', 'like', "%{$search}%")
-                  ->orWhere('que_quan', 'like', "%{$search}%")
+                  ->orWhere('quan_he_chu_ho', 'like', "%{$search}%")
                   ->orWhereHas('hoKhau', function ($q2) use ($search) {
                       $q2->where('so_so_ho_khau', 'like', "%{$search}%")
                         ->orWhere('ma_ho', 'like', "%{$search}%");
