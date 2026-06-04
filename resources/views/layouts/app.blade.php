@@ -180,8 +180,9 @@
                         $isModuleActive = request()->routeIs('modules.show') && request()->route('module') === $module['slug'];
                         $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*') && $module['slug'] === 'an-sinh-y-te-giao-duc';
                         $isHoKhauActive = request()->routeIs('ho-khau.*') && $module['slug'] === 'ho-tich-cu-tru';
+                        $isNhanKhauActive = request()->routeIs('nhan-khau.*') && $module['slug'] === 'ho-tich-cu-tru';
                         
-                        $isActive = $isModuleActive || ($isHoTich && $isHoKhauActive) || ($isAnSinh && $isPolicyActive);
+                        $isActive = $isModuleActive || ($isHoTich && ($isHoKhauActive || $isNhanKhauActive)) || ($isAnSinh && $isPolicyActive);
                     @endphp
 
                     @if ($isHoTich)
@@ -209,9 +210,12 @@
                                     <a class="submenu-link {{ request()->routeIs('ho-khau.create') ? 'active' : '' }}" href="{{ route('ho-khau.create') }}">
                                         <i class="bi bi-plus-lg"></i> Thêm mới hộ khẩu
                                     </a>
-                                    <span class="submenu-link disabled-link">
-                                        <i class="bi bi-person-plus"></i> Thêm nhân khẩu mới <small class="text-muted">(Phát triển sau)</small>
-                                    </span>
+                                    <a class="submenu-link {{ request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit') ? 'active' : '' }}" href="{{ route('nhan-khau.index') }}">
+                                        <i class="bi bi-people"></i> Danh sách nhân khẩu
+                                    </a>
+                                    <a class="submenu-link {{ request()->routeIs('nhan-khau.create') ? 'active' : '' }}" href="{{ route('nhan-khau.create') }}">
+                                        <i class="bi bi-person-plus"></i> Thêm nhân khẩu mới
+                                    </a>
                                     <span class="submenu-link disabled-link">
                                         <i class="bi bi-arrow-left-right"></i> Tách / Nhập hộ <small class="text-muted">(Phát triển sau)</small>
                                     </span>
