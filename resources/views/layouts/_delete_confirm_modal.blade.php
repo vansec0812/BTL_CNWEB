@@ -232,6 +232,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const trigger = e.target.closest('[data-confirm]');
         if (!trigger) return;
         
+        // If the matched data-confirm trigger is a form itself, ignore click handling
+        // and let the submit event handler take care of it natively.
+        if (trigger.tagName === 'FORM') {
+            return;
+        }
+        
         const form = trigger.closest('form');
         if (form && trigger.type === 'submit') {
             return; // Let submit handler handle forms

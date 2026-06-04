@@ -202,7 +202,7 @@
                             <div class="collapse {{ $isActive ? 'show' : '' }}" id="submenu-{{ $module['slug'] }}">
                                 <div class="submenu-container">
                                     <a class="submenu-link {{ $isModuleActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
-                                        <i class="bi bi-speedometer2"></i> Tổng quan phân hệ
+                                        <i class="bi bi-speedometer2"></i> Tổng quan
                                     </a>
                                     <a class="submenu-link {{ request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit') ? 'active' : '' }}" href="{{ route('ho-khau.index') }}">
                                         <i class="bi bi-journal-text"></i> Danh sách sổ hộ khẩu
@@ -242,13 +242,10 @@
                             <div class="collapse {{ $isActive ? 'show' : '' }}" id="submenu-{{ $module['slug'] }}">
                                 <div class="submenu-container">
                                     <a class="submenu-link {{ $isModuleActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
-                                        <i class="bi bi-speedometer2"></i> Tổng quan phân hệ
+                                        <i class="bi bi-speedometer2"></i> Tổng quan
                                     </a>
                                     <a class="submenu-link {{ request()->routeIs('doi-tuong-chinh-sach.index') || request()->routeIs('doi-tuong-chinh-sach.edit') ? 'active' : '' }}" href="{{ route('doi-tuong-chinh-sach.index') }}">
                                         <i class="bi bi-list-ul"></i> Đối tượng chính sách
-                                    </a>
-                                    <a class="submenu-link {{ request()->routeIs('doi-tuong-chinh-sach.create') ? 'active' : '' }}" href="{{ route('doi-tuong-chinh-sach.create') }}">
-                                        <i class="bi bi-plus-circle"></i> Thêm đối tượng chính sách
                                     </a>
                                 </div>
                             </div>
