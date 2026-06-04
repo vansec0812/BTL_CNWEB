@@ -89,6 +89,11 @@ class NhanKhau extends Model
         return $this->hasOne(DoiTuongChinhSach::class, 'nhan_khau_id');
     }
 
+    public function nghiaVuQuanSu(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(NghiaVuQuanSu::class, 'nhan_khau_id');
+    }
+
     public function gioiTinhLabel(): string
     {
         return self::GIOI_TINH[$this->gioi_tinh] ?? 'Không xác định';
@@ -109,3 +114,4 @@ class NhanKhau extends Model
         return self::TRANG_THAI[$this->trang_thai] ?? 'Không xác định';
     }
 }
+
