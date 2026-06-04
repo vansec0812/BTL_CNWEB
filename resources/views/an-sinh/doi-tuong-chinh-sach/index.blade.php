@@ -74,9 +74,11 @@
         </div>
         <p class="text-secondary mb-0">Theo dõi thương binh, bệnh binh, thân nhân liệt sĩ và người có công với cách mạng.</p>
     </div>
+    @can('manage_an_sinh')
     <a href="{{ route('doi-tuong-chinh-sach.create') }}" class="btn btn-success">
         <i class="bi bi-plus-lg me-1"></i> Thêm hồ sơ
     </a>
+    @endcan
 </div>
 
 @if (session('status'))
@@ -169,6 +171,7 @@
                                     <a href="{{ route('doi-tuong-chinh-sach.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Xem">
                                         <i class="bi bi-eye"></i> Xem
                                     </a>
+                                    @can('manage_an_sinh')
                                     <a href="{{ route('doi-tuong-chinh-sach.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
@@ -179,6 +182,7 @@
                                             <i class="bi bi-trash"></i> Xóa
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

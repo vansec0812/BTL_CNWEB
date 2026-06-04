@@ -72,9 +72,11 @@
         </div>
         <p class="text-secondary mb-0">Quản lý lý lịch cá nhân, định danh cá nhân, trình độ học vấn, tình trạng hôn nhân và quan hệ gia đình.</p>
     </div>
+    @can('manage_nhan_khau')
     <a href="{{ route('nhan-khau.create') }}" class="btn btn-success">
         <i class="bi bi-person-plus-fill me-1"></i> Thêm nhân khẩu mới
     </a>
+    @endcan
 </div>
 
 @if (session('status'))
@@ -225,6 +227,7 @@
                                     <a href="{{ route('nhan-khau.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Xem">
                                         <i class="bi bi-eye"></i> Xem
                                     </a>
+                                    @can('manage_nhan_khau')
                                     <a href="{{ route('nhan-khau.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
@@ -235,6 +238,7 @@
                                             <i class="bi bi-trash"></i> Xóa
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

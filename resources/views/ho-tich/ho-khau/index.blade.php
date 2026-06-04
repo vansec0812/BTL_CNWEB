@@ -74,9 +74,11 @@
         </div>
         <p class="text-secondary mb-0">Quản lý mã hộ, số sổ, thông tin chủ hộ, địa chỉ và phân loại cư trú.</p>
     </div>
+    @can('manage_ho_khau')
     <a href="{{ route('ho-khau.create') }}" class="btn btn-success">
         <i class="bi bi-plus-lg me-1"></i> Thêm sổ hộ khẩu
     </a>
+    @endcan
 </div>
 
 @if (session('status'))
@@ -185,6 +187,7 @@
                                     <a href="{{ route('ho-khau.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Xem">
                                         <i class="bi bi-eye"></i> Xem
                                     </a>
+                                    @can('manage_ho_khau')
                                     <a href="{{ route('ho-khau.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
@@ -195,6 +198,7 @@
                                             <i class="bi bi-trash"></i> Xóa
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>
