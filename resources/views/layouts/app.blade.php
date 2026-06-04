@@ -154,6 +154,14 @@
             background: transparent;
             color: #a0b0a6;
         }
+
+        .profile-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .profile-link:hover {
+            opacity: 0.85;
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body>
@@ -238,9 +246,14 @@
                                 ['title' => 'Thuế & Phí địa phương', 'disabled' => true, 'icon' => 'bi-cash-coin'],
                             ];
                         } elseif ($isHeThong) {
-                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac');
+                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*');
                             $submenu = [
                                 ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'he-thong-bao-cao'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                            ];
+                            if (auth()->user()->can('manage_users')) {
+                                $submenu[] = ['title' => 'Tài khoản cán bộ', 'url' => route('users.index'), 'icon' => 'bi-person-badge', 'active' => request()->routeIs('users.*')];
+                            }
+                            $submenu = array_merge($submenu, [
                                 ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
                                 ['title' => 'Nhật ký hệ thống (Audit)', 'disabled' => true, 'icon' => 'bi-clock-history'],
                                 ['title' => 'Dashboard & Biểu đồ', 'disabled' => true, 'icon' => 'bi-graph-up'],
@@ -248,7 +261,7 @@
                                 ['title' => 'Xuất báo cáo Excel', 'disabled' => true, 'icon' => 'bi-file-earmark-excel'],
                                 ['title' => 'Xuất báo cáo PDF', 'disabled' => true, 'icon' => 'bi-file-earmark-pdf'],
                                 ['title' => 'Cấu hình hệ thống', 'disabled' => true, 'icon' => 'bi-gear'],
-                            ];
+                            ]);
                         }
 
                         $iconClass = 'bi-grid';
@@ -335,7 +348,7 @@
 
                                 <div class="vr text-secondary opacity-25 d-none d-lg-block" style="height: 24px;"></div>
 
-                                <div class="d-flex align-items-center gap-2">
+                                <a href="{{ route('users.show', $currentUser->id) }}" class="d-flex align-items-center gap-2 text-decoration-none profile-link">
                                     <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center text-success fw-bold" style="width: 34px; height: 34px; font-size: 0.85rem;">
                                         {{ substr($currentUser->name, 0, 1) }}
                                     </div>
@@ -345,7 +358,7 @@
                                             {{ $currentUser->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($currentUser->roles->first()?->name === 'tu_phap' ? 'Cán bộ Tư pháp' : ($currentUser->roles->first()?->name === 'lao_dong' ? 'Cán bộ Lao động' : ($currentUser->roles->first()?->name === 'dia_chinh' ? 'Cán bộ Địa chính' : 'Trưởng thôn'))) }}
                                         </span>
                                     </div>
-                                </div>
+                                </a>
 
                                 <div class="vr text-secondary opacity-25 d-none d-lg-block" style="height: 24px;"></div>
 

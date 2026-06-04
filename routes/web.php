@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NghiaVuQuanSuController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 
 $modules = [
@@ -327,4 +328,12 @@ Route::middleware('auth')->group(function () use ($modules) {
             'message' => 'Cập nhật quyền thành công.'
         ]);
     })->name('he-thong.rbac.toggle');
+
+    // --- Quản lý Cán bộ ---
+    Route::middleware('can:manage_users')->group(function () {
+        Route::resource('he-thong/users', UserController::class)->except(['show'])->names('users');
+        Route::post('he-thong/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    });
+
+    Route::get('he-thong/users/{user}', [UserController::class, 'show'])->name('users.show');
 });
