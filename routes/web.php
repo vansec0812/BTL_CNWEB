@@ -5,6 +5,7 @@ use App\Http\Controllers\HoKhauController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NghiaVuQuanSuController;
+use App\Http\Controllers\AuthController;
 
 
 $modules = [
@@ -136,103 +137,145 @@ $modules = [
     ],
 ];
 
-Route::get('/', function () use ($modules) {
-    $count = static function (string $table, int $fallback = 0): int {
-        try {
-            return DB::table($table)->count();
-        } catch (Throwable) {
-            return $fallback;
-        }
-    };
-
-    $sum = static function (string $table, string $column, int $fallback = 0): int {
-        try {
-            return (int) DB::table($table)->sum($column);
-        } catch (Throwable) {
-            return $fallback;
-        }
-    };
-
-    $stats = [
-        ['label' => 'Hộ khẩu', 'value' => $count('ho_khau', 10), 'note' => 'Hộ đang quản lý', 'variant' => 'success'],
-        ['label' => 'Nhân khẩu', 'value' => $count('nhan_khau', 33), 'note' => 'Công dân trong địa bàn', 'variant' => 'primary'],
-        ['label' => 'Hồ sơ tạm trú', 'value' => $count('tam_tru_tam_vang', 1), 'note' => 'Theo dõi cư trú tạm thời', 'variant' => 'info'],
-        ['label' => 'Thuế phí', 'value' => number_format($sum('thue_va_phi_dia_phuong', 'so_tien', 0), 0, ',', '.'), 'note' => 'Tổng phát sinh đã ghi nhận', 'variant' => 'warning'],
-    ];
-
-    $tasks = [
-        ['title' => 'Xác minh danh sách chủ hộ mới', 'meta' => 'Hộ khẩu / Nhân khẩu', 'priority' => 'Cao'],
-        ['title' => 'Đối chiếu đợt trợ cấp tháng này', 'meta' => 'Bảo trợ xã hội', 'priority' => 'Trung bình'],
-        ['title' => 'Cập nhật trạng thái thu phí địa phương', 'meta' => 'Thuế và phí', 'priority' => 'Cao'],
-        ['title' => 'Kiểm tra hồ sơ tạm vắng quá hạn', 'meta' => 'Cư trú', 'priority' => 'Thấp'],
-    ];
-
-    return view('welcome', compact('modules', 'stats', 'tasks'));
-})->name('dashboard');
-
-Route::get('/modules/{module}', function (string $module) use ($modules) {
-    $selected = collect($modules)->firstWhere('slug', $module);
-
-    abort_unless($selected, 404);
-
-    $count = static function (string $table): int {
-        try {
-            return DB::table($table)->count();
-        } catch (Throwable) {
-            return 0;
-        }
-    };
-
-    $metrics = collect($selected['tables'])
-        ->map(fn (string $table): array => [
-            'table' => $table,
-            'label' => str_replace('_', ' ', $table),
-            'count' => $count($table),
-        ])
-        ->all();
-
-    $stats = [];
-    $extraData = [];
-
-    if ($module === 'ho-tich-cu-tru') {
-        $stats = [
-            'so_ho_khau' => $count('ho_khau'),
-            'nhan_khau' => $count('nhan_khau'),
-            'tam_tru' => $count('tam_tru_tam_vang'),
-            'bien_dong' => $count('bien_dong_ho_khau'),
-        ];
-
-        $extraData['dsHoKhau'] = \App\Models\HoKhau::query()
-            ->with('chuHo')
-            ->latest()
-            ->limit(10)
-            ->get()
-            ->map(function ($ho) {
-                $ho->chu_ho_ten = $ho->chuHo?->ho_ten;
-                return $ho;
-            });
-    }
-
-    return view($selected['view'] ?? 'modules.show', array_merge(
-        compact('modules', 'selected', 'metrics', 'stats'),
-        $extraData
-    ));
-})->name('modules.show');
-
-// Routes cho Module Quản lý Nghĩa vụ & An ninh quốc phòng (NVQS)
-Route::prefix('api')->group(function () {
-    Route::post('nghia-vu-quan-su/scan', [NghiaVuQuanSuController::class, 'scan'])->name('nghia-vu-quan-su.scan');
-    Route::apiResource('nghia-vu-quan-su', NghiaVuQuanSuController::class);
+// Routes cho Guest (Chưa đăng nhập)
+Route::middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'login']);
 });
 
-Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
-    ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
-    ->names('doi-tuong-chinh-sach');
+// Routes cho Auth (Đã đăng nhập)
+Route::middleware('auth')->group(function () use ($modules) {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('switch-user', [AuthController::class, 'switchUser'])->name('switch-user');
 
-Route::resource('ho-tich/ho-khau', HoKhauController::class)
-    ->parameters(['ho-khau' => 'hoKhau'])
-    ->names('ho-khau');
+    Route::get('/', function () use ($modules) {
+        $count = static function (string $table, int $fallback = 0): int {
+            try {
+                return DB::table($table)->count();
+            } catch (Throwable) {
+                return $fallback;
+            }
+        };
 
-Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
-    ->parameters(['nhan-khau' => 'nhanKhau'])
-    ->names('nhan-khau');
+        $sum = static function (string $table, string $column, int $fallback = 0): int {
+            try {
+                return (int) DB::table($table)->sum($column);
+            } catch (Throwable) {
+                return $fallback;
+            }
+        };
+
+        $stats = [
+            ['label' => 'Hộ khẩu', 'value' => $count('ho_khau', 10), 'note' => 'Hộ đang quản lý', 'variant' => 'success'],
+            ['label' => 'Nhân khẩu', 'value' => $count('nhan_khau', 33), 'note' => 'Công dân trong địa bàn', 'variant' => 'primary'],
+            ['label' => 'Hồ sơ tạm trú', 'value' => $count('tam_tru_tam_vang', 1), 'note' => 'Theo dõi cư trú tạm thời', 'variant' => 'info'],
+            ['label' => 'Thuế phí', 'value' => number_format($sum('thue_va_phi_dia_phuong', 'so_tien', 0), 0, ',', '.'), 'note' => 'Tổng phát sinh đã ghi nhận', 'variant' => 'warning'],
+        ];
+
+        $tasks = [
+            ['title' => 'Xác minh danh sách chủ hộ mới', 'meta' => 'Hộ khẩu / Nhân khẩu', 'priority' => 'Cao'],
+            ['title' => 'Đối chiếu đợt trợ cấp tháng này', 'meta' => 'Bảo trợ xã hội', 'priority' => 'Trung bình'],
+            ['title' => 'Cập nhật trạng thái thu phí địa phương', 'meta' => 'Thuế và phí', 'priority' => 'Cao'],
+            ['title' => 'Kiểm tra hồ sơ tạm vắng quá hạn', 'meta' => 'Cư trú', 'priority' => 'Thấp'],
+        ];
+
+        return view('welcome', compact('modules', 'stats', 'tasks'));
+    })->name('dashboard');
+
+    Route::get('/modules/{module}', function (string $module) use ($modules) {
+        $selected = collect($modules)->firstWhere('slug', $module);
+
+        abort_unless($selected, 404);
+
+        $count = static function (string $table): int {
+            try {
+                return DB::table($table)->count();
+            } catch (Throwable) {
+                return 0;
+            }
+        };
+
+        $metrics = collect($selected['tables'])
+            ->map(fn (string $table): array => [
+                'table' => $table,
+                'label' => str_replace('_', ' ', $table),
+                'count' => $count($table),
+            ])
+            ->all();
+
+        $stats = [];
+        $extraData = [];
+
+        if ($module === 'ho-tich-cu-tru') {
+            $stats = [
+                'so_ho_khau' => $count('ho_khau'),
+                'nhan_khau' => $count('nhan_khau'),
+                'tam_tru' => $count('tam_tru_tam_vang'),
+                'bien_dong' => $count('bien_dong_ho_khau'),
+            ];
+
+            $extraData['dsHoKhau'] = \App\Models\HoKhau::query()
+                ->with('chuHo')
+                ->latest()
+                ->limit(10)
+                ->get()
+                ->map(function ($ho) {
+                    $ho->chu_ho_ten = $ho->chuHo?->ho_ten;
+                    return $ho;
+                });
+        }
+
+        return view($selected['view'] ?? 'modules.show', array_merge(
+            compact('modules', 'selected', 'metrics', 'stats'),
+            $extraData
+        ));
+    })->name('modules.show');
+
+    // Routes cho Module Quản lý Nghĩa vụ & An ninh quốc phòng (NVQS)
+    Route::prefix('api')->group(function () {
+        Route::post('nghia-vu-quan-su/scan', [NghiaVuQuanSuController::class, 'scan'])->name('nghia-vu-quan-su.scan');
+        Route::apiResource('nghia-vu-quan-su', NghiaVuQuanSuController::class);
+    });
+
+    // --- Phân hệ Hộ tịch & Cư trú (Hộ khẩu & Nhân khẩu) ---
+    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
+    Route::resource('ho-tich/ho-khau', HoKhauController::class)
+        ->only(['index', 'show'])
+        ->parameters(['ho-khau' => 'hoKhau'])
+        ->names('ho-khau');
+
+    Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
+        ->only(['index', 'show'])
+        ->parameters(['nhan-khau' => 'nhanKhau'])
+        ->names('nhan-khau');
+
+    // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Tư pháp và Admin được làm)
+    Route::middleware('can:manage_ho_khau')->group(function () {
+        Route::resource('ho-tich/ho-khau', HoKhauController::class)
+            ->except(['index', 'show'])
+            ->parameters(['ho-khau' => 'hoKhau'])
+            ->names('ho-khau');
+    });
+
+    Route::middleware('can:manage_nhan_khau')->group(function () {
+        Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
+            ->except(['index', 'show'])
+            ->parameters(['nhan-khau' => 'nhanKhau'])
+            ->names('nhan-khau');
+    });
+
+    // --- Phân hệ An sinh xã hội (Đối tượng chính sách) ---
+    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
+    Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+        ->only(['index', 'show'])
+        ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+        ->names('doi-tuong-chinh-sach');
+
+    // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
+    Route::middleware('can:manage_an_sinh')->group(function () {
+        Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+            ->except(['index', 'show'])
+            ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+            ->names('doi-tuong-chinh-sach');
+    });
+});

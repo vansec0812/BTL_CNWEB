@@ -280,16 +280,57 @@
         </aside>
 
         <main class="flex-grow-1">
-            <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+            <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top py-2">
                 <div class="container-fluid px-3 px-lg-4">
                     <span class="navbar-brand mb-0 h1">@yield('page_title', 'Bảng điều khiển')</span>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topActions" aria-controls="topActions" aria-expanded="false" aria-label="Bật tắt thanh công cụ">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="topActions">
-                        <div class="ms-auto d-flex gap-2 pt-3 pt-lg-0">
-                            <button class="btn btn-outline-success btn-sm" type="button">Xuất báo cáo</button>
-                            <button class="btn btn-success btn-sm" type="button">Tạo hồ sơ</button>
+                        <div class="ms-auto d-flex align-items-center gap-3 pt-3 pt-lg-0">
+                            @php
+                                $allUsersForSwitcher = \App\Models\User::with('roles')->get();
+                                $currentUser = auth()->user();
+                            @endphp
+                            @if($currentUser)
+                                <form action="{{ route('switch-user') }}" method="POST" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <label for="quick_user_select" class="small fw-semibold text-secondary text-nowrap mb-0">
+                                        <i class="bi bi-arrow-left-right text-success me-1"></i>Chuyển vai trò:
+                                    </label>
+                                    <select name="user_id" id="quick_user_select" class="form-select form-select-sm" style="width: auto; max-width: 220px; border-radius: 8px;" onchange="this.form.submit()">
+                                        @foreach($allUsersForSwitcher as $u)
+                                            <option value="{{ $u->id }}" {{ $currentUser->id === $u->id ? 'selected' : '' }}>
+                                                {{ $u->name }} ({{ $u->roles->first()?->name === 'admin' ? 'Admin' : ($u->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($u->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($u->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : 'Trưởng thôn'))) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </form>
+
+                                <div class="vr text-secondary opacity-25 d-none d-lg-block" style="height: 24px;"></div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center text-success fw-bold" style="width: 34px; height: 34px; font-size: 0.85rem;">
+                                        {{ substr($currentUser->name, 0, 1) }}
+                                    </div>
+                                    <div class="text-start">
+                                        <span class="d-block fw-bold small text-dark lh-sm">{{ $currentUser->name }}</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success fw-semibold" style="font-size: 0.65rem; padding: 2px 6px;">
+                                            {{ $currentUser->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($currentUser->roles->first()?->name === 'tu_phap' ? 'Cán bộ Tư pháp' : ($currentUser->roles->first()?->name === 'lao_dong' ? 'Cán bộ Lao động' : ($currentUser->roles->first()?->name === 'dia_chinh' ? 'Cán bộ Địa chính' : 'Trưởng thôn'))) }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="vr text-secondary opacity-25 d-none d-lg-block" style="height: 24px;"></div>
+
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1" style="border-radius: 8px;" type="submit">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Đăng xuất</span>
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
