@@ -122,7 +122,7 @@
         <form method="GET" action="{{ route('nhan-khau.index') }}" class="row g-3">
             <div class="col-lg-4">
                 <label for="q" class="form-label">Tìm kiếm</label>
-                <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Tìm theo họ tên, CCCD/CMND, quê quán...">
+                <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Tìm theo họ tên, CCCD/CMND, hộ khẩu/vai trò...">
             </div>
             <div class="col-lg-3">
                 <label for="gioi_tinh" class="form-label">Giới tính</label>
