@@ -174,102 +174,128 @@
                 
                 @foreach ($modules as $module)
                     @php
-                        $isHoTich = $module['slug'] === 'ho-tich-cu-tru';
-                        $isAnSinh = $module['slug'] === 'an-sinh-y-te-giao-duc';
+                        $slug = $module['slug'];
+                        $isHoTich = $slug === 'ho-tich-cu-tru';
+                        $isAnSinh = $slug === 'an-sinh-y-te-giao-duc';
+                        $isKinhTe = $slug === 'kinh-te-lao-dong';
+                        $isNghiaVu = $slug === 'nghia-vu-an-ninh';
+                        $isDatDai = $slug === 'dat-dai-ha-tang';
+                        $isHeThong = $slug === 'he-thong-bao-cao';
+
+                        $isModuleActive = request()->routeIs('modules.show') && request()->route('module') === $slug;
                         
-                        $isModuleActive = request()->routeIs('modules.show') && request()->route('module') === $module['slug'];
-                        $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*') && $module['slug'] === 'an-sinh-y-te-giao-duc';
-                        $isHoKhauActive = request()->routeIs('ho-khau.*') && $module['slug'] === 'ho-tich-cu-tru';
-                        $isNhanKhauActive = request()->routeIs('nhan-khau.*') && $module['slug'] === 'ho-tich-cu-tru';
-                        
-                        $isActive = $isModuleActive || ($isHoTich && ($isHoKhauActive || $isNhanKhauActive)) || ($isAnSinh && $isPolicyActive);
+                        $isActive = false;
+                        $submenu = [];
+
+                        if ($isHoTich) {
+                            $isHoKhauActive = request()->routeIs('ho-khau.*');
+                            $isNhanKhauActive = request()->routeIs('nhan-khau.*');
+                            $isActive = $isModuleActive || $isHoKhauActive || $isNhanKhauActive;
+                            
+                            $submenu = [
+                                ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'ho-tich-cu-tru'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                                ['title' => 'Danh sách sổ hộ khẩu', 'url' => route('ho-khau.index'), 'icon' => 'bi-journal-text', 'active' => request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit')],
+                                ['title' => 'Thêm mới hộ khẩu', 'url' => route('ho-khau.create'), 'icon' => 'bi-plus-lg', 'active' => request()->routeIs('ho-khau.create')],
+                                ['title' => 'Danh sách nhân khẩu', 'url' => route('nhan-khau.index'), 'icon' => 'bi-people', 'active' => request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit')],
+                                ['title' => 'Thêm nhân khẩu mới', 'url' => route('nhan-khau.create'), 'icon' => 'bi-person-plus', 'active' => request()->routeIs('nhan-khau.create')],
+                                ['title' => 'Tách / Nhập hộ', 'disabled' => true, 'icon' => 'bi-arrow-left-right'],
+                                ['title' => 'Khai báo tạm trú / tạm vắng', 'disabled' => true, 'icon' => 'bi-luggage'],
+                            ];
+                        } elseif ($isKinhTe) {
+                            $isActive = $isModuleActive;
+                            $submenu = [
+                                ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'kinh-te-lao-dong'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                                ['title' => 'Hồ sơ lao động', 'disabled' => true, 'icon' => 'bi-person-workspace'],
+                                ['title' => 'Doanh nghiệp & Hộ kinh doanh', 'disabled' => true, 'icon' => 'bi-building'],
+                                ['title' => 'Kết nối việc làm', 'disabled' => true, 'icon' => 'bi-link-45deg'],
+                            ];
+                        } elseif ($isAnSinh) {
+                            $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*');
+                            $isActive = $isModuleActive || $isPolicyActive;
+                            
+                            $submenu = [
+                                ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'an-sinh-y-te-giao-duc'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                                ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.index') || request()->routeIs('doi-tuong-chinh-sach.edit')],
+                                ['title' => 'Thêm đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.create'), 'icon' => 'bi-plus-circle', 'active' => request()->routeIs('doi-tuong-chinh-sach.create')],
+                                ['title' => 'Bảo trợ xã hội', 'disabled' => true, 'icon' => 'bi-shield-heart'],
+                                ['title' => 'Đợt trợ cấp & Quà tặng', 'disabled' => true, 'icon' => 'bi-gift'],
+                                ['title' => 'Theo dõi Y tế & Giáo dục', 'disabled' => true, 'icon' => 'bi-heart-pulse'],
+                            ];
+                        } elseif ($isNghiaVu) {
+                            $isActive = $isModuleActive;
+                            $submenu = [
+                                ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'nghia-vu-an-ninh'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                                ['title' => 'Đăng ký nghĩa vụ quân sự', 'disabled' => true, 'icon' => 'bi-person-check'],
+                                ['title' => 'Lực lượng dân quân tự vệ', 'disabled' => true, 'icon' => 'bi-people-fill'],
+                                ['title' => 'An ninh trật tự', 'disabled' => true, 'icon' => 'bi-shield-exclamation'],
+                            ];
+                        } elseif ($isDatDai) {
+                            $isActive = $isModuleActive;
+                            $submenu = [
+                                ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'dat-dai-ha-tang'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                                ['title' => 'Đất đai & Tài sản', 'disabled' => true, 'icon' => 'bi-map'],
+                                ['title' => 'Hạ tầng địa bàn', 'disabled' => true, 'icon' => 'bi-signpost-split'],
+                                ['title' => 'Thuế & Phí địa phương', 'disabled' => true, 'icon' => 'bi-cash-coin'],
+                            ];
+                        } elseif ($isHeThong) {
+                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac');
+                            $submenu = [
+                                ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'he-thong-bao-cao'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
+                                ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
+                                ['title' => 'Nhật ký hệ thống (Audit)', 'disabled' => true, 'icon' => 'bi-clock-history'],
+                                ['title' => 'Dashboard & Biểu đồ', 'disabled' => true, 'icon' => 'bi-graph-up'],
+                                ['title' => 'Bộ lọc động & Tìm kiếm', 'disabled' => true, 'icon' => 'bi-funnel'],
+                                ['title' => 'Xuất báo cáo Excel', 'disabled' => true, 'icon' => 'bi-file-earmark-excel'],
+                                ['title' => 'Xuất báo cáo PDF', 'disabled' => true, 'icon' => 'bi-file-earmark-pdf'],
+                                ['title' => 'Cấu hình hệ thống', 'disabled' => true, 'icon' => 'bi-gear'],
+                            ];
+                        }
+
+                        $iconClass = 'bi-grid';
+                        if ($isHoTich) {
+                            $iconClass = 'bi-journal-text';
+                        } elseif ($isKinhTe) {
+                            $iconClass = 'bi-briefcase';
+                        } elseif ($isAnSinh) {
+                            $iconClass = 'bi-heart-pulse';
+                        } elseif ($isNghiaVu) {
+                            $iconClass = 'bi-shield-check';
+                        } elseif ($isDatDai) {
+                            $iconClass = 'bi-geo-alt';
+                        } elseif ($isHeThong) {
+                            $iconClass = 'bi-gear';
+                        }
                     @endphp
 
-                    @if ($isHoTich)
-                        <div class="nav-item">
-                            <a class="nav-link {{ $isActive ? 'active' : '' }}" 
-                               data-bs-toggle="collapse" 
-                               href="#submenu-{{ $module['slug'] }}" 
-                               role="button" 
-                               aria-expanded="{{ $isActive ? 'true' : 'false' }}" 
-                               aria-controls="submenu-{{ $module['slug'] }}">
-                                <span>
-                                    <i class="bi bi-journal-text me-2"></i>
-                                    {{ $module['title'] }}
-                                </span>
-                                <i class="bi bi-chevron-down chevron-icon"></i>
-                            </a>
-                            <div class="collapse {{ $isActive ? 'show' : '' }}" id="submenu-{{ $module['slug'] }}">
-                                <div class="submenu-container">
-                                    <a class="submenu-link {{ $isModuleActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
-                                        <i class="bi bi-speedometer2"></i> Tổng quan
-                                    </a>
-                                    <a class="submenu-link {{ request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit') ? 'active' : '' }}" href="{{ route('ho-khau.index') }}">
-                                        <i class="bi bi-journal-text"></i> Danh sách sổ hộ khẩu
-                                    </a>
-                                    <a class="submenu-link {{ request()->routeIs('ho-khau.create') ? 'active' : '' }}" href="{{ route('ho-khau.create') }}">
-                                        <i class="bi bi-plus-lg"></i> Thêm mới hộ khẩu
-                                    </a>
-                                    <a class="submenu-link {{ request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit') ? 'active' : '' }}" href="{{ route('nhan-khau.index') }}">
-                                        <i class="bi bi-people"></i> Danh sách nhân khẩu
-                                    </a>
-                                    <a class="submenu-link {{ request()->routeIs('nhan-khau.create') ? 'active' : '' }}" href="{{ route('nhan-khau.create') }}">
-                                        <i class="bi bi-person-plus"></i> Thêm nhân khẩu mới
-                                    </a>
-                                    <span class="submenu-link disabled-link">
-                                        <i class="bi bi-arrow-left-right"></i> Tách / Nhập hộ <small class="text-muted">(Phát triển sau)</small>
-                                    </span>
-                                    <span class="submenu-link disabled-link">
-                                        <i class="bi bi-luggage"></i> Khai báo tạm trú / tạm vắng <small class="text-muted">(Phát triển sau)</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    @elseif ($isAnSinh)
-                        <div class="nav-item">
-                            <a class="nav-link {{ $isActive ? 'active' : '' }}" 
-                               data-bs-toggle="collapse" 
-                               href="#submenu-{{ $module['slug'] }}" 
-                               role="button" 
-                               aria-expanded="{{ $isActive ? 'true' : 'false' }}" 
-                               aria-controls="submenu-{{ $module['slug'] }}">
-                                <span>
-                                    <i class="bi bi-heart-pulse me-2"></i>
-                                    {{ $module['title'] }}
-                                </span>
-                                <i class="bi bi-chevron-down chevron-icon"></i>
-                            </a>
-                            <div class="collapse {{ $isActive ? 'show' : '' }}" id="submenu-{{ $module['slug'] }}">
-                                <div class="submenu-container">
-                                    <a class="submenu-link {{ $isModuleActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
-                                        <i class="bi bi-speedometer2"></i> Tổng quan
-                                    </a>
-                                    <a class="submenu-link {{ request()->routeIs('doi-tuong-chinh-sach.index') || request()->routeIs('doi-tuong-chinh-sach.edit') ? 'active' : '' }}" href="{{ route('doi-tuong-chinh-sach.index') }}">
-                                        <i class="bi bi-list-ul"></i> Đối tượng chính sách
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        @php
-                            $iconClass = 'bi-grid';
-                            if ($module['slug'] === 'kinh-te-lao-dong') {
-                                $iconClass = 'bi-briefcase';
-                            } elseif ($module['slug'] === 'nghia-vu-an-ninh') {
-                                $iconClass = 'bi-shield-check';
-                            } elseif ($module['slug'] === 'dat-dai-ha-tang') {
-                                $iconClass = 'bi-geo-alt';
-                            } elseif ($module['slug'] === 'he-thong-bao-cao') {
-                                $iconClass = 'bi-gear';
-                            }
-                        @endphp
-                        <a class="nav-link {{ $isActive ? 'active' : '' }}" href="{{ route('modules.show', $module['slug']) }}">
+                    <div class="nav-item">
+                        <a class="nav-link {{ $isActive ? 'active' : '' }}" 
+                           data-bs-toggle="collapse" 
+                           href="#submenu-{{ $slug }}" 
+                           role="button" 
+                           aria-expanded="{{ $isActive ? 'true' : 'false' }}" 
+                           aria-controls="submenu-{{ $slug }}">
                             <span>
                                 <i class="bi {{ $iconClass }} me-2"></i>
                                 {{ $module['title'] }}
                             </span>
+                            <i class="bi bi-chevron-down chevron-icon"></i>
                         </a>
-                    @endif
+                        <div class="collapse {{ $isActive ? 'show' : '' }}" id="submenu-{{ $slug }}">
+                            <div class="submenu-container">
+                                @foreach($submenu as $item)
+                                    @if(isset($item['disabled']) && $item['disabled'])
+                                        <span class="submenu-link disabled-link">
+                                            <i class="bi {{ $item['icon'] }}"></i> {{ $item['title'] }} <small class="text-muted">(Phát triển sau)</small>
+                                        </span>
+                                    @else
+                                        <a class="submenu-link {{ $item['active'] ? 'active' : '' }}" href="{{ $item['url'] }}">
+                                            <i class="bi {{ $item['icon'] }}"></i> {{ $item['title'] }}
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </nav>
 

@@ -278,4 +278,53 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
         ->names('doi-tuong-chinh-sach');
+
+    // --- Phân quyền RBAC ---
+    Route::get('/he-thong/phan-quyen', function () {
+        $modules = \App\Support\ModuleRegistry::all();
+        $roles = \Spatie\Permission\Models\Role::all();
+        $permissions = \Spatie\Permission\Models\Permission::all();
+        
+        $groupedPermissions = [
+            'Hệ thống & Người dùng' => $permissions->filter(fn($p) => in_array($p->name, ['manage_users', 'view_audit_logs'])),
+            'Hộ tịch & Cư trú' => $permissions->filter(fn($p) => str_contains($p->name, 'ho_khau') || str_contains($p->name, 'nhan_khau')),
+            'Kinh tế & Lao động' => $permissions->filter(fn($p) => str_contains($p->name, 'lao_dong')),
+            'An sinh xã hội' => $permissions->filter(fn($p) => str_contains($p->name, 'an_sinh')),
+            'Nghĩa vụ quân sự' => $permissions->filter(fn($p) => str_contains($p->name, 'nghia_vu')),
+            'Đất đai & Thuế phí' => $permissions->filter(fn($p) => str_contains($p->name, 'dat_dai')),
+        ];
+
+        return view('he-thong.rbac', compact('modules', 'roles', 'permissions', 'groupedPermissions'));
+    })->name('he-thong.rbac');
+
+    Route::post('/he-thong/phan-quyen/toggle', function (\Illuminate\Http\Request $request) {
+        if (!auth()->user()->hasRole('admin')) {
+            return response()->json(['success' => false, 'message' => 'Bạn không có quyền thực hiện hành động này.'], 403);
+        }
+
+        $roleId = $request->input('role_id');
+        $permissionId = $request->input('permission_id');
+
+        $role = \Spatie\Permission\Models\Role::findOrFail($roleId);
+        $permission = \Spatie\Permission\Models\Permission::findOrFail($permissionId);
+
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        if ($role->hasPermissionTo($permission)) {
+            if ($role->name === 'admin' && in_array($permission->name, ['manage_users', 'view_audit_logs'])) {
+                return response()->json(['success' => false, 'message' => 'Không thể huỷ quyền hệ thống cốt lõi của vai trò Admin.'], 400);
+            }
+            $role->revokePermissionTo($permission);
+            $active = false;
+        } else {
+            $role->givePermissionTo($permission);
+            $active = true;
+        }
+
+        return response()->json([
+            'success' => true, 
+            'active' => $active,
+            'message' => 'Cập nhật quyền thành công.'
+        ]);
+    })->name('he-thong.rbac.toggle');
 });
