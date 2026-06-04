@@ -23,6 +23,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'so_cccd',
+        'gioi_tinh',
+        'ngay_sinh',
+        'so_dien_thoai',
+        'chuc_vu',
+        'dia_chi',
+        'que_quan',
+        'trang_thai',
     ];
 
     /**
@@ -45,6 +53,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'ngay_sinh' => 'date',
         ];
     }
 }
