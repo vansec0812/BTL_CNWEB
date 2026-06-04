@@ -81,6 +81,19 @@ class UserSeeder extends Seeder
                 'que_quan' => 'Hà Nội',
                 'trang_thai' => 'active',
             ],
+            [
+                'name' => 'Cán bộ Quân sự',
+                'email' => 'quansu@ubnd-xa.vn',
+                'password' => Hash::make('CanBo@123456'),
+                'so_cccd' => '001089123461',
+                'gioi_tinh' => 'nam',
+                'ngay_sinh' => '1989-11-12',
+                'so_dien_thoai' => '0932109876',
+                'chuc_vu' => 'Cán bộ Chỉ huy quân sự',
+                'dia_chi' => 'Thôn 4, Xã Quốc Oai',
+                'que_quan' => 'Hà Nội',
+                'trang_thai' => 'active',
+            ],
         ];
 
         foreach ($users as $userData) {

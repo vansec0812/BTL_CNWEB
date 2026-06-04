@@ -224,6 +224,14 @@ Route::middleware('auth')->group(function () use ($modules) {
                     $ho->chu_ho_ten = $ho->chuHo?->ho_ten;
                     return $ho;
                 });
+        } elseif ($module === 'nghia-vu-an-ninh') {
+            abort_unless(auth()->user()->can('view_nghia_vu'), 403, 'Bạn không có quyền truy cập phân hệ Nghĩa vụ & An ninh quốc phòng.');
+            $stats = [
+                'nghia_vu_quan_su' => $count('nghia_vu_quan_su'),
+                'dan_quan_tu_ve' => $count('dan_quan_tu_ve'),
+                'du_dieu_kien' => \App\Models\NghiaVuQuanSu::where('trang_thai_nvqs', 'du_dieu_kien')->count(),
+                'tam_hoan' => \App\Models\NghiaVuQuanSu::whereIn('trang_thai_nvqs', ['tam_hoan', 'mien_goi'])->count(),
+            ];
         }
 
         return view($selected['view'] ?? 'modules.show', array_merge(
@@ -234,8 +242,18 @@ Route::middleware('auth')->group(function () use ($modules) {
 
     // Routes cho Module Quản lý Nghĩa vụ & An ninh quốc phòng (NVQS)
     Route::prefix('api')->group(function () {
-        Route::post('nghia-vu-quan-su/scan', [NghiaVuQuanSuController::class, 'scan'])->name('nghia-vu-quan-su.scan');
-        Route::apiResource('nghia-vu-quan-su', NghiaVuQuanSuController::class);
+        Route::middleware('can:manage_nghia_vu')->group(function () {
+            Route::post('nghia-vu-quan-su/scan', [NghiaVuQuanSuController::class, 'scan'])->name('nghia-vu-quan-su.scan');
+            Route::get('nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])->name('nghia-vu-quan-su.eligible-citizens');
+            Route::post('nghia-vu-quan-su', [NghiaVuQuanSuController::class, 'store'])->name('nghia-vu-quan-su.store');
+            Route::put('nghia-vu-quan-su/{nghia_vu_quan_su}', [NghiaVuQuanSuController::class, 'update'])->name('nghia-vu-quan-su.update');
+            Route::delete('nghia-vu-quan-su/{nghia_vu_quan_su}', [NghiaVuQuanSuController::class, 'destroy'])->name('nghia-vu-quan-su.destroy');
+        });
+
+        Route::middleware('can:view_nghia_vu')->group(function () {
+            Route::get('nghia-vu-quan-su', [NghiaVuQuanSuController::class, 'index'])->name('nghia-vu-quan-su.index');
+            Route::get('nghia-vu-quan-su/{nghia_vu_quan_su}', [NghiaVuQuanSuController::class, 'show'])->name('nghia-vu-quan-su.show');
+        });
     });
 
     // --- Phân hệ Hộ tịch & Cư trú (Hộ khẩu & Nhân khẩu) ---

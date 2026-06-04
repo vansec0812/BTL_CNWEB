@@ -137,6 +137,11 @@ class RolesAndPermissionsSeeder extends Seeder
             $userTruongThon->assignRole('truong_thon');
         }
 
+        $userQuanSu = User::where('email', 'quansu@ubnd-xa.vn')->first();
+        if ($userQuanSu) {
+            $userQuanSu->assignRole('quan_su');
+        }
+
         $this->command->info('✅ Đã khởi tạo vai trò và phân quyền thành công.');
     }
 }

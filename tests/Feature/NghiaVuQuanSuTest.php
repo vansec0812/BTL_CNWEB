@@ -12,6 +12,32 @@ class NghiaVuQuanSuTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        
+        $user = \App\Models\User::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'so_cccd' => '001090123456',
+            'gioi_tinh' => 'nam',
+            'ngay_sinh' => '1990-01-15',
+            'so_dien_thoai' => '0987654321',
+            'chuc_vu' => 'Cán bộ',
+            'dia_chi' => 'UBND',
+            'que_quan' => 'Hà Nội',
+            'trang_thai' => 'active',
+        ]);
+
+        // Khởi tạo permissions và gán cho user test để qua middleware can
+        \Spatie\Permission\Models\Permission::findOrCreate('view_nghia_vu', 'web');
+        \Spatie\Permission\Models\Permission::findOrCreate('manage_nghia_vu', 'web');
+        $user->givePermissionTo(['view_nghia_vu', 'manage_nghia_vu']);
+        
+        $this->actingAs($user);
+    }
+
     public function test_get_list_nvqs(): void
     {
         $response = $this->getJson(route('nghia-vu-quan-su.index'));
@@ -172,5 +198,43 @@ class NghiaVuQuanSuTest extends TestCase
         $deleteResponse->assertStatus(200);
 
         $this->assertNull(NghiaVuQuanSu::find($nvqsId));
+    }
+
+    public function test_get_eligible_citizens_list(): void
+    {
+        $hoKhau = HoKhau::create([
+            'so_so_ho_khau' => 'SHK003',
+            'ma_ho' => 'MH003',
+            'dia_chi_thuong_tru' => 'Thôn 3, Xã X',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nhanKhau = NhanKhau::create([
+            'ho_khau_id' => $hoKhau->id,
+            'ho_ten' => 'Nguyễn Văn Tìm Kiếm',
+            'cccd_cmnd' => '123456789098',
+            'ngay_sinh' => '2005-05-15',
+            'gioi_tinh' => 'nam',
+            'dan_toc' => 'Kinh',
+            'trinh_do_hoc_van' => 'thpt',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        // Trả về danh sách chưa đăng ký NVQS
+        $response = $this->getJson(route('nghia-vu-quan-su.eligible-citizens', ['search' => 'Tìm Kiếm']));
+        $response->assertStatus(200)
+            ->assertJsonPath('data.0.ho_ten', 'Nguyễn Văn Tìm Kiếm');
+
+        // Tạo hồ sơ NVQS
+        NghiaVuQuanSu::create([
+            'nhan_khau_id' => $nhanKhau->id,
+            'trang_thai_nvqs' => 'du_dieu_kien',
+        ]);
+
+        // Sau khi tạo thì không còn trả về nữa
+        $response2 = $this->getJson(route('nghia-vu-quan-su.eligible-citizens', ['search' => 'Tìm Kiếm']));
+        $response2->assertStatus(200)
+            ->assertJsonCount(0, 'data');
     }
 }
