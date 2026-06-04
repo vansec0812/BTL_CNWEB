@@ -218,11 +218,13 @@ Route::get('/modules/{module}', function (string $module) use ($modules) {
 })->name('modules.show');
 
 Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
-    ->except(['show'])
     ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
     ->names('doi-tuong-chinh-sach');
 
 Route::resource('ho-tich/ho-khau', HoKhauController::class)
-    ->except(['show'])
     ->parameters(['ho-khau' => 'hoKhau'])
     ->names('ho-khau');
+
+Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
+    ->parameters(['nhan-khau' => 'nhanKhau'])
+    ->names('nhan-khau');
