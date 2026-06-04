@@ -160,7 +160,7 @@
     <div class="app-shell d-lg-flex">
         <aside class="app-sidebar flex-shrink-0 p-3 p-lg-4" style="width: 300px;">
             <a href="{{ route('dashboard') }}" class="d-flex align-items-center gap-3 mb-4 text-decoration-none text-dark">
-                <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold">X</span>
+                <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold">QO</span>
                 <span>
                     <span class="d-block fw-bold">UBND Xã Quốc Oai</span>
                     <small class="text-secondary">Quản lý thông tin hộ dân</small>
@@ -301,5 +301,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    @include('layouts._delete_confirm_modal')
 </body>
 </html>

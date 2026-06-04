@@ -175,7 +175,7 @@
                                     <a href="{{ route('ho-khau.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
                                         <i class="bi bi-pencil-square"></i> Sửa
                                     </a>
-                                    <form method="POST" action="{{ route('ho-khau.destroy', $record) }}" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sổ hộ khẩu này?')">
+                                    <form method="POST" action="{{ route('ho-khau.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa sổ hộ khẩu này?">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-action-delete d-inline-flex align-items-center gap-1" type="submit" title="Xóa">
