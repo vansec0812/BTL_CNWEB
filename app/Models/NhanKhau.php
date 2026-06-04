@@ -35,7 +35,7 @@ class NhanKhau extends Model
     ];
 
     public const TRANG_THAI = [
-        'hoat_dong' => 'Đang hoạt động (Thường trú)',
+        'hoat_dong' => 'Thường trú',
         'tam_tru' => 'Tạm trú',
         'tam_vang' => 'Tạm vắng',
         'da_chuyen_di' => 'Đã chuyển đi',
