@@ -26,24 +26,24 @@ return new class extends Migration
             ])->default('tien_mat')->comment('Hình thức trợ cấp');
 
             $table->decimal('gia_tri_quy_doi', 15, 0)->nullable()
-                  ->comment('Giá trị quy đổi ra tiền (VNĐ) / suất');
+                ->comment('Giá trị quy đổi ra tiền (VNĐ) / suất');
 
             $table->string('nguon_kinh_phi', 255)->nullable()
-                  ->comment('Nguồn kinh phí (Ngân sách xã, huyện, tỉnh, mạnh thường quân...)');
+                ->comment('Nguồn kinh phí (Ngân sách xã, huyện, tỉnh, mạnh thường quân...)');
 
             $table->date('ngay_bat_dau_cap_phat')->comment('Ngày bắt đầu cấp phát');
             $table->date('ngay_ket_thuc_cap_phat')->nullable()->comment('Ngày kết thúc cấp phát');
 
             // Điều kiện đối tượng được hưởng (JSON để linh hoạt)
             $table->json('dieu_kien_doi_tuong')->nullable()
-                  ->comment('Điều kiện lọc đối tượng (VD: {"loai_bao_tro": ["ho_ngheo", "nguoi_khuyet_tat"]})');
+                ->comment('Điều kiện lọc đối tượng (VD: {"loai_bao_tro": ["ho_ngheo", "nguoi_khuyet_tat"]})');
 
             $table->integer('tong_so_doi_tuong')->default(0)->comment('Tổng số đối tượng được hưởng');
             $table->integer('so_da_nhan')->default(0)->comment('Số đã nhận');
 
             $table->enum('trang_thai', ['sap_dien_ra', 'dang_thuc_hien', 'hoan_thanh', 'huy_bo'])
-                  ->default('sap_dien_ra')
-                  ->comment('Trạng thái đợt trợ cấp');
+                ->default('sap_dien_ra')
+                ->comment('Trạng thái đợt trợ cấp');
 
             $table->unsignedBigInteger('nguoi_tao_id')->nullable()->comment('FK → users.id (cán bộ tạo đợt)');
             $table->foreign('nguoi_tao_id')->references('id')->on('users')->onDelete('set null');

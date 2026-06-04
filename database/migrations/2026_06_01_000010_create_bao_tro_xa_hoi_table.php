@@ -36,22 +36,22 @@ return new class extends Migration
 
             // Thông tin đặc thù cho người khuyết tật
             $table->enum('muc_do_khuyet_tat', [
-                'dac_biet_nang', 'nang', 'nhe', 'khong_ap_dung'
+                'dac_biet_nang', 'nang', 'nhe', 'khong_ap_dung',
             ])->default('khong_ap_dung')->comment('Mức độ khuyết tật (nếu có)');
 
             $table->string('dang_khuyet_tat', 255)->nullable()
-                  ->comment('Dạng khuyết tật (vận động, nghe, nhìn, trí tuệ, tâm thần, ngôn ngữ)');
+                ->comment('Dạng khuyết tật (vận động, nghe, nhìn, trí tuệ, tâm thần, ngôn ngữ)');
 
             // Thông tin hỗ trợ
             $table->string('so_quyet_dinh', 100)->nullable()->comment('Số quyết định phê duyệt bảo trợ');
             $table->date('ngay_bat_dau_huong')->nullable()->comment('Ngày bắt đầu hưởng trợ cấp bảo trợ');
             $table->date('ngay_ket_thuc_huong')->nullable()->comment('Ngày kết thúc (null = hưởng dài hạn)');
             $table->decimal('muc_tro_cap_hang_thang', 15, 0)->nullable()
-                  ->comment('Mức trợ cấp hàng tháng (VNĐ)');
+                ->comment('Mức trợ cấp hàng tháng (VNĐ)');
 
             $table->enum('trang_thai', ['dang_huong', 'tam_ngung', 'het_dieu_kien'])
-                  ->default('dang_huong')
-                  ->comment('Trạng thái hưởng bảo trợ');
+                ->default('dang_huong')
+                ->comment('Trạng thái hưởng bảo trợ');
 
             $table->text('ghi_chu')->nullable();
             $table->timestamps();

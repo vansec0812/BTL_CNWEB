@@ -215,7 +215,7 @@ class DoiTuongChinhSachTest extends TestCase
             'thon_xom' => 'Thôn 1',
             'phan_loai' => 'thuong_tru',
             'so_thanh_vien' => 1,
-            'trang_thai' => $trangThai,
+            'trang_thai' => 'hoat_dong',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -58,36 +58,28 @@
         <div class="card h-100">
             <div class="card-header"><i class="bi bi-list-check me-1"></i>Danh mục chức năng</div>
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex align-items-center gap-2">
+                <div class="list-group list-group-flush">
+                    <a href="{{ route('ho-khau.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-journal-text small"></i></span>
+                        Danh sách sổ hộ khẩu
+                    </a>
+                    <a href="{{ route('ho-khau.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                         <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-plus-lg small"></i></span>
                         Thêm mới hộ khẩu
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-pencil small"></i></span>
-                        Cập nhật thông tin hộ
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-person-plus small"></i></span>
-                        Thêm nhân khẩu mới
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-arrow-left-right small"></i></span>
-                        Tách / Nhập hộ
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-luggage small"></i></span>
-                        Khai báo tạm trú / tạm vắng
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-journal-x small"></i></span>
-                        Khai tử
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-file-text small"></i></span>
-                        Quản lý mối quan hệ
-                    </li>
-                </ul>
+                    </a>
+                    <div class="list-group-item text-muted d-flex align-items-center gap-2">
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-person-plus small"></i></span>
+                        Thêm nhân khẩu mới (Phát triển sau)
+                    </div>
+                    <div class="list-group-item text-muted d-flex align-items-center gap-2">
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-arrow-left-right small"></i></span>
+                        Tách / Nhập hộ (Phát triển sau)
+                    </div>
+                    <div class="list-group-item text-muted d-flex align-items-center gap-2">
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-luggage small"></i></span>
+                        Khai báo tạm trú / tạm vắng (Phát triển sau)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -95,7 +87,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-table me-1"></i>Danh sách hộ khẩu gần đây</span>
-                <button class="btn btn-sm btn-outline-success"><i class="bi bi-download"></i> Xuất danh sách</button>
+                <a href="{{ route('ho-khau.index') }}" class="btn btn-sm btn-success"><i class="bi bi-arrow-right-short"></i> Quản lý toàn bộ</a>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -107,20 +99,19 @@
                                 <th>Chủ hộ</th>
                                 <th>Số thành viên</th>
                                 <th>Phân loại</th>
-                                <th>Thao tác</th>
+                                <th class="text-end">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($dsHoKhau ?? [] as $ho)
                             <tr>
-                                <td class="fw-semibold">{{ $ho->ma_ho }}</td>
+                                <td class="fw-semibold text-success">{{ $ho->ma_ho }}</td>
                                 <td>{{ $ho->so_so_ho_khau }}</td>
                                 <td>{{ $ho->chu_ho_ten ?? '—' }}</td>
                                 <td>{{ $ho->so_thanh_vien }}</td>
                                 <td><span class="badge bg-info bg-opacity-10 text-info">{{ $ho->phan_loai === 'thuong_tru' ? 'Thường trú' : ($ho->phan_loai === 'tam_tru' ? 'Tạm trú' : 'Tạm vắng') }}</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-secondary" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
-                                    <button class="btn btn-sm btn-outline-secondary" title="Sửa"><i class="bi bi-pencil"></i></button>
+                                <td class="text-end">
+                                    <a href="{{ route('ho-khau.edit', $ho) }}" class="btn btn-sm btn-outline-primary" title="Sửa"><i class="bi bi-pencil"></i> Sửa</a>
                                 </td>
                             </tr>
                             @empty

@@ -34,16 +34,16 @@ return new class extends Migration
             // Trình độ & hôn nhân
             $table->enum('trinh_do_hoc_van', [
                 'mu_chu', 'tieu_hoc', 'thcs', 'thpt',
-                'trung_cap', 'cao_dang', 'dai_hoc', 'sau_dai_hoc'
+                'trung_cap', 'cao_dang', 'dai_hoc', 'sau_dai_hoc',
             ])->nullable()->comment('Trình độ học vấn cao nhất');
 
             $table->enum('tinh_trang_hon_nhan', [
-                'doc_than', 'da_ket_hon', 'ly_hon', 'goa'
+                'doc_than', 'da_ket_hon', 'ly_hon', 'goa',
             ])->default('doc_than')->comment('Tình trạng hôn nhân');
 
             // Mối quan hệ với chủ hộ
             $table->string('quan_he_chu_ho', 100)->nullable()
-                  ->comment('Mối quan hệ với chủ hộ (Vợ, Chồng, Con, Cháu, Bố, Mẹ, Anh/Chị/Em...)');
+                ->comment('Mối quan hệ với chủ hộ (Vợ, Chồng, Con, Cháu, Bố, Mẹ, Anh/Chị/Em...)');
 
             $table->boolean('la_chu_ho')->default(false)->comment('Có phải chủ hộ không?');
 

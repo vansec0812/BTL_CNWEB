@@ -13,10 +13,8 @@ class UpdateHoKhauRequest extends FormRequest
 
     public function rules(): array
     {
-        $hoKhauId = $this->route('ho_khau');
-        if (is_object($hoKhauId)) {
-            $hoKhauId = $hoKhauId->id;
-        }
+        $hoKhau = $this->route('hoKhau') ?? $this->route('ho_khau');
+        $hoKhauId = is_object($hoKhau) ? $hoKhau->id : $hoKhau;
 
         return [
             'so_so_ho_khau' => 'required|string|max:50|unique:ho_khau,so_so_ho_khau,'.$hoKhauId,

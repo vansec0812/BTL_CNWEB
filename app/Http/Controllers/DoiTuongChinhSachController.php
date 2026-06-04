@@ -58,6 +58,11 @@ class DoiTuongChinhSachController extends Controller
             ->with('status', 'Đã thêm hồ sơ diện chính sách.');
     }
 
+    public function show(DoiTuongChinhSach $doiTuongChinhSach): View
+    {
+        return view('an-sinh.doi-tuong-chinh-sach.show', $this->formData($doiTuongChinhSach));
+    }
+
     public function edit(DoiTuongChinhSach $doiTuongChinhSach): View
     {
         return view('an-sinh.doi-tuong-chinh-sach.edit', $this->formData($doiTuongChinhSach));

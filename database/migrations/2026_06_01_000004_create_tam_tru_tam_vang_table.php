@@ -26,15 +26,15 @@ return new class extends Migration
             $table->date('ngay_ket_thuc')->nullable()->comment('Ngày hết hạn (null = không xác định)');
 
             $table->string('dia_chi_cu_tru_thuc_te', 500)->nullable()
-                  ->comment('Địa chỉ nơi cư trú thực tế (cho tạm trú người từ nơi khác đến)');
+                ->comment('Địa chỉ nơi cư trú thực tế (cho tạm trú người từ nơi khác đến)');
             $table->string('dia_chi_vang_mat', 500)->nullable()
-                  ->comment('Địa chỉ nơi đến (cho tạm vắng - người tạm thời rời đi)');
+                ->comment('Địa chỉ nơi đến (cho tạm vắng - người tạm thời rời đi)');
 
             $table->string('ly_do', 500)->nullable()->comment('Lý do tạm trú/tạm vắng (đi học, đi làm, chữa bệnh...)');
 
             $table->enum('trang_thai', ['dang_hieu_luc', 'da_het_han', 'da_huy'])
-                  ->default('dang_hieu_luc')
-                  ->comment('Trạng thái của khai báo tạm trú/tạm vắng');
+                ->default('dang_hieu_luc')
+                ->comment('Trạng thái của khai báo tạm trú/tạm vắng');
 
             // Cán bộ xác nhận
             $table->unsignedBigInteger('nguoi_xac_nhan_id')->nullable()->comment('FK → users.id');
