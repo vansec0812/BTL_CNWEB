@@ -238,17 +238,6 @@ Route::middleware('auth')->group(function () use ($modules) {
     });
 
     // --- Phân hệ Hộ tịch & Cư trú (Hộ khẩu & Nhân khẩu) ---
-    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
-    Route::resource('ho-tich/ho-khau', HoKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['ho-khau' => 'hoKhau'])
-        ->names('ho-khau');
-
-    Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['nhan-khau' => 'nhanKhau'])
-        ->names('nhan-khau');
-
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Tư pháp và Admin được làm)
     Route::middleware('can:manage_ho_khau')->group(function () {
         Route::resource('ho-tich/ho-khau', HoKhauController::class)
@@ -264,13 +253,18 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->names('nhan-khau');
     });
 
-    // --- Phân hệ An sinh xã hội (Đối tượng chính sách) ---
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
-    Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+    Route::resource('ho-tich/ho-khau', HoKhauController::class)
         ->only(['index', 'show'])
-        ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
-        ->names('doi-tuong-chinh-sach');
+        ->parameters(['ho-khau' => 'hoKhau'])
+        ->names('ho-khau');
 
+    Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
+        ->only(['index', 'show'])
+        ->parameters(['nhan-khau' => 'nhanKhau'])
+        ->names('nhan-khau');
+
+    // --- Phân hệ An sinh xã hội (Đối tượng chính sách) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
     Route::middleware('can:manage_an_sinh')->group(function () {
         Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
@@ -278,4 +272,10 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
             ->names('doi-tuong-chinh-sach');
     });
+
+    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
+    Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+        ->only(['index', 'show'])
+        ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+        ->names('doi-tuong-chinh-sach');
 });
