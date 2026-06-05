@@ -67,6 +67,9 @@ class BienDongHoKhauController extends Controller
             'sourceHoKhau' => $sourceHoKhau,
             'members' => $members,
             'phanLoai' => HoKhau::PHAN_LOAI,
+            'gioiTinh' => NhanKhau::GIOI_TINH,
+            'trinhDoHocVan' => NhanKhau::TRINH_DO_HOC_VAN,
+            'tinhTrangHonNhan' => NhanKhau::TINH_TRANG_HON_NHAN,
         ];
 
         if ($request->expectsJson() || $request->is('api/*')) {
@@ -141,6 +144,46 @@ class BienDongHoKhauController extends Controller
             'parentModule' => ModuleRegistry::findBySlug('ho-tich-cu-tru'),
             'record' => $bienDong,
         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(BienDongHoKhau $bienDong, Request $request)
+    {
+        return view('ho-tich.bien-dong.edit', [
+            'modules' => ModuleRegistry::all(),
+            'parentModule' => ModuleRegistry::findBySlug('ho-tich-cu-tru'),
+            'record' => $bienDong,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, BienDongHoKhau $bienDong)
+    {
+        $validated = $request->validate([
+            'ngay_bien_dong' => 'required|date',
+            'so_quyet_dinh' => 'nullable|string|max:100',
+            'ly_do' => 'nullable|string|max:500',
+            'dia_chi_chuyen_den' => 'nullable|string|max:500',
+            'ghi_chu' => 'nullable|string',
+        ]);
+
+        $bienDong->update($validated);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật lịch sử biến động thành công.',
+                'data' => $bienDong,
+            ], 200);
+        }
+
+        return redirect()
+            ->route('bien-dong.index')
+            ->with('status', 'Cập nhật lịch sử biến động thành công.');
     }
 
     /**
