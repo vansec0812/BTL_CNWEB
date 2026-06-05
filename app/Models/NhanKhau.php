@@ -94,6 +94,11 @@ class NhanKhau extends Model
         return $this->hasOne(NghiaVuQuanSu::class, 'nhan_khau_id');
     }
 
+    public function danQuanTuVe(): HasOne
+    {
+        return $this->hasOne(DanQuanTuVe::class, 'nhan_khau_id');
+    }
+
     public function gioiTinhLabel(): string
     {
         return self::GIOI_TINH[$this->gioi_tinh] ?? 'Không xác định';
