@@ -16,7 +16,12 @@ class StoreNhanKhauRequest extends FormRequest
         return [
             'ho_khau_id' => 'required|integer|exists:ho_khau,id',
             'ho_ten' => 'required|string|max:255',
-            'cccd_cmnd' => 'nullable|string|regex:/^[0-9]{9}$|^[0-9]{12}$/|unique:nhan_khau,cccd_cmnd',
+            'cccd_cmnd' => [
+                'nullable',
+                'string',
+                'regex:/^[0-9]{9}$|^[0-9]{12}$/',
+                'unique:nhan_khau,cccd_cmnd',
+            ],
             'ngay_sinh' => 'required|date',
             'gioi_tinh' => 'required|in:nam,nu,khac',
             'dan_toc' => 'required|string|max:100',
