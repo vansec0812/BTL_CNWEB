@@ -93,7 +93,7 @@ class NghiaVuQuanSuController extends Controller
     public function scan(Request $request): JsonResponse
     {
         $targetYear = $request->integer('nam_tuyen_quan', (int) date('Y'));
-        
+
         $result = $this->nghiaVuQuanSuService->scanEligibleCitizens($targetYear);
 
         return response()->json([
