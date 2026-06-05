@@ -150,6 +150,11 @@ $modules = [
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [AuthController::class, 'login']);
+
+    Route::prefix('api')->group(function () {
+        Route::get('login', [AuthController::class, 'showLoginForm'])->name('api.login.show');
+        Route::post('login', [AuthController::class, 'login'])->name('api.login');
+    });
 });
 
 // Routes cho Auth (Đã đăng nhập)
@@ -233,6 +238,19 @@ Route::middleware('auth')->group(function () use ($modules) {
 
                     return $ho;
                 });
+        } elseif ($module === 'nghia-vu-an-ninh') {
+            $stats = [
+                'nghia_vu_quan_su' => DB::table('nghia_vu_quan_su')->count(),
+                'dan_quan_tu_ve' => 0, // Khung chờ dữ liệu
+                'du_dieu_kien' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'du_dieu_kien')->count(),
+                'tam_hoan' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'tam_hoan')->count(),
+            ];
+
+            $extraData['dsNVQS'] = \App\Models\NghiaVuQuanSu::query()
+                ->with(['nhanKhau.hoKhau'])
+                ->latest()
+                ->limit(10)
+                ->get();
         }
 
         return view($selected['view'] ?? 'modules.show', array_merge(
@@ -241,12 +259,20 @@ Route::middleware('auth')->group(function () use ($modules) {
         ));
     })->name('modules.show');
 
-    // Routes cho Module Quản lý Nghĩa vụ & An ninh quốc phòng (NVQS)
-    Route::prefix('api')->group(function () {
-        Route::post('nghia-vu-quan-su/scan', [NghiaVuQuanSuController::class, 'scan'])->name('nghia-vu-quan-su.scan');
-        Route::apiResource('nghia-vu-quan-su', NghiaVuQuanSuController::class);
+    // --- Phân hệ Nghĩa vụ & An ninh quốc phòng ---
+    // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Quân sự và Admin được làm)
+    Route::middleware('can:manage_nghia_vu')->group(function () {
+        Route::resource('nghia-vu-an-ninh/nghia-vu-quan-su', NghiaVuQuanSuController::class)
+            ->except(['index', 'show'])
+            ->parameters(['nghia-vu-quan-su' => 'nghiaVuQuanSu'])
+            ->names('nghia-vu-quan-su');
 
-        // API endpoints cho Hộ tịch & Cư trú (Biến động & Tạm trú/Tạm vắng & Hộ khẩu & Nhân khẩu)
+        Route::get('nghia-vu-an-ninh/nghia-vu-quan-su/scan-preview', [NghiaVuQuanSuController::class, 'scanPreview'])->name('nghia-vu-quan-su.scan-preview');
+        Route::post('nghia-vu-an-ninh/nghia-vu-quan-su/scan-store', [NghiaVuQuanSuController::class, 'scanStore'])->name('nghia-vu-quan-su.scan-store');
+    });
+
+    // API endpoints cho Hộ tịch & Cư trú (Biến động & Tạm trú/Tạm vắng & Hộ khẩu & Nhân khẩu)
+    Route::prefix('api')->group(function () {
         Route::middleware('can:manage_ho_khau')->group(function () {
             Route::apiResource('ho-tich/ho-khau', HoKhauController::class)
                 ->except(['index', 'show'])
@@ -290,7 +316,46 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->only(['index', 'show'])
             ->parameters(['tam-tru' => 'tamTruTamVang'])
             ->names('api.tam-tru');
+
+        // API cho An sinh xã hội
+        Route::middleware('can:manage_an_sinh')->group(function () {
+            Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+                ->except(['index', 'show'])
+                ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+                ->names('api.doi-tuong-chinh-sach');
+        });
+
+        Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+            ->only(['index', 'show'])
+            ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+            ->names('api.doi-tuong-chinh-sach');
+
+        // API cho Quản lý Cán bộ (Users)
+        Route::middleware('can:manage_users')->group(function () {
+            Route::apiResource('he-thong/users', UserController::class)
+                ->except(['show'])
+                ->names('api.users');
+            Route::post('he-thong/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+                ->name('api.users.toggle-status');
+        });
+        Route::get('he-thong/users/{user}', [UserController::class, 'show'])
+            ->name('api.users.show');
+
+        // API cho Xác thực (Đã đăng nhập)
+        Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
+        Route::post('switch-user', [AuthController::class, 'switchUser'])->name('api.switch-user');
     });
+
+    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
+    Route::resource('nghia-vu-an-ninh/nghia-vu-quan-su', NghiaVuQuanSuController::class)
+        ->only(['index', 'show'])
+        ->parameters(['nghia-vu-quan-su' => 'nghiaVuQuanSu'])
+        ->names('nghia-vu-quan-su');
+
+    // API phục vụ autocomplete
+    Route::get('api/nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])
+        ->name('nghia-vu-quan-su.eligible-citizens')
+        ->middleware('can:view_nghia_vu');
 
     // --- Phân hệ Hộ tịch & Cư trú (Hộ khẩu & Nhân khẩu) ---
     // Web endpoints phục vụ giao diện Blade

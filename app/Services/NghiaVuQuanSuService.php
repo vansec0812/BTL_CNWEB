@@ -42,14 +42,14 @@ class NghiaVuQuanSuService
             });
         }
 
-        return $query->orderBy('id', 'desc')->paginate($perPage);
+        return $query->orderBy('id', 'asc')->paginate($perPage);
     }
 
     /**
-     * Tự động quét danh sách nam thanh niên trong độ tuổi nghĩa vụ quân sự.
+     * Lấy danh sách nam thanh niên đủ tuổi nghĩa vụ quân sự chưa có hồ sơ.
      * Độ tuổi: 18 - 25 hoặc đến 27 nếu có bằng đại học/sau đại học.
      */
-    public function scanEligibleCitizens(int $targetYear): array
+    public function getEligibleScannedCitizens(int $targetYear)
     {
         // 18 tuổi: Y - 18. VD: 2026 - 18 = 2008
         // 25 tuổi: Y - 25. VD: 2026 - 25 = 2001
@@ -60,8 +60,7 @@ class NghiaVuQuanSuService
         $startDegree = ($targetYear - 27).'-01-01';
         $endDegree = ($targetYear - 26).'-12-31';
 
-        // Lấy danh sách nam công dân đủ điều kiện tuổi trong địa bàn
-        $eligibleCitizens = NhanKhau::query()
+        return NhanKhau::query()
             ->where('gioi_tinh', 'nam')
             ->whereIn('trang_thai', ['hoat_dong', 'tam_tru', 'tam_vang'])
             ->where(function ($query) use ($startGeneral, $endGeneral, $startDegree, $endDegree) {
@@ -71,46 +70,35 @@ class NghiaVuQuanSuService
                             ->whereIn('trinh_do_hoc_van', ['dai_hoc', 'sau_dai_hoc']);
                     });
             })
-            ->get();
+            ->whereDoesntHave('nghiaVuQuanSu')
+            ->orderBy('ho_ten', 'asc')
+            ->get(['id', 'ho_ten', 'cccd_cmnd', 'ngay_sinh', 'trinh_do_hoc_van']);
+    }
 
+    /**
+     * Thêm hàng loạt công dân được chọn vào danh sách NVQS.
+     */
+    public function storeScannedCitizens(int $targetYear, array $nhanKhauIds): int
+    {
         $addedCount = 0;
-        $existingCount = 0;
-        $results = [];
-
-        DB::transaction(function () use ($eligibleCitizens, $targetYear, &$addedCount, &$existingCount, &$results) {
-            foreach ($eligibleCitizens as $citizen) {
-                // Kiểm tra xem đã có bản ghi trong bảng nghĩa vụ chưa
-                $record = NghiaVuQuanSu::where('nhan_khau_id', $citizen->id)->first();
-
-                if (! $record) {
+        DB::transaction(function () use ($nhanKhauIds, $targetYear, &$addedCount) {
+            foreach ($nhanKhauIds as $nhanKhauId) {
+                // Kiểm tra xem đã có bản ghi chưa để tránh chèn trùng lặp
+                $exists = NghiaVuQuanSu::where('nhan_khau_id', $nhanKhauId)->exists();
+                if (!$exists) {
                     NghiaVuQuanSu::create([
-                        'nhan_khau_id' => $citizen->id,
+                        'nhan_khau_id' => $nhanKhauId,
                         'nam_tuoi_tuyen_quan' => $targetYear,
                         'trang_thai_nvqs' => 'du_dieu_kien',
                         'ly_do_tam_hoan' => 'khong_ap_dung',
                         'ket_qua_kham_suc_khoe' => 'chua_kham',
                     ]);
                     $addedCount++;
-                    $results[] = [
-                        'nhan_khau_id' => $citizen->id,
-                        'ho_ten' => $citizen->ho_ten,
-                        'ngay_sinh' => $citizen->ngay_sinh ? $citizen->ngay_sinh->format('Y-m-d') : null,
-                        'action' => 'created',
-                    ];
-                } else {
-                    $existingCount++;
                 }
             }
         });
 
-        return [
-            'success' => true,
-            'target_year' => $targetYear,
-            'total_scanned' => $eligibleCitizens->count(),
-            'added_count' => $addedCount,
-            'existing_count' => $existingCount,
-            'details' => $results,
-        ];
+        return $addedCount;
     }
 
     /**
