@@ -18,12 +18,12 @@ class NhanKhauService
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('ho_ten', 'like', "%{$search}%")
-                  ->orWhere('cccd_cmnd', 'like', "%{$search}%")
-                  ->orWhere('quan_he_chu_ho', 'like', "%{$search}%")
-                  ->orWhereHas('hoKhau', function ($q2) use ($search) {
-                      $q2->where('so_so_ho_khau', 'like', "%{$search}%")
-                        ->orWhere('ma_ho', 'like', "%{$search}%");
-                  });
+                    ->orWhere('cccd_cmnd', 'like', "%{$search}%")
+                    ->orWhere('quan_he_chu_ho', 'like', "%{$search}%")
+                    ->orWhereHas('hoKhau', function ($q2) use ($search) {
+                        $q2->where('so_so_ho_khau', 'like', "%{$search}%")
+                            ->orWhere('ma_ho', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -48,8 +48,8 @@ class NhanKhauService
     public function createNhanKhau(array $data): NhanKhau
     {
         // Handle boolean fields
-        $data['la_chu_ho'] = !empty($data['la_chu_ho']);
-        $data['co_tien_an'] = !empty($data['co_tien_an']);
+        $data['la_chu_ho'] = ! empty($data['la_chu_ho']);
+        $data['co_tien_an'] = ! empty($data['co_tien_an']);
 
         return NhanKhau::create($data);
     }
@@ -60,8 +60,8 @@ class NhanKhauService
     public function updateNhanKhau(NhanKhau $nhanKhau, array $data): NhanKhau
     {
         // Handle boolean fields
-        $data['la_chu_ho'] = !empty($data['la_chu_ho']);
-        $data['co_tien_an'] = !empty($data['co_tien_an']);
+        $data['la_chu_ho'] = ! empty($data['la_chu_ho']);
+        $data['co_tien_an'] = ! empty($data['co_tien_an']);
 
         $nhanKhau->update($data);
 
@@ -73,6 +73,6 @@ class NhanKhauService
      */
     public function deleteNhanKhau(NhanKhau $nhanKhau): bool
     {
-        return $nhanKhau->delete();
+        return (bool) $nhanKhau->delete();
     }
 }
