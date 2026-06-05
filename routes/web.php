@@ -8,6 +8,7 @@ use App\Http\Controllers\NghiaVuQuanSuController;
 use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DanQuanTuVeController;
 use App\Models\HoKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
@@ -89,16 +90,16 @@ $modules = [
         'color' => 'warning',
         'view' => 'modules.nghia-vu-an-ninh',
         'description' => 'Quản lý nghĩa vụ quân sự, dân quân tự vệ, danh sách rà soát và nhóm hồ sơ an ninh trật tự.',
-        'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve'],
+        'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve', 'dan_quan_hoat_dong'],
         'features' => [
             'Lọc danh sách nam công dân trong độ tuổi nghĩa vụ quân sự.',
             'Theo dõi trạng thái: đủ điều kiện, tạm hoãn, trúng tuyển, nhập ngũ, xuất ngũ.',
-            'Quản lý lực lượng dân quân tự vệ và các đợt tập huấn.',
+            'Quản lý lực lượng dân quân tự vệ và lịch sử hoạt động.',
             'Chuẩn bị khu vực theo dõi vi phạm hành chính, đối tượng quản lý đặc biệt.',
         ],
         'rows' => [
             ['Nghĩa vụ quân sự', 'Độ tuổi, sức khỏe, học vấn, trạng thái', 'Theo mùa tuyển quân'],
-            ['Dân quân tự vệ', 'Lực lượng nòng cốt, tập huấn, trực ban', 'Theo kế hoạch xã'],
+            ['Dân quân tự vệ', 'Lực lượng nòng cốt, lịch sử hoạt động', 'Theo kế hoạch xã'],
             ['An ninh trật tự', 'Hồ sơ quản lý đặc biệt', 'Trang khung chờ dữ liệu'],
         ],
     ],
@@ -241,7 +242,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         } elseif ($module === 'nghia-vu-an-ninh') {
             $stats = [
                 'nghia_vu_quan_su' => DB::table('nghia_vu_quan_su')->count(),
-                'dan_quan_tu_ve' => 0, // Khung chờ dữ liệu
+                'dan_quan_tu_ve' => DB::table('dan_quan_tu_ve')->count(),
                 'du_dieu_kien' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'du_dieu_kien')->count(),
                 'tam_hoan' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'tam_hoan')->count(),
             ];
@@ -269,6 +270,14 @@ Route::middleware('auth')->group(function () use ($modules) {
 
         Route::get('nghia-vu-an-ninh/nghia-vu-quan-su/scan-preview', [NghiaVuQuanSuController::class, 'scanPreview'])->name('nghia-vu-quan-su.scan-preview');
         Route::post('nghia-vu-an-ninh/nghia-vu-quan-su/scan-store', [NghiaVuQuanSuController::class, 'scanStore'])->name('nghia-vu-quan-su.scan-store');
+
+        // Dân quân tự vệ (Lực lượng nòng cốt, tập huấn, trực ban)
+        Route::resource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
+            ->except(['index', 'show'])
+            ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
+            ->names('dan-quan-tu-ve');
+
+
     });
 
     // API endpoints cho Hộ tịch & Cư trú (Biến động & Tạm trú/Tạm vắng & Hộ khẩu & Nhân khẩu)
@@ -341,6 +350,19 @@ Route::middleware('auth')->group(function () use ($modules) {
         Route::get('he-thong/users/{user}', [UserController::class, 'show'])
             ->name('api.users.show');
 
+        // API cho Dân quân tự vệ
+        Route::middleware('can:manage_nghia_vu')->group(function () {
+            Route::apiResource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
+                ->except(['index', 'show'])
+                ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
+                ->names('api.dan-quan-tu-ve');
+        });
+
+        Route::apiResource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
+            ->only(['index', 'show'])
+            ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
+            ->names('api.dan-quan-tu-ve');
+
         // API cho Xác thực (Đã đăng nhập)
         Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
         Route::post('switch-user', [AuthController::class, 'switchUser'])->name('api.switch-user');
@@ -351,6 +373,13 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['nghia-vu-quan-su' => 'nghiaVuQuanSu'])
         ->names('nghia-vu-quan-su');
+
+    Route::resource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
+        ->only(['index', 'show'])
+        ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
+        ->names('dan-quan-tu-ve');
+
+
 
     // API phục vụ autocomplete
     Route::get('api/nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])
