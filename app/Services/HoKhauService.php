@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\HoKhau;
+use App\Models\NhanKhau;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class HoKhauService
@@ -43,7 +44,23 @@ class HoKhauService
      */
     public function createHoKhau(array $data): HoKhau
     {
-        return HoKhau::create($data);
+        $hoKhau = HoKhau::create($data);
+
+        if ($hoKhau->chu_ho_nhan_khau_id) {
+            // Update the selected citizen to be head of household and belong to this household
+            NhanKhau::where('id', $hoKhau->chu_ho_nhan_khau_id)->update([
+                'la_chu_ho' => true,
+                'quan_he_chu_ho' => 'Chủ hộ',
+                'ho_khau_id' => $hoKhau->id,
+            ]);
+
+            // Unset other members
+            NhanKhau::where('ho_khau_id', $hoKhau->id)
+                ->where('id', '!=', $hoKhau->chu_ho_nhan_khau_id)
+                ->update(['la_chu_ho' => false, 'quan_he_chu_ho' => 'Thành viên']);
+        }
+
+        return $hoKhau;
     }
 
     /**
@@ -51,7 +68,31 @@ class HoKhauService
      */
     public function updateHoKhau(HoKhau $hoKhau, array $data): HoKhau
     {
+        $oldChuHoId = $hoKhau->chu_ho_nhan_khau_id;
         $hoKhau->update($data);
+
+        $newChuHoId = $hoKhau->chu_ho_nhan_khau_id;
+        if ($newChuHoId) {
+            // Update the selected citizen to be head of household and belong to this household
+            NhanKhau::where('id', $newChuHoId)->update([
+                'la_chu_ho' => true,
+                'quan_he_chu_ho' => 'Chủ hộ',
+                'ho_khau_id' => $hoKhau->id,
+            ]);
+
+            // Unset other members
+            NhanKhau::where('ho_khau_id', $hoKhau->id)
+                ->where('id', '!=', $newChuHoId)
+                ->update(['la_chu_ho' => false, 'quan_he_chu_ho' => 'Thành viên']);
+        } else {
+            // If chu_ho_nhan_khau_id is set to null, unset la_chu_ho of the old head of household
+            if ($oldChuHoId) {
+                NhanKhau::where('id', $oldChuHoId)->update([
+                    'la_chu_ho' => false,
+                    'quan_he_chu_ho' => 'Thành viên',
+                ]);
+            }
+        }
 
         return $hoKhau;
     }
