@@ -51,7 +51,26 @@ class NhanKhauService
         $data['la_chu_ho'] = ! empty($data['la_chu_ho']);
         $data['co_tien_an'] = ! empty($data['co_tien_an']);
 
-        return NhanKhau::create($data);
+        if ($data['la_chu_ho']) {
+            $data['quan_he_chu_ho'] = 'Chủ hộ';
+        }
+
+        $nhanKhau = NhanKhau::create($data);
+
+        if ($nhanKhau->la_chu_ho && $nhanKhau->ho_khau_id) {
+            // Unset previous head of household's la_chu_ho flag in this household
+            NhanKhau::where('ho_khau_id', $nhanKhau->ho_khau_id)
+                ->where('id', '!=', $nhanKhau->id)
+                ->where('la_chu_ho', true)
+                ->update(['la_chu_ho' => false, 'quan_he_chu_ho' => 'Thành viên']);
+
+            // Update household's head of household ID
+            if ($nhanKhau->hoKhau) {
+                $nhanKhau->hoKhau->update(['chu_ho_nhan_khau_id' => $nhanKhau->id]);
+            }
+        }
+
+        return $nhanKhau;
     }
 
     /**
@@ -63,7 +82,29 @@ class NhanKhauService
         $data['la_chu_ho'] = ! empty($data['la_chu_ho']);
         $data['co_tien_an'] = ! empty($data['co_tien_an']);
 
+        if ($data['la_chu_ho']) {
+            $data['quan_he_chu_ho'] = 'Chủ hộ';
+        }
+
         $nhanKhau->update($data);
+
+        if ($nhanKhau->la_chu_ho && $nhanKhau->ho_khau_id) {
+            // Unset previous head of household's la_chu_ho flag in this household
+            NhanKhau::where('ho_khau_id', $nhanKhau->ho_khau_id)
+                ->where('id', '!=', $nhanKhau->id)
+                ->where('la_chu_ho', true)
+                ->update(['la_chu_ho' => false, 'quan_he_chu_ho' => 'Thành viên']);
+
+            // Update household's head of household ID
+            if ($nhanKhau->hoKhau) {
+                $nhanKhau->hoKhau->update(['chu_ho_nhan_khau_id' => $nhanKhau->id]);
+            }
+        } else {
+            // If no longer head of household, and they were recorded as the head of household of the household
+            if ($nhanKhau->hoKhau && $nhanKhau->hoKhau->chu_ho_nhan_khau_id == $nhanKhau->id) {
+                $nhanKhau->hoKhau->update(['chu_ho_nhan_khau_id' => null]);
+            }
+        }
 
         return $nhanKhau;
     }
