@@ -8,9 +8,7 @@ use App\Models\HoKhau;
 use App\Models\NhanKhau;
 use App\Services\HoKhauService;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class HoKhauController extends Controller
 {
@@ -21,12 +19,21 @@ class HoKhauController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $filters = $request->only(['q', 'thon_xom', 'phan_loai', 'trang_thai']);
         $perPage = $request->integer('per_page', 10);
 
         $records = $this->hoKhauService->getHoKhauList($filters, $perPage);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách hộ khẩu thành công.',
+                'data' => $records,
+                'stats' => $this->stats(),
+            ], 200);
+        }
 
         return view('ho-tich.ho-khau.index', [
             'modules' => ModuleRegistry::all(),
@@ -42,17 +49,35 @@ class HoKhauController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('ho-tich.ho-khau.create', $this->formData());
+        $formData = $this->formData();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form tạo mới thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('ho-tich.ho-khau.create', $formData);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreHoKhauRequest $request): RedirectResponse
+    public function store(StoreHoKhauRequest $request)
     {
-        $this->hoKhauService->createHoKhau($request->validated());
+        $hoKhau = $this->hoKhauService->createHoKhau($request->validated());
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã tạo sổ hộ khẩu mới thành công.',
+                'data' => $hoKhau,
+            ], 201);
+        }
 
         return redirect()
             ->route('ho-khau.index')
@@ -62,25 +87,53 @@ class HoKhauController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HoKhau $hoKhau): View
+    public function show(HoKhau $hoKhau, Request $request)
     {
+        $hoKhau->load(['thanhVien', 'chuHo']);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy chi tiết sổ hộ khẩu thành công.',
+                'data' => $hoKhau,
+            ], 200);
+        }
+
         return view('ho-tich.ho-khau.show', $this->formData($hoKhau));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HoKhau $hoKhau): View
+    public function edit(HoKhau $hoKhau, Request $request)
     {
-        return view('ho-tich.ho-khau.edit', $this->formData($hoKhau));
+        $formData = $this->formData($hoKhau);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form chỉnh sửa thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('ho-tich.ho-khau.edit', $formData);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateHoKhauRequest $request, HoKhau $hoKhau): RedirectResponse
+    public function update(UpdateHoKhauRequest $request, HoKhau $hoKhau)
     {
-        $this->hoKhauService->updateHoKhau($hoKhau, $request->validated());
+        $updated = $this->hoKhauService->updateHoKhau($hoKhau, $request->validated());
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật sổ hộ khẩu thành công.',
+                'data' => $updated,
+            ], 200);
+        }
 
         return redirect()
             ->route('ho-khau.index')
@@ -90,9 +143,16 @@ class HoKhauController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(HoKhau $hoKhau): RedirectResponse
+    public function destroy(HoKhau $hoKhau, Request $request)
     {
         $this->hoKhauService->deleteHoKhau($hoKhau);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa sổ hộ khẩu thành công.',
+            ], 200);
+        }
 
         return redirect()
             ->route('ho-khau.index')

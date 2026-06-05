@@ -8,9 +8,7 @@ use App\Models\HoKhau;
 use App\Models\NhanKhau;
 use App\Services\NhanKhauService;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class NhanKhauController extends Controller
 {
@@ -21,12 +19,21 @@ class NhanKhauController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $filters = $request->only(['q', 'gioi_tinh', 'trang_thai', 'co_tien_an']);
         $perPage = $request->integer('per_page', 10);
 
         $records = $this->nhanKhauService->getNhanKhauList($filters, $perPage);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách nhân khẩu thành công.',
+                'data' => $records,
+                'stats' => $this->stats(),
+            ], 200);
+        }
 
         return view('ho-tich.nhan-khau.index', [
             'modules' => ModuleRegistry::all(),
@@ -42,17 +49,35 @@ class NhanKhauController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('ho-tich.nhan-khau.create', $this->formData());
+        $formData = $this->formData();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form tạo mới thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('ho-tich.nhan-khau.create', $formData);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreNhanKhauRequest $request): RedirectResponse
+    public function store(StoreNhanKhauRequest $request)
     {
-        $this->nhanKhauService->createNhanKhau($request->validated());
+        $nhanKhau = $this->nhanKhauService->createNhanKhau($request->validated());
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã thêm nhân khẩu mới thành công.',
+                'data' => $nhanKhau,
+            ], 201);
+        }
 
         return redirect()
             ->route('nhan-khau.index')
@@ -62,25 +87,53 @@ class NhanKhauController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(NhanKhau $nhanKhau): View
+    public function show(NhanKhau $nhanKhau, Request $request)
     {
+        $nhanKhau->load('hoKhau');
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy chi tiết nhân khẩu thành công.',
+                'data' => $nhanKhau,
+            ], 200);
+        }
+
         return view('ho-tich.nhan-khau.show', $this->formData($nhanKhau));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(NhanKhau $nhanKhau): View
+    public function edit(NhanKhau $nhanKhau, Request $request)
     {
-        return view('ho-tich.nhan-khau.edit', $this->formData($nhanKhau));
+        $formData = $this->formData($nhanKhau);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form chỉnh sửa thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('ho-tich.nhan-khau.edit', $formData);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNhanKhauRequest $request, NhanKhau $nhanKhau): RedirectResponse
+    public function update(UpdateNhanKhauRequest $request, NhanKhau $nhanKhau)
     {
-        $this->nhanKhauService->updateNhanKhau($nhanKhau, $request->validated());
+        $updated = $this->nhanKhauService->updateNhanKhau($nhanKhau, $request->validated());
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật thông tin nhân khẩu thành công.',
+                'data' => $updated,
+            ], 200);
+        }
 
         return redirect()
             ->route('nhan-khau.index')
@@ -90,9 +143,16 @@ class NhanKhauController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NhanKhau $nhanKhau): RedirectResponse
+    public function destroy(NhanKhau $nhanKhau, Request $request)
     {
         $this->nhanKhauService->deleteNhanKhau($nhanKhau);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa nhân khẩu thành công.',
+            ], 200);
+        }
 
         return redirect()
             ->route('nhan-khau.index')

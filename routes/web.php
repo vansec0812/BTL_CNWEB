@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BienDongHoKhauController;
 use App\Http\Controllers\DoiTuongChinhSachController;
 use App\Http\Controllers\HoKhauController;
 use App\Http\Controllers\NghiaVuQuanSuController;
 use App\Http\Controllers\NhanKhauController;
+use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
 use App\Models\HoKhau;
 use App\Support\ModuleRegistry;
@@ -264,6 +266,53 @@ Route::middleware('auth')->group(function () use ($modules) {
         Route::post('nghia-vu-an-ninh/nghia-vu-quan-su/scan-store', [NghiaVuQuanSuController::class, 'scanStore'])->name('nghia-vu-quan-su.scan-store');
     });
 
+    // API endpoints cho Hộ tịch & Cư trú (Biến động & Tạm trú/Tạm vắng & Hộ khẩu & Nhân khẩu)
+    Route::prefix('api')->group(function () {
+        Route::middleware('can:manage_ho_khau')->group(function () {
+            Route::apiResource('ho-tich/ho-khau', HoKhauController::class)
+                ->except(['index', 'show'])
+                ->parameters(['ho-khau' => 'hoKhau'])
+                ->names('api.ho-khau');
+
+            Route::apiResource('ho-tich/bien-dong', BienDongHoKhauController::class)
+                ->except(['index', 'show'])
+                ->parameters(['bien-dong' => 'bienDong'])
+                ->names('api.bien-dong');
+
+            Route::apiResource('ho-tich/tam-tru', TamTruTamVangController::class)
+                ->except(['index', 'show'])
+                ->parameters(['tam-tru' => 'tamTruTamVang'])
+                ->names('api.tam-tru');
+        });
+
+        Route::middleware('can:manage_nhan_khau')->group(function () {
+            Route::apiResource('ho-tich/nhan-khau', NhanKhauController::class)
+                ->except(['index', 'show'])
+                ->parameters(['nhan-khau' => 'nhanKhau'])
+                ->names('api.nhan-khau');
+        });
+
+        Route::apiResource('ho-tich/ho-khau', HoKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['ho-khau' => 'hoKhau'])
+            ->names('api.ho-khau');
+
+        Route::apiResource('ho-tich/nhan-khau', NhanKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['nhan-khau' => 'nhanKhau'])
+            ->names('api.nhan-khau');
+
+        Route::apiResource('ho-tich/bien-dong', BienDongHoKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['bien-dong' => 'bienDong'])
+            ->names('api.bien-dong');
+
+        Route::apiResource('ho-tich/tam-tru', TamTruTamVangController::class)
+            ->only(['index', 'show'])
+            ->parameters(['tam-tru' => 'tamTruTamVang'])
+            ->names('api.tam-tru');
+    });
+
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
     Route::resource('nghia-vu-an-ninh/nghia-vu-quan-su', NghiaVuQuanSuController::class)
         ->only(['index', 'show'])
@@ -276,12 +325,22 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->middleware('can:view_nghia_vu');
 
     // --- Phân hệ Hộ tịch & Cư trú (Hộ khẩu & Nhân khẩu) ---
-    // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Tư pháp và Admin được làm)
+    // Web endpoints phục vụ giao diện Blade
     Route::middleware('can:manage_ho_khau')->group(function () {
         Route::resource('ho-tich/ho-khau', HoKhauController::class)
             ->except(['index', 'show'])
             ->parameters(['ho-khau' => 'hoKhau'])
             ->names('ho-khau');
+
+        Route::resource('ho-tich/bien-dong', BienDongHoKhauController::class)
+            ->except(['index', 'show'])
+            ->parameters(['bien-dong' => 'bienDong'])
+            ->names('bien-dong');
+
+        Route::resource('ho-tich/tam-tru', TamTruTamVangController::class)
+            ->except(['index', 'show'])
+            ->parameters(['tam-tru' => 'tamTruTamVang'])
+            ->names('tam-tru');
     });
 
     Route::middleware('can:manage_nhan_khau')->group(function () {
@@ -291,7 +350,6 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->names('nhan-khau');
     });
 
-    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
     Route::resource('ho-tich/ho-khau', HoKhauController::class)
         ->only(['index', 'show'])
         ->parameters(['ho-khau' => 'hoKhau'])
@@ -301,6 +359,16 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['nhan-khau' => 'nhanKhau'])
         ->names('nhan-khau');
+
+    Route::resource('ho-tich/bien-dong', BienDongHoKhauController::class)
+        ->only(['index', 'show'])
+        ->parameters(['bien-dong' => 'bienDong'])
+        ->names('bien-dong');
+
+    Route::resource('ho-tich/tam-tru', TamTruTamVangController::class)
+        ->only(['index', 'show'])
+        ->parameters(['tam-tru' => 'tamTruTamVang'])
+        ->names('tam-tru');
 
     // --- Phân hệ An sinh xã hội (Đối tượng chính sách) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)

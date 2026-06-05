@@ -198,14 +198,16 @@
                         if ($isHoTich) {
                             $isHoKhauActive = request()->routeIs('ho-khau.*');
                             $isNhanKhauActive = request()->routeIs('nhan-khau.*');
-                            $isActive = $isModuleActive || $isHoKhauActive || $isNhanKhauActive;
+                            $isBienDongActive = request()->routeIs('bien-dong.*');
+                            $isTamTruActive = request()->routeIs('tam-tru.*');
+                            $isActive = $isModuleActive || $isHoKhauActive || $isNhanKhauActive || $isBienDongActive || $isTamTruActive;
                             
                             $submenu = [
                                 ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'ho-tich-cu-tru'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Danh sách sổ hộ khẩu', 'url' => route('ho-khau.index'), 'icon' => 'bi-journal-text', 'active' => request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit') || request()->routeIs('ho-khau.create')],
                                 ['title' => 'Danh sách nhân khẩu', 'url' => route('nhan-khau.index'), 'icon' => 'bi-people', 'active' => request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit') || request()->routeIs('nhan-khau.create')],
-                                ['title' => 'Tách / Nhập hộ', 'disabled' => true, 'icon' => 'bi-arrow-left-right'],
-                                ['title' => 'Khai báo tạm trú / tạm vắng', 'disabled' => true, 'icon' => 'bi-luggage'],
+                                ['title' => 'Biến động hộ khẩu', 'url' => route('bien-dong.index'), 'icon' => 'bi-arrow-left-right', 'active' => request()->routeIs('bien-dong.*')],
+                                ['title' => 'Khai báo tạm trú / tạm vắng', 'url' => route('tam-tru.index'), 'icon' => 'bi-luggage', 'active' => request()->routeIs('tam-tru.*')],
                             ];
                         } elseif ($isKinhTe) {
                             $isActive = $isModuleActive;
