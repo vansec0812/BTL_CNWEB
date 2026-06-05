@@ -89,7 +89,7 @@ class NhanKhau extends Model
         return $this->hasOne(DoiTuongChinhSach::class, 'nhan_khau_id');
     }
 
-    public function nghiaVuQuanSu(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function nghiaVuQuanSu(): HasOne
     {
         return $this->hasOne(NghiaVuQuanSu::class, 'nhan_khau_id');
     }
@@ -114,4 +114,3 @@ class NhanKhau extends Model
         return self::TRANG_THAI[$this->trang_thai] ?? 'Không xác định';
     }
 }
-

@@ -24,9 +24,9 @@ class UpdateUserRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $userId],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$userId],
             'password' => ['nullable', 'string', 'min:6'],
-            'so_cccd' => ['nullable', 'string', 'digits:12', 'unique:users,so_cccd,' . $userId],
+            'so_cccd' => ['nullable', 'string', 'digits:12', 'unique:users,so_cccd,'.$userId],
             'gioi_tinh' => ['required', 'string', 'in:nam,nu,khac'],
             'ngay_sinh' => ['nullable', 'date'],
             'so_dien_thoai' => ['nullable', 'string', 'max:20'],

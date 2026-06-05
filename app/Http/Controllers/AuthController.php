@@ -14,6 +14,7 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         $users = User::with('roles')->get();
+
         return view('auth.login', compact('users'));
     }
 
