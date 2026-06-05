@@ -102,31 +102,4 @@ class NghiaVuQuanSuController extends Controller
             'data' => $result,
         ], 200);
     }
-
-    /**
-     * Lấy danh sách công dân nam chưa có hồ sơ nghĩa vụ quân sự phục vụ tạo thủ công.
-     */
-    public function eligibleCitizens(Request $request): JsonResponse
-    {
-        $search = $request->input('search');
-        
-        $query = \App\Models\NhanKhau::query()
-            ->where('gioi_tinh', 'nam')
-            ->whereIn('trang_thai', ['hoat_dong', 'tam_tru', 'tam_vang'])
-            ->whereDoesntHave('nghiaVuQuanSu');
-
-        if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('ho_ten', 'like', '%' . $search . '%')
-                  ->orWhere('cccd_cmnd', 'like', '%' . $search . '%');
-            });
-        }
-
-        $citizens = $query->limit(15)->get(['id', 'ho_ten', 'cccd_cmnd', 'ngay_sinh', 'trinh_do_hoc_van']);
-
-        return response()->json([
-            'success' => true,
-            'data' => $citizens,
-        ], 200);
-    }
 }
