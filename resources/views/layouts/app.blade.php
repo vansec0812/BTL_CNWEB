@@ -217,12 +217,13 @@
                             ];
                         } elseif ($isAnSinh) {
                             $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*');
-                            $isActive = $isModuleActive || $isPolicyActive;
+                            $isBaoTroActive = request()->routeIs('bao-tro-xa-hoi.*');
+                            $isActive = $isModuleActive || $isPolicyActive || $isBaoTroActive;
                             
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'an-sinh-y-te-giao-duc'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                                ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.index') || request()->routeIs('doi-tuong-chinh-sach.edit')],
-                                ['title' => 'Bảo trợ xã hội', 'disabled' => true, 'icon' => 'bi-shield-heart'],
+                                ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.*')],
+                                ['title' => 'Bảo trợ xã hội', 'url' => route('bao-tro-xa-hoi.index'), 'icon' => 'bi-shield-heart', 'active' => request()->routeIs('bao-tro-xa-hoi.*')],
                                 ['title' => 'Đợt trợ cấp & Quà tặng', 'disabled' => true, 'icon' => 'bi-gift'],
                                 ['title' => 'Theo dõi Y tế & Giáo dục', 'disabled' => true, 'icon' => 'bi-heart-pulse'],
                             ];
