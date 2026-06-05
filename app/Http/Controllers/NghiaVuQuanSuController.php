@@ -53,12 +53,21 @@ class NghiaVuQuanSuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $filters = $request->only(['search', 'trang_thai_nvqs', 'nam_tuoi_tuyen_quan', 'thon_xom']);
         $perPage = $request->integer('per_page', 10);
 
         $records = $this->nghiaVuQuanSuService->getNghiaVuList($filters, $perPage);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách nghĩa vụ quân sự thành công.',
+                'data' => $records,
+                'stats' => $this->stats(),
+            ], 200);
+        }
 
         return view('nghia-vu-an-ninh.nghia-vu-quan-su.index', [
             'modules' => ModuleRegistry::all(),
@@ -67,7 +76,6 @@ class NghiaVuQuanSuController extends Controller
             'filters' => $filters,
             'trangThaiNVQS' => self::TRANG_THAI_NVQS,
             'lyDoTamHoan' => self::LY_DO_TAM_HOAN,
-            'parentModule' => ModuleRegistry::findBySlug('nghia-vu-an-ninh'),
             'ketQuaKham' => self::KET_QUA_KHAM,
             'stats' => $this->stats(),
         ]);
@@ -76,17 +84,35 @@ class NghiaVuQuanSuController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('nghia-vu-an-ninh.nghia-vu-quan-su.create', $this->formData());
+        $formData = $this->formData();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form tạo mới thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('nghia-vu-an-ninh.nghia-vu-quan-su.create', $formData);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreNghiaVuQuanSuRequest $request): RedirectResponse
+    public function store(StoreNghiaVuQuanSuRequest $request)
     {
-        $this->nghiaVuQuanSuService->createNghiaVuRecord($request->validated());
+        $record = $this->nghiaVuQuanSuService->createNghiaVuRecord($request->validated());
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã tạo hồ sơ nghĩa vụ quân sự thành công.',
+                'data' => $record,
+            ], 201);
+        }
 
         return redirect()
             ->route('nghia-vu-quan-su.index')
@@ -96,27 +122,54 @@ class NghiaVuQuanSuController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(NghiaVuQuanSu $nghiaVuQuanSu): View
+    public function show(NghiaVuQuanSu $nghiaVuQuanSu, Request $request)
     {
         $nghiaVuQuanSu->load(['nhanKhau.hoKhau']);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy chi tiết hồ sơ nghĩa vụ quân sự thành công.',
+                'data' => $nghiaVuQuanSu,
+            ], 200);
+        }
+
         return view('nghia-vu-an-ninh.nghia-vu-quan-su.show', $this->formData($nghiaVuQuanSu));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(NghiaVuQuanSu $nghiaVuQuanSu): View
+    public function edit(NghiaVuQuanSu $nghiaVuQuanSu, Request $request)
     {
         $nghiaVuQuanSu->load(['nhanKhau.hoKhau']);
-        return view('nghia-vu-an-ninh.nghia-vu-quan-su.edit', $this->formData($nghiaVuQuanSu));
+        $formData = $this->formData($nghiaVuQuanSu);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form chỉnh sửa thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('nghia-vu-an-ninh.nghia-vu-quan-su.edit', $formData);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNghiaVuQuanSuRequest $request, NghiaVuQuanSu $nghiaVuQuanSu): RedirectResponse
+    public function update(UpdateNghiaVuQuanSuRequest $request, NghiaVuQuanSu $nghiaVuQuanSu)
     {
-        $this->nghiaVuQuanSuService->updateNghiaVuRecord($nghiaVuQuanSu, $request->validated());
+        $record = $this->nghiaVuQuanSuService->updateNghiaVuRecord($nghiaVuQuanSu, $request->validated());
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật hồ sơ nghĩa vụ quân sự thành công.',
+                'data' => $record,
+            ], 200);
+        }
 
         return redirect()
             ->route('nghia-vu-quan-su.index')
@@ -126,9 +179,16 @@ class NghiaVuQuanSuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NghiaVuQuanSu $nghiaVuQuanSu): RedirectResponse
+    public function destroy(NghiaVuQuanSu $nghiaVuQuanSu, Request $request)
     {
         $this->nghiaVuQuanSuService->deleteNghiaVuRecord($nghiaVuQuanSu);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Xóa hồ sơ nghĩa vụ quân sự thành công.',
+            ], 200);
+        }
 
         return redirect()
             ->route('nghia-vu-quan-su.index')

@@ -150,6 +150,11 @@ $modules = [
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [AuthController::class, 'login']);
+
+    Route::prefix('api')->group(function () {
+        Route::get('login', [AuthController::class, 'showLoginForm'])->name('api.login.show');
+        Route::post('login', [AuthController::class, 'login'])->name('api.login');
+    });
 });
 
 // Routes cho Auth (Đã đăng nhập)
@@ -311,6 +316,34 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->only(['index', 'show'])
             ->parameters(['tam-tru' => 'tamTruTamVang'])
             ->names('api.tam-tru');
+
+        // API cho An sinh xã hội
+        Route::middleware('can:manage_an_sinh')->group(function () {
+            Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+                ->except(['index', 'show'])
+                ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+                ->names('api.doi-tuong-chinh-sach');
+        });
+
+        Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+            ->only(['index', 'show'])
+            ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+            ->names('api.doi-tuong-chinh-sach');
+
+        // API cho Quản lý Cán bộ (Users)
+        Route::middleware('can:manage_users')->group(function () {
+            Route::apiResource('he-thong/users', UserController::class)
+                ->except(['show'])
+                ->names('api.users');
+            Route::post('he-thong/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+                ->name('api.users.toggle-status');
+        });
+        Route::get('he-thong/users/{user}', [UserController::class, 'show'])
+            ->name('api.users.show');
+
+        // API cho Xác thực (Đã đăng nhập)
+        Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
+        Route::post('switch-user', [AuthController::class, 'switchUser'])->name('api.switch-user');
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
