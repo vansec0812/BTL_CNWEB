@@ -222,7 +222,6 @@
                             $submenu = [
                                 ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'an-sinh-y-te-giao-duc'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.index') || request()->routeIs('doi-tuong-chinh-sach.edit')],
-                                ['title' => 'Thêm đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.create'), 'icon' => 'bi-plus-circle', 'active' => request()->routeIs('doi-tuong-chinh-sach.create')],
                                 ['title' => 'Bảo trợ xã hội', 'disabled' => true, 'icon' => 'bi-shield-heart'],
                                 ['title' => 'Đợt trợ cấp & Quà tặng', 'disabled' => true, 'icon' => 'bi-gift'],
                                 ['title' => 'Theo dõi Y tế & Giáo dục', 'disabled' => true, 'icon' => 'bi-heart-pulse'],
