@@ -30,18 +30,11 @@ class NghiaVuQuanSuTest extends TestCase
 
     public function test_get_list_nvqs(): void
     {
-        $response = $this->getJson(route('nghia-vu-quan-su.index'));
+        $response = $this->get(route('nghia-vu-quan-su.index'));
 
         $response->assertStatus(200)
-            ->assertJsonStructure([
-                'success',
-                'message',
-                'data' => [
-                    'data',
-                    'current_page',
-                    'total',
-                ],
-            ]);
+            ->assertSee('Hồ sơ Nghĩa vụ quân sự')
+            ->assertSee('Bộ lọc tìm kiếm');
     }
 
     public function test_scan_eligible_citizens(): void
@@ -91,39 +84,73 @@ class NghiaVuQuanSuTest extends TestCase
             'trang_thai' => 'hoat_dong',
         ]);
 
-        $response = $this->postJson(route('nghia-vu-quan-su.scan'), [
+        // 1. Kiểm tra preview danh sách quét
+        $previewResponse = $this->getJson(route('nghia-vu-quan-su.scan-preview', [
             'nam_tuyen_quan' => 2026,
+        ]));
+
+        $previewResponse->assertStatus(200)
+            ->assertJsonPath('success', true)
+            ->assertJsonCount(2, 'data');
+
+        // 2. Thực hiện lưu những người được chọn (chỉ chọn nhanKhau1)
+        $storeResponse = $this->post(route('nghia-vu-quan-su.scan-store'), [
+            'nam_tuyen_quan' => 2026,
+            'nhan_khau_ids' => [$nhanKhau1->id],
         ]);
 
-        $response->assertStatus(200)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Tự động quét danh sách đủ tuổi nghĩa vụ quân sự hoàn tất.',
-                'data' => [
-                    'target_year' => 2026,
-                    'total_scanned' => 2, // Chỉ có Nam và Đại học (nam)
-                    'added_count' => 2,
-                    'existing_count' => 0,
-                ],
-            ]);
+        $storeResponse->assertStatus(302)
+            ->assertRedirect(route('nghia-vu-quan-su.index'));
 
+        // Công dân 1 được thêm thành công
         $this->assertDatabaseHas('nghia_vu_quan_su', [
             'nhan_khau_id' => $nhanKhau1->id,
             'trang_thai_nvqs' => 'du_dieu_kien',
         ]);
 
-        $this->assertDatabaseHas('nghia_vu_quan_su', [
+        // Công dân 2 KHÔNG được thêm vì không được chọn
+        $this->assertDatabaseMissing('nghia_vu_quan_su', [
             'nhan_khau_id' => $nhanKhau2->id,
-            'trang_thai_nvqs' => 'du_dieu_kien',
         ]);
     }
 
     public function test_store_nvqs_validation_error(): void
     {
-        $response = $this->postJson(route('nghia-vu-quan-su.store'), []);
+        $response = $this->post(route('nghia-vu-quan-su.store'), []);
 
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['nhan_khau_id']);
+        $response->assertStatus(302)
+            ->assertSessionHasErrors(['nhan_khau_id']);
+    }
+
+    public function test_store_nvqs_female_validation_error(): void
+    {
+        $hoKhau = HoKhau::create([
+            'so_so_ho_khau' => 'SHK999',
+            'ma_ho' => 'MH999',
+            'dia_chi_thuong_tru' => 'Thôn 99, Xã X',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nhanKhauNu = NhanKhau::create([
+            'ho_khau_id' => $hoKhau->id,
+            'ho_ten' => 'Nguyễn Thị Nữ Test',
+            'cccd_cmnd' => '123456789088',
+            'ngay_sinh' => '2005-05-15',
+            'gioi_tinh' => 'nu',
+            'dan_toc' => 'Kinh',
+            'trinh_do_hoc_van' => 'thpt',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $response = $this->post(route('nghia-vu-quan-su.store'), [
+            'nhan_khau_id' => $nhanKhauNu->id,
+            'nam_tuoi_tuyen_quan' => 2026,
+            'trang_thai_nvqs' => 'du_dieu_kien',
+        ]);
+
+        $response->assertStatus(302)
+            ->assertSessionHasErrors(['nhan_khau_id']);
     }
 
     public function test_store_and_crud_nvqs(): void
@@ -155,20 +182,24 @@ class NghiaVuQuanSuTest extends TestCase
             'trang_thai_nvqs' => 'du_dieu_kien',
         ];
 
-        $storeResponse = $this->postJson(route('nghia-vu-quan-su.store'), $storeData);
+        $storeResponse = $this->post(route('nghia-vu-quan-su.store'), $storeData);
 
-        $storeResponse->assertStatus(201)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Đã tạo hồ sơ nghĩa vụ quân sự thành công.',
-            ]);
+        $storeResponse->assertStatus(302)
+            ->assertRedirect(route('nghia-vu-quan-su.index'));
 
-        $nvqsId = $storeResponse->json('data.id');
+        $this->assertDatabaseHas('nghia_vu_quan_su', [
+            'nhan_khau_id' => $nhanKhau->id,
+            'trang_thai_nvqs' => 'du_dieu_kien',
+        ]);
 
-        // 3. Xem chi tiết
-        $showResponse = $this->getJson(route('nghia-vu-quan-su.show', $nvqsId));
+        $nvqs = NghiaVuQuanSu::where('nhan_khau_id', $nhanKhau->id)->first();
+        $this->assertNotNull($nvqs);
+
+        // 3. Xem chi tiết HTML
+        $showResponse = $this->get(route('nghia-vu-quan-su.show', $nvqs));
         $showResponse->assertStatus(200)
-            ->assertJsonPath('data.nhan_khau.ho_ten', 'Nguyễn Test Binh');
+            ->assertSee('Nguyễn Test Binh')
+            ->assertSee('Chi tiết hồ sơ NVQS');
 
         // 4. Cập nhật trạng thái
         $updateData = [
@@ -178,15 +209,21 @@ class NghiaVuQuanSuTest extends TestCase
             'ngay_tam_hoan_den' => '2027-06-01',
         ];
 
-        $updateResponse = $this->putJson(route('nghia-vu-quan-su.update', $nvqsId), $updateData);
-        $updateResponse->assertStatus(200)
-            ->assertJsonPath('data.trang_thai_nvqs', 'tam_hoan')
-            ->assertJsonPath('data.ly_do_tam_hoan', 'benh_tat_suc_khoe');
+        $updateResponse = $this->put(route('nghia-vu-quan-su.update', $nvqs), $updateData);
+        $updateResponse->assertStatus(302)
+            ->assertRedirect(route('nghia-vu-quan-su.index'));
+
+        $this->assertDatabaseHas('nghia_vu_quan_su', [
+            'id' => $nvqs->id,
+            'trang_thai_nvqs' => 'tam_hoan',
+            'ly_do_tam_hoan' => 'benh_tat_suc_khoe',
+        ]);
 
         // 5. Xóa
-        $deleteResponse = $this->deleteJson(route('nghia-vu-quan-su.destroy', $nvqsId));
-        $deleteResponse->assertStatus(200);
+        $deleteResponse = $this->delete(route('nghia-vu-quan-su.destroy', $nvqs));
+        $deleteResponse->assertStatus(302)
+            ->assertRedirect(route('nghia-vu-quan-su.index'));
 
-        $this->assertNull(NghiaVuQuanSu::find($nvqsId));
+        $this->assertNull(NghiaVuQuanSu::find($nvqs->id));
     }
 }

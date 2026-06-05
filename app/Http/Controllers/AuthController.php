@@ -11,9 +11,17 @@ class AuthController extends Controller
     /**
      * Hiển thị giao diện đăng nhập.
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         $users = User::with('roles')->get();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách người dùng đăng nhập nhanh thành công.',
+                'data' => $users,
+            ], 200);
+        }
 
         return view('auth.login', compact('users'));
     }
@@ -31,7 +39,22 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đăng nhập thành công.',
+                    'user' => Auth::user(),
+                ], 200);
+            }
+
             return redirect()->intended('/');
+        }
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Thông tin đăng nhập không chính xác.',
+            ], 401);
         }
 
         return back()->withErrors([
@@ -49,6 +72,13 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đăng xuất thành công.',
+            ], 200);
+        }
+
         return redirect('/login');
     }
 
@@ -62,6 +92,14 @@ class AuthController extends Controller
         ]);
 
         Auth::loginUsingId($request->user_id);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã chuyển đổi tài khoản thành công.',
+                'user' => Auth::user(),
+            ], 200);
+        }
 
         return back()->with('status', 'Đã chuyển đổi tài khoản thành công.');
     }

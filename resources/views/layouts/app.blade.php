@@ -198,14 +198,16 @@
                         if ($isHoTich) {
                             $isHoKhauActive = request()->routeIs('ho-khau.*');
                             $isNhanKhauActive = request()->routeIs('nhan-khau.*');
-                            $isActive = $isModuleActive || $isHoKhauActive || $isNhanKhauActive;
+                            $isBienDongActive = request()->routeIs('bien-dong.*');
+                            $isTamTruActive = request()->routeIs('tam-tru.*');
+                            $isActive = $isModuleActive || $isHoKhauActive || $isNhanKhauActive || $isBienDongActive || $isTamTruActive;
                             
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'ho-tich-cu-tru'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Danh sách sổ hộ khẩu', 'url' => route('ho-khau.index'), 'icon' => 'bi-journal-text', 'active' => request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit') || request()->routeIs('ho-khau.create')],
                                 ['title' => 'Danh sách nhân khẩu', 'url' => route('nhan-khau.index'), 'icon' => 'bi-people', 'active' => request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit') || request()->routeIs('nhan-khau.create')],
-                                ['title' => 'Tách / Nhập hộ', 'disabled' => true, 'icon' => 'bi-arrow-left-right'],
-                                ['title' => 'Khai báo tạm trú / tạm vắng', 'disabled' => true, 'icon' => 'bi-luggage'],
+                                ['title' => 'Biến động hộ khẩu', 'url' => route('bien-dong.index'), 'icon' => 'bi-arrow-left-right', 'active' => request()->routeIs('bien-dong.*')],
+                                ['title' => 'Khai báo tạm trú / tạm vắng', 'url' => route('tam-tru.index'), 'icon' => 'bi-luggage', 'active' => request()->routeIs('tam-tru.*')],
                             ];
                         } elseif ($isKinhTe) {
                             $isActive = $isModuleActive;
@@ -228,7 +230,8 @@
                                 ['title' => 'Theo dõi Y tế & Giáo dục', 'disabled' => true, 'icon' => 'bi-heart-pulse'],
                             ];
                         } elseif ($isNghiaVu) {
-                            $isActive = $isModuleActive;
+                            $isNghiaVuActive = request()->routeIs('nghia-vu-quan-su.*');
+                            $isActive = $isModuleActive || $isNghiaVuActive;
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'nghia-vu-an-ninh'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Đăng ký nghĩa vụ quân sự', 'disabled' => true, 'icon' => 'bi-person-check'],
@@ -338,7 +341,7 @@
                                     <select name="user_id" id="quick_user_select" class="form-select form-select-sm" style="width: auto; max-width: 220px; border-radius: 8px;" onchange="this.form.submit()">
                                         @foreach($allUsersForSwitcher as $u)
                                             <option value="{{ $u->id }}" {{ $currentUser->id === $u->id ? 'selected' : '' }}>
-                                                {{ $u->name }} ({{ $u->roles->first()?->name === 'admin' ? 'Admin' : ($u->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($u->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($u->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : 'Trưởng thôn'))) }})
+                                                {{ $u->name }} ({{ $u->roles->first()?->name === 'admin' ? 'Admin' : ($u->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($u->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($u->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : ($u->roles->first()?->name === 'quan_su' ? 'Quân sự' : 'Trưởng thôn')))) }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -353,7 +356,7 @@
                                     <div class="text-start">
                                         <span class="d-block fw-bold small text-dark lh-sm">{{ $currentUser->name }}</span>
                                         <span class="badge bg-success bg-opacity-10 text-success fw-semibold" style="font-size: 0.65rem; padding: 2px 6px;">
-                                            {{ $currentUser->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($currentUser->roles->first()?->name === 'tu_phap' ? 'Cán bộ Tư pháp' : ($currentUser->roles->first()?->name === 'lao_dong' ? 'Cán bộ Lao động' : ($currentUser->roles->first()?->name === 'dia_chinh' ? 'Cán bộ Địa chính' : 'Trưởng thôn'))) }}
+                                            {{ $currentUser->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($currentUser->roles->first()?->name === 'tu_phap' ? 'Cán bộ Tư pháp' : ($currentUser->roles->first()?->name === 'lao_dong' ? 'Cán bộ Lao động' : ($currentUser->roles->first()?->name === 'dia_chinh' ? 'Cán bộ Địa chính' : ($currentUser->roles->first()?->name === 'quan_su' ? 'Cán bộ Quân sự' : 'Trưởng thôn')))) }}
                                         </span>
                                     </div>
                                 </a>

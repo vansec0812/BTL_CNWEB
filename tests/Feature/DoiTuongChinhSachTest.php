@@ -222,6 +222,196 @@ class DoiTuongChinhSachTest extends TestCase
         $this->assertSoftDeleted('doi_tuong_chinh_sach', ['id' => $recordId]);
     }
 
+    public function test_api_index_returns_json(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Võ Thị Chính Sách API');
+        DB::table('doi_tuong_chinh_sach')->insert([
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'thuong_binh',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-001',
+            'trang_thai' => 'dang_huong_che_do',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('api.doi-tuong-chinh-sach.index'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'nhan_khau_id',
+                            'loai_chinh_sach',
+                            'so_quyet_dinh_cong_nhan',
+                        ]
+                    ]
+                ],
+                'stats'
+            ])
+            ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-001']);
+    }
+
+    public function test_api_create_returns_json(): void
+    {
+        $response = $this->getJson(route('doi-tuong-chinh-sach.create'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'nhanKhau',
+                    'loaiChinhSach',
+                    'trangThai',
+                ]
+            ]);
+    }
+
+    public function test_api_store_returns_json(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Trần Thị Người Có Công API');
+
+        $response = $this->postJson(route('api.doi-tuong-chinh-sach.store'), [
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'nguoi_co_cong',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-002',
+            'ngay_cong_nhan' => '2020-07-27',
+            'co_quan_cap' => 'UBND xã Quốc Oai',
+            'muc_tro_cap_hang_thang' => 1500000,
+            'trang_thai' => 'dang_huong_che_do',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'nhan_khau_id',
+                    'loai_chinh_sach',
+                    'so_quyet_dinh_cong_nhan',
+                ]
+            ])
+            ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-002']);
+
+        $this->assertDatabaseHas('doi_tuong_chinh_sach', [
+            'nhan_khau_id' => $nhanKhauId,
+            'so_quyet_dinh_cong_nhan' => 'QD-API-002',
+        ]);
+    }
+
+    public function test_api_show_returns_json(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Lê Văn Thương Binh API');
+        $recordId = DB::table('doi_tuong_chinh_sach')->insertGetId([
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'thuong_binh',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-003',
+            'trang_thai' => 'dang_huong_che_do',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('api.doi-tuong-chinh-sach.show', $recordId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'nhan_khau_id',
+                    'loai_chinh_sach',
+                    'nhan_khau',
+                ]
+            ])
+            ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-003']);
+    }
+
+    public function test_api_edit_returns_json(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Bùi Văn Hưởng Chế Độ API');
+        $recordId = DB::table('doi_tuong_chinh_sach')->insertGetId([
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'thuong_binh',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-004',
+            'trang_thai' => 'dang_huong_che_do',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('doi-tuong-chinh-sach.edit', $recordId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'record',
+                    'nhanKhau',
+                    'loaiChinhSach',
+                    'trangThai',
+                ]
+            ]);
+    }
+
+    public function test_api_update_returns_json(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Lê Văn Thương Binh API 2');
+        $recordId = DB::table('doi_tuong_chinh_sach')->insertGetId([
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'thuong_binh',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-OLD',
+            'trang_thai' => 'dang_huong_che_do',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->putJson(route('api.doi-tuong-chinh-sach.update', $recordId), [
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'benh_binh',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-NEW',
+            'ty_le_thuong_tat' => 25.5,
+            'muc_tro_cap_hang_thang' => 1800000,
+            'trang_thai' => 'ngung_huong',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'loai_chinh_sach',
+                    'so_quyet_dinh_cong_nhan',
+                    'trang_thai',
+                ]
+            ])
+            ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-NEW']);
+    }
+
+    public function test_api_destroy_returns_json(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Lê Văn Thương Binh API 3');
+        $recordId = DB::table('doi_tuong_chinh_sach')->insertGetId([
+            'nhan_khau_id' => $nhanKhauId,
+            'loai_chinh_sach' => 'thuong_binh',
+            'so_quyet_dinh_cong_nhan' => 'QD-API-TO-DELETE',
+            'trang_thai' => 'dang_huong_che_do',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->deleteJson(route('api.doi-tuong-chinh-sach.destroy', $recordId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
+        $this->assertSoftDeleted('doi_tuong_chinh_sach', ['id' => $recordId]);
+    }
+
     private function createNhanKhau(string $hoTen, string $trangThai = 'hoat_dong'): int
     {
         $hoKhauId = DB::table('ho_khau')->insertGetId([

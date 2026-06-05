@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class DoiTuongChinhSachController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $filters = $request->only(['q', 'loai_chinh_sach', 'trang_thai']);
 
@@ -33,6 +33,15 @@ class DoiTuongChinhSachController extends Controller
 
         $doiTuongChinhSach = $query->paginate(10)->withQueryString();
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách đối tượng chính sách thành công.',
+                'data' => $doiTuongChinhSach,
+                'stats' => $this->stats(),
+            ], 200);
+        }
+
         return view('an-sinh.doi-tuong-chinh-sach.index', [
             'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('an-sinh-y-te-giao-duc'),
@@ -44,42 +53,95 @@ class DoiTuongChinhSachController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('an-sinh.doi-tuong-chinh-sach.create', $this->formData());
+        $formData = $this->formData();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form tạo mới thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('an-sinh.doi-tuong-chinh-sach.create', $formData);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        DoiTuongChinhSach::create($this->validated($request));
+        $record = DoiTuongChinhSach::create($this->validated($request));
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã thêm hồ sơ diện chính sách.',
+                'data' => $record,
+            ], 201);
+        }
 
         return redirect()
             ->route('doi-tuong-chinh-sach.index')
             ->with('status', 'Đã thêm hồ sơ diện chính sách.');
     }
 
-    public function show(DoiTuongChinhSach $doiTuongChinhSach): View
+    public function show(DoiTuongChinhSach $doiTuongChinhSach, Request $request)
     {
+        $doiTuongChinhSach->load('nhanKhau');
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy chi tiết hồ sơ diện chính sách thành công.',
+                'data' => $doiTuongChinhSach,
+            ], 200);
+        }
+
         return view('an-sinh.doi-tuong-chinh-sach.show', $this->formData($doiTuongChinhSach));
     }
 
-    public function edit(DoiTuongChinhSach $doiTuongChinhSach): View
+    public function edit(DoiTuongChinhSach $doiTuongChinhSach, Request $request)
     {
-        return view('an-sinh.doi-tuong-chinh-sach.edit', $this->formData($doiTuongChinhSach));
+        $formData = $this->formData($doiTuongChinhSach);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form chỉnh sửa thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('an-sinh.doi-tuong-chinh-sach.edit', $formData);
     }
 
-    public function update(Request $request, DoiTuongChinhSach $doiTuongChinhSach): RedirectResponse
+    public function update(Request $request, DoiTuongChinhSach $doiTuongChinhSach)
     {
         $doiTuongChinhSach->update($this->validated($request, $doiTuongChinhSach));
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã cập nhật hồ sơ diện chính sách.',
+                'data' => $doiTuongChinhSach,
+            ], 200);
+        }
 
         return redirect()
             ->route('doi-tuong-chinh-sach.index')
             ->with('status', 'Đã cập nhật hồ sơ diện chính sách.');
     }
 
-    public function destroy(DoiTuongChinhSach $doiTuongChinhSach): RedirectResponse
+    public function destroy(DoiTuongChinhSach $doiTuongChinhSach, Request $request)
     {
         $doiTuongChinhSach->delete();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã lưu hồ sơ vào trạng thái đã xoá.',
+            ], 200);
+        }
 
         return redirect()
             ->route('doi-tuong-chinh-sach.index')

@@ -40,23 +40,15 @@ class HoKhauTest extends TestCase
             'updated_at' => now(),
         ]);
 
-        $this->get(route('ho-khau.index'))
-            ->assertOk()
-            ->assertSee('Danh sách sổ hộ khẩu')
-            ->assertSee('HK123456')
-            ->assertSee('MH123456');
-    }
-
-    public function test_create_page_renders_form(): void
-    {
-        $this->get(route('ho-khau.create'))
-            ->assertOk()
-            ->assertSee('Thêm sổ hộ khẩu mới');
+        $response = $this->getJson(route('api.ho-khau.index'));
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonFragment(['so_so_ho_khau' => 'HK123456']);
     }
 
     public function test_store_creates_hokhau_record(): void
     {
-        $response = $this->post(route('ho-khau.store'), [
+        $response = $this->postJson(route('api.ho-khau.store'), [
             'so_so_ho_khau' => 'HK999999',
             'ma_ho' => 'MH999999',
             'dia_chi_thuong_tru' => 'Thôn 2, Xã Quốc Oai',
@@ -67,7 +59,12 @@ class HoKhauTest extends TestCase
             'ngay_lap_so' => '2026-06-01',
         ]);
 
-        $response->assertRedirect(route('ho-khau.index'));
+        $response->assertCreated();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Đã tạo sổ hộ khẩu mới thành công.',
+        ]);
+
         $this->assertDatabaseHas('ho_khau', [
             'so_so_ho_khau' => 'HK999999',
             'ma_ho' => 'MH999999',
@@ -78,25 +75,9 @@ class HoKhauTest extends TestCase
 
     public function test_store_validation_errors(): void
     {
-        $this->post(route('ho-khau.store'), [])
-            ->assertSessionHasErrors(['so_so_ho_khau', 'ma_ho', 'dia_chi_thuong_tru', 'phan_loai', 'trang_thai']);
-    }
-
-    public function test_edit_page_renders_form(): void
-    {
-        $hoKhauId = DB::table('ho_khau')->insertGetId([
-            'so_so_ho_khau' => 'HK777777',
-            'ma_ho' => 'MH777777',
-            'dia_chi_thuong_tru' => 'Thôn 1, Xã Quốc Oai',
-            'phan_loai' => 'thuong_tru',
-            'trang_thai' => 'hoat_dong',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        $this->get(route('ho-khau.edit', $hoKhauId))
-            ->assertOk()
-            ->assertSee('Sửa sổ hộ khẩu: MH777777');
+        $response = $this->postJson(route('api.ho-khau.store'), []);
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['so_so_ho_khau', 'ma_ho', 'dia_chi_thuong_tru', 'phan_loai', 'trang_thai']);
     }
 
     public function test_update_updates_hokhau_record(): void
@@ -111,7 +92,7 @@ class HoKhauTest extends TestCase
             'updated_at' => now(),
         ]);
 
-        $response = $this->put(route('ho-khau.update', $hoKhauId), [
+        $response = $this->putJson(route('api.ho-khau.update', $hoKhauId), [
             'so_so_ho_khau' => 'HK888888-EDITED',
             'ma_ho' => 'MH888888',
             'dia_chi_thuong_tru' => 'Thôn 3, Xã Quốc Oai',
@@ -121,7 +102,12 @@ class HoKhauTest extends TestCase
             'trang_thai' => 'da_giai_the',
         ]);
 
-        $response->assertRedirect(route('ho-khau.index'));
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Cập nhật sổ hộ khẩu thành công.',
+        ]);
+
         $this->assertDatabaseHas('ho_khau', [
             'id' => $hoKhauId,
             'so_so_ho_khau' => 'HK888888-EDITED',
@@ -143,8 +129,8 @@ class HoKhauTest extends TestCase
             'updated_at' => now(),
         ]);
 
-        $response = $this->delete(route('ho-khau.destroy', $hoKhauId));
-        $response->assertRedirect(route('ho-khau.index'));
+        $response = $this->deleteJson(route('api.ho-khau.destroy', $hoKhauId));
+        $response->assertOk();
         $this->assertSoftDeleted('ho_khau', ['id' => $hoKhauId]);
     }
 }

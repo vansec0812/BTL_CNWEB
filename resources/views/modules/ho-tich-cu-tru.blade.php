@@ -67,14 +67,14 @@
                         <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-people small"></i></span>
                         Danh sách nhân khẩu
                     </a>
-                    <div class="list-group-item text-muted d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-arrow-left-right small"></i></span>
-                        Tách / Nhập hộ (Phát triển sau)
-                    </div>
-                    <div class="list-group-item text-muted d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-luggage small"></i></span>
-                        Khai báo tạm trú / tạm vắng (Phát triển sau)
-                    </div>
+                    <a href="{{ route('bien-dong.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-arrow-left-right small"></i></span>
+                        Biến động hộ khẩu (Tách/Nhập hộ)
+                    </a>
+                    <a href="{{ route('tam-tru.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-luggage small"></i></span>
+                        Khai báo tạm trú / tạm vắng
+                    </a>
                 </div>
             </div>
         </div>
