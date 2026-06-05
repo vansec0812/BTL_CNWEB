@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BaoTroXaHoiController;
+use App\Http\Controllers\BienDongHoKhauController;
 use App\Http\Controllers\DoiTuongChinhSachController;
 use App\Http\Controllers\HoKhauController;
 use App\Http\Controllers\NghiaVuQuanSuController;
@@ -421,6 +422,16 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['nhan-khau' => 'nhanKhau'])
         ->names('nhan-khau');
+
+    Route::resource('ho-tich/bien-dong', BienDongHoKhauController::class)
+        ->only(['index', 'show'])
+        ->parameters(['bien-dong' => 'bienDong'])
+        ->names('bien-dong');
+
+    Route::resource('ho-tich/tam-tru', TamTruTamVangController::class)
+        ->only(['index', 'show'])
+        ->parameters(['tam-tru' => 'tamTruTamVang'])
+        ->names('tam-tru');
 
     // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
