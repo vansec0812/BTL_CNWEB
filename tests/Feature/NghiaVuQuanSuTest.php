@@ -5,12 +5,28 @@ namespace Tests\Feature;
 use App\Models\HoKhau;
 use App\Models\NghiaVuQuanSu;
 use App\Models\NhanKhau;
+use App\Models\User;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class NghiaVuQuanSuTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->withoutMiddleware([
+            Authenticate::class,
+            Authorize::class,
+        ]);
+    }
 
     public function test_get_list_nvqs(): void
     {
@@ -24,7 +40,7 @@ class NghiaVuQuanSuTest extends TestCase
                     'data',
                     'current_page',
                     'total',
-                ]
+                ],
             ]);
     }
 
@@ -76,7 +92,7 @@ class NghiaVuQuanSuTest extends TestCase
         ]);
 
         $response = $this->postJson(route('nghia-vu-quan-su.scan'), [
-            'nam_tuyen_quan' => 2026
+            'nam_tuyen_quan' => 2026,
         ]);
 
         $response->assertStatus(200)
@@ -88,7 +104,7 @@ class NghiaVuQuanSuTest extends TestCase
                     'total_scanned' => 2, // Chỉ có Nam và Đại học (nam)
                     'added_count' => 2,
                     'existing_count' => 0,
-                ]
+                ],
             ]);
 
         $this->assertDatabaseHas('nghia_vu_quan_su', [

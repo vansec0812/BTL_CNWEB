@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -9,6 +12,19 @@ use Tests\TestCase;
 class HoKhauTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->withoutMiddleware([
+            Authenticate::class,
+            Authorize::class,
+        ]);
+    }
 
     public function test_index_page_renders_hokhau_records(): void
     {
