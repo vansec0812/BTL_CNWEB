@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BienDongHoKhauController;
+use App\Http\Controllers\BaoTroXaHoiController;
 use App\Http\Controllers\DoiTuongChinhSachController;
 use App\Http\Controllers\HoKhauController;
 use App\Http\Controllers\NghiaVuQuanSuController;
@@ -422,23 +422,18 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['nhan-khau' => 'nhanKhau'])
         ->names('nhan-khau');
 
-    Route::resource('ho-tich/bien-dong', BienDongHoKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['bien-dong' => 'bienDong'])
-        ->names('bien-dong');
-
-    Route::resource('ho-tich/tam-tru', TamTruTamVangController::class)
-        ->only(['index', 'show'])
-        ->parameters(['tam-tru' => 'tamTruTamVang'])
-        ->names('tam-tru');
-
-    // --- Phân hệ An sinh xã hội (Đối tượng chính sách) ---
+    // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
     Route::middleware('can:manage_an_sinh')->group(function () {
         Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
             ->except(['index', 'show'])
             ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
             ->names('doi-tuong-chinh-sach');
+
+        Route::resource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
+            ->except(['index', 'show'])
+            ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
+            ->names('bao-tro-xa-hoi');
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
@@ -446,6 +441,11 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
         ->names('doi-tuong-chinh-sach');
+
+    Route::resource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
+        ->only(['index', 'show'])
+        ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
+        ->names('bao-tro-xa-hoi');
 
     // --- Phân quyền RBAC ---
     Route::get('/he-thong/phan-quyen', function () {

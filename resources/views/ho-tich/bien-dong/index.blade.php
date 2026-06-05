@@ -34,6 +34,16 @@
         background-color: #6c757d;
         color: #ffffff;
     }
+    .btn-action-edit {
+        background-color: rgba(13, 110, 253, 0.08);
+        color: #0d6efd;
+        border: none;
+        transition: all 0.2s ease;
+    }
+    .btn-action-edit:hover {
+        background-color: #0d6efd;
+        color: #ffffff;
+    }
     .btn-action-delete {
         background-color: rgba(220, 53, 69, 0.08);
         color: #dc3545;
@@ -206,6 +216,9 @@
                                         <i class="bi bi-eye"></i> Xem
                                     </a>
                                     @can('manage_ho_khau')
+                                    <a href="{{ route('bien-dong.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </a>
                                     <form method="POST" action="{{ route('bien-dong.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa bản ghi lịch sử này?">
                                         @csrf
                                         @method('DELETE')

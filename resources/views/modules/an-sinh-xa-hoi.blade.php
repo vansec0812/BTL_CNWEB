@@ -64,7 +64,7 @@
                     </li>
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-heartbreak small"></i></span>
-                        Quản lý bảo trợ xã hội
+                        <a href="{{ route('bao-tro-xa-hoi.index') }}" class="text-decoration-none text-dark fw-semibold">Quản lý bảo trợ xã hội</a>
                     </li>
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-gift small"></i></span>
@@ -90,7 +90,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-table me-1"></i>Đợt trợ cấp gần đây</span>
-                <a href="{{ route('doi-tuong-chinh-sach.create') }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-plus-lg"></i> Thêm diện chính sách</a>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('doi-tuong-chinh-sach.create') }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-plus-lg"></i> Thêm diện chính sách</a>
+                    <a href="{{ route('bao-tro-xa-hoi.create') }}" class="btn btn-sm btn-outline-success"><i class="bi bi-plus-lg"></i> Thêm bảo trợ</a>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">

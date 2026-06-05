@@ -161,4 +161,98 @@ class BienDongHoKhauTest extends TestCase
             'quan_he_chu_ho' => 'Con',
         ]);
     }
+
+    public function test_update_bien_dong_successfully(): void
+    {
+        $hoKhauId = DB::table('ho_khau')->insertGetId([
+            'so_so_ho_khau' => 'HK-UD1',
+            'ma_ho' => 'MH-UD1',
+            'dia_chi_thuong_tru' => 'Địa chỉ UD1',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nk = DB::table('nhan_khau')->insertGetId([
+            'ho_khau_id' => $hoKhauId,
+            'ho_ten' => 'Nguyen Van UD',
+            'gioi_tinh' => 'nam',
+            'dan_toc' => 'Kinh',
+            'tinh_trang_hon_nhan' => 'doc_than',
+            'trang_thai' => 'hoat_dong',
+            'ngay_sinh' => '1995-01-01',
+        ]);
+
+        $bdId = DB::table('bien_dong_ho_khau')->insertGetId([
+            'loai_bien_dong' => 'chuyen_di',
+            'ho_khau_nguon_id' => $hoKhauId,
+            'nhan_khau_id' => $nk,
+            'ngay_bien_dong' => '2026-06-01',
+            'ly_do' => 'Old Reason',
+            'dia_chi_chuyen_den' => 'Old Address',
+            'so_quyet_dinh' => 'Old Decision',
+        ]);
+
+        $response = $this->putJson(route('api.bien-dong.update', $bdId), [
+            'ngay_bien_dong' => '2026-06-05',
+            'ly_do' => 'New Reason',
+            'dia_chi_chuyen_den' => 'New Address',
+            'so_quyet_dinh' => 'New Decision',
+            'ghi_chu' => 'Edited note',
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Cập nhật lịch sử biến động thành công.',
+        ]);
+
+        $this->assertDatabaseHas('bien_dong_ho_khau', [
+            'id' => $bdId,
+            'ngay_bien_dong' => '2026-06-05 00:00:00',
+            'ly_do' => 'New Reason',
+            'dia_chi_chuyen_den' => 'New Address',
+            'so_quyet_dinh' => 'New Decision',
+            'ghi_chu' => 'Edited note',
+        ]);
+    }
+
+    public function test_destroy_bien_dong_successfully(): void
+    {
+        $hoKhauId = DB::table('ho_khau')->insertGetId([
+            'so_so_ho_khau' => 'HK-UD2',
+            'ma_ho' => 'MH-UD2',
+            'dia_chi_thuong_tru' => 'Địa chỉ UD2',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nk = DB::table('nhan_khau')->insertGetId([
+            'ho_khau_id' => $hoKhauId,
+            'ho_ten' => 'Nguyen Van UD2',
+            'gioi_tinh' => 'nam',
+            'dan_toc' => 'Kinh',
+            'tinh_trang_hon_nhan' => 'doc_than',
+            'trang_thai' => 'hoat_dong',
+            'ngay_sinh' => '1995-01-01',
+        ]);
+
+        $bdId = DB::table('bien_dong_ho_khau')->insertGetId([
+            'loai_bien_dong' => 'chuyen_di',
+            'ho_khau_nguon_id' => $hoKhauId,
+            'nhan_khau_id' => $nk,
+            'ngay_bien_dong' => '2026-06-01',
+            'ly_do' => 'Delete test',
+        ]);
+
+        $response = $this->deleteJson(route('api.bien-dong.destroy', $bdId));
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Xóa lịch sử biến động thành công.',
+        ]);
+
+        $this->assertDatabaseMissing('bien_dong_ho_khau', [
+            'id' => $bdId,
+        ]);
+    }
 }
