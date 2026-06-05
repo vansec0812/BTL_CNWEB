@@ -56,6 +56,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $modules = ModuleRegistry::all();
+
         return view('he-thong.users.create', compact('roles', 'modules'));
     }
 
@@ -83,11 +84,12 @@ class UserController extends Controller
      */
     public function show(User $user): View
     {
-        if (auth()->id() !== $user->id && !auth()->user()->can('manage_users')) {
+        if (auth()->id() !== $user->id && ! auth()->user()->can('manage_users')) {
             abort(403, 'Bạn không có quyền xem hồ sơ của cán bộ khác.');
         }
 
         $modules = ModuleRegistry::all();
+
         return view('he-thong.users.show', compact('user', 'modules'));
     }
 
@@ -98,6 +100,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $modules = ModuleRegistry::all();
+
         return view('he-thong.users.edit', compact('user', 'roles', 'modules'));
     }
 

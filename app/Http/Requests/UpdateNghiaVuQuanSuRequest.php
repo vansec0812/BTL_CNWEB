@@ -17,7 +17,7 @@ class UpdateNghiaVuQuanSuRequest extends FormRequest
         $id = is_object($nvqs) ? $nvqs->id : $nvqs;
 
         return [
-            'nhan_khau_id' => 'required|integer|exists:nhan_khau,id|unique:nghia_vu_quan_su,nhan_khau_id,' . $id,
+            'nhan_khau_id' => 'required|integer|exists:nhan_khau,id|unique:nghia_vu_quan_su,nhan_khau_id,'.$id,
             'nam_tuoi_tuyen_quan' => 'nullable|integer|min:1900|max:2100',
             'trang_thai_nvqs' => 'nullable|in:chua_den_tuoi,du_dieu_kien,tam_hoan,mien_goi,trung_tuyen,da_nhap_ngu,xuat_ngu,da_qua_tuoi',
             'ly_do_tam_hoan' => 'nullable|in:di_hoc_dai_hoc,benh_tat_suc_khoe,con_mot_con,nuoi_duong_than_nhan,ly_do_khac,khong_ap_dung',

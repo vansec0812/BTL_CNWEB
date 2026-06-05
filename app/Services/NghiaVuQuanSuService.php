@@ -17,28 +17,28 @@ class NghiaVuQuanSuService
         $query = NghiaVuQuanSu::query()->with(['nhanKhau.hoKhau']);
 
         // Tìm kiếm theo tên hoặc CCCD/CMND của nhân khẩu
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->whereHas('nhanKhau', function ($q) use ($search) {
-                $q->where('ho_ten', 'like', '%' . $search . '%')
-                  ->orWhere('cccd_cmnd', 'like', '%' . $search . '%');
+                $q->where('ho_ten', 'like', '%'.$search.'%')
+                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
             });
         }
 
         // Lọc theo trạng thái NVQS
-        if (!empty($filters['trang_thai_nvqs'])) {
+        if (! empty($filters['trang_thai_nvqs'])) {
             $query->where('trang_thai_nvqs', $filters['trang_thai_nvqs']);
         }
 
         // Lọc theo năm tuổi tuyển quan
-        if (!empty($filters['nam_tuoi_tuyen_quan'])) {
+        if (! empty($filters['nam_tuoi_tuyen_quan'])) {
             $query->where('nam_tuoi_tuyen_quan', $filters['nam_tuoi_tuyen_quan']);
         }
 
         // Lọc theo thôn xóm của hộ khẩu
-        if (!empty($filters['thon_xom'])) {
+        if (! empty($filters['thon_xom'])) {
             $query->whereHas('nhanKhau.hoKhau', function ($q) use ($filters) {
-                $q->where('thon_xom', 'like', '%' . $filters['thon_xom'] . '%');
+                $q->where('thon_xom', 'like', '%'.$filters['thon_xom'].'%');
             });
         }
 
@@ -54,11 +54,11 @@ class NghiaVuQuanSuService
         // 18 tuổi: Y - 18. VD: 2026 - 18 = 2008
         // 25 tuổi: Y - 25. VD: 2026 - 25 = 2001
         // 26-27 tuổi: Y - 27 đến Y - 26. VD: 1999 đến 2000
-        $startGeneral = ($targetYear - 25) . '-01-01';
-        $endGeneral = ($targetYear - 18) . '-12-31';
+        $startGeneral = ($targetYear - 25).'-01-01';
+        $endGeneral = ($targetYear - 18).'-12-31';
 
-        $startDegree = ($targetYear - 27) . '-01-01';
-        $endDegree = ($targetYear - 26) . '-12-31';
+        $startDegree = ($targetYear - 27).'-01-01';
+        $endDegree = ($targetYear - 26).'-12-31';
 
         // Lấy danh sách nam công dân đủ điều kiện tuổi trong địa bàn
         $eligibleCitizens = NhanKhau::query()
@@ -68,7 +68,7 @@ class NghiaVuQuanSuService
                 $query->whereBetween('ngay_sinh', [$startGeneral, $endGeneral])
                     ->orWhere(function ($q) use ($startDegree, $endDegree) {
                         $q->whereBetween('ngay_sinh', [$startDegree, $endDegree])
-                          ->whereIn('trinh_do_hoc_van', ['dai_hoc', 'sau_dai_hoc']);
+                            ->whereIn('trinh_do_hoc_van', ['dai_hoc', 'sau_dai_hoc']);
                     });
             })
             ->get();
@@ -82,7 +82,7 @@ class NghiaVuQuanSuService
                 // Kiểm tra xem đã có bản ghi trong bảng nghĩa vụ chưa
                 $record = NghiaVuQuanSu::where('nhan_khau_id', $citizen->id)->first();
 
-                if (!$record) {
+                if (! $record) {
                     NghiaVuQuanSu::create([
                         'nhan_khau_id' => $citizen->id,
                         'nam_tuoi_tuyen_quan' => $targetYear,
@@ -127,6 +127,7 @@ class NghiaVuQuanSuService
     public function updateNghiaVuRecord(NghiaVuQuanSu $record, array $data): NghiaVuQuanSu
     {
         $record->update($data);
+
         return $record;
     }
 

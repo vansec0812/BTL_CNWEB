@@ -63,14 +63,10 @@
                         <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-journal-text small"></i></span>
                         Danh sách sổ hộ khẩu
                     </a>
-                    <a href="{{ route('ho-khau.create') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-plus-lg small"></i></span>
-                        Thêm mới hộ khẩu
+                    <a href="{{ route('nhan-khau.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-circle p-1"><i class="bi bi-people small"></i></span>
+                        Danh sách nhân khẩu
                     </a>
-                    <div class="list-group-item text-muted d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-person-plus small"></i></span>
-                        Thêm nhân khẩu mới (Phát triển sau)
-                    </div>
                     <div class="list-group-item text-muted d-flex align-items-center gap-2">
                         <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-arrow-left-right small"></i></span>
                         Tách / Nhập hộ (Phát triển sau)

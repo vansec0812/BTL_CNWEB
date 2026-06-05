@@ -202,10 +202,8 @@
                             
                             $submenu = [
                                 ['title' => 'Tổng quan phân hệ', 'url' => route('modules.show', 'ho-tich-cu-tru'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                                ['title' => 'Danh sách sổ hộ khẩu', 'url' => route('ho-khau.index'), 'icon' => 'bi-journal-text', 'active' => request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit')],
-                                ['title' => 'Thêm mới hộ khẩu', 'url' => route('ho-khau.create'), 'icon' => 'bi-plus-lg', 'active' => request()->routeIs('ho-khau.create')],
-                                ['title' => 'Danh sách nhân khẩu', 'url' => route('nhan-khau.index'), 'icon' => 'bi-people', 'active' => request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit')],
-                                ['title' => 'Thêm nhân khẩu mới', 'url' => route('nhan-khau.create'), 'icon' => 'bi-person-plus', 'active' => request()->routeIs('nhan-khau.create')],
+                                ['title' => 'Danh sách sổ hộ khẩu', 'url' => route('ho-khau.index'), 'icon' => 'bi-journal-text', 'active' => request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit') || request()->routeIs('ho-khau.create')],
+                                ['title' => 'Danh sách nhân khẩu', 'url' => route('nhan-khau.index'), 'icon' => 'bi-people', 'active' => request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit') || request()->routeIs('nhan-khau.create')],
                                 ['title' => 'Tách / Nhập hộ', 'disabled' => true, 'icon' => 'bi-arrow-left-right'],
                                 ['title' => 'Khai báo tạm trú / tạm vắng', 'disabled' => true, 'icon' => 'bi-luggage'],
                             ];

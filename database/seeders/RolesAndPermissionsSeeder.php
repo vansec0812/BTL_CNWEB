@@ -51,7 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         // 2. Tạo Roles và gán permissions
-        
+
         // Admin Hệ thống
         $admin = Role::findOrCreate('admin', 'web');
         $admin->syncPermissions(Permission::all());

@@ -1,13 +1,19 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DoiTuongChinhSachController;
 use App\Http\Controllers\HoKhauController;
+use App\Http\Controllers\NghiaVuQuanSuController;
+use App\Http\Controllers\NhanKhauController;
+use App\Http\Controllers\UserController;
+use App\Models\HoKhau;
+use App\Support\ModuleRegistry;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NghiaVuQuanSuController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
-
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 $modules = [
     [
@@ -215,13 +221,14 @@ Route::middleware('auth')->group(function () use ($modules) {
                 'bien_dong' => $count('bien_dong_ho_khau'),
             ];
 
-            $extraData['dsHoKhau'] = \App\Models\HoKhau::query()
+            $extraData['dsHoKhau'] = HoKhau::query()
                 ->with('chuHo')
                 ->latest()
                 ->limit(10)
                 ->get()
                 ->map(function ($ho) {
                     $ho->chu_ho_ten = $ho->chuHo?->ho_ten;
+
                     return $ho;
                 });
         }
@@ -248,7 +255,7 @@ Route::middleware('auth')->group(function () use ($modules) {
     });
 
     Route::middleware('can:manage_nhan_khau')->group(function () {
-        Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
+        Route::resource('ho-tich/nhan-khau', NhanKhauController::class)
             ->except(['index', 'show'])
             ->parameters(['nhan-khau' => 'nhanKhau'])
             ->names('nhan-khau');
@@ -260,7 +267,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['ho-khau' => 'hoKhau'])
         ->names('ho-khau');
 
-    Route::resource('ho-tich/nhan-khau', \App\Http\Controllers\NhanKhauController::class)
+    Route::resource('ho-tich/nhan-khau', NhanKhauController::class)
         ->only(['index', 'show'])
         ->parameters(['nhan-khau' => 'nhanKhau'])
         ->names('nhan-khau');
@@ -282,34 +289,34 @@ Route::middleware('auth')->group(function () use ($modules) {
 
     // --- Phân quyền RBAC ---
     Route::get('/he-thong/phan-quyen', function () {
-        $modules = \App\Support\ModuleRegistry::all();
-        $roles = \Spatie\Permission\Models\Role::all();
-        $permissions = \Spatie\Permission\Models\Permission::all();
-        
+        $modules = ModuleRegistry::all();
+        $roles = Role::all();
+        $permissions = Permission::all();
+
         $groupedPermissions = [
-            'Hệ thống & Người dùng' => $permissions->filter(fn($p) => in_array($p->name, ['manage_users', 'view_audit_logs'])),
-            'Hộ tịch & Cư trú' => $permissions->filter(fn($p) => str_contains($p->name, 'ho_khau') || str_contains($p->name, 'nhan_khau')),
-            'Kinh tế & Lao động' => $permissions->filter(fn($p) => str_contains($p->name, 'lao_dong')),
-            'An sinh xã hội' => $permissions->filter(fn($p) => str_contains($p->name, 'an_sinh')),
-            'Nghĩa vụ quân sự' => $permissions->filter(fn($p) => str_contains($p->name, 'nghia_vu')),
-            'Đất đai & Thuế phí' => $permissions->filter(fn($p) => str_contains($p->name, 'dat_dai')),
+            'Hệ thống & Người dùng' => $permissions->filter(fn ($p) => in_array($p->name, ['manage_users', 'view_audit_logs'])),
+            'Hộ tịch & Cư trú' => $permissions->filter(fn ($p) => str_contains($p->name, 'ho_khau') || str_contains($p->name, 'nhan_khau')),
+            'Kinh tế & Lao động' => $permissions->filter(fn ($p) => str_contains($p->name, 'lao_dong')),
+            'An sinh xã hội' => $permissions->filter(fn ($p) => str_contains($p->name, 'an_sinh')),
+            'Nghĩa vụ quân sự' => $permissions->filter(fn ($p) => str_contains($p->name, 'nghia_vu')),
+            'Đất đai & Thuế phí' => $permissions->filter(fn ($p) => str_contains($p->name, 'dat_dai')),
         ];
 
         return view('he-thong.rbac', compact('modules', 'roles', 'permissions', 'groupedPermissions'));
     })->name('he-thong.rbac');
 
-    Route::post('/he-thong/phan-quyen/toggle', function (\Illuminate\Http\Request $request) {
-        if (!auth()->user()->hasRole('admin')) {
+    Route::post('/he-thong/phan-quyen/toggle', function (Request $request) {
+        if (! auth()->user()->hasRole('admin')) {
             return response()->json(['success' => false, 'message' => 'Bạn không có quyền thực hiện hành động này.'], 403);
         }
 
         $roleId = $request->input('role_id');
         $permissionId = $request->input('permission_id');
 
-        $role = \Spatie\Permission\Models\Role::findOrFail($roleId);
-        $permission = \Spatie\Permission\Models\Permission::findOrFail($permissionId);
+        $role = Role::findOrFail($roleId);
+        $permission = Permission::findOrFail($permissionId);
 
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         if ($role->hasPermissionTo($permission)) {
             if ($role->name === 'admin' && in_array($permission->name, ['manage_users', 'view_audit_logs'])) {
@@ -323,9 +330,9 @@ Route::middleware('auth')->group(function () use ($modules) {
         }
 
         return response()->json([
-            'success' => true, 
+            'success' => true,
             'active' => $active,
-            'message' => 'Cập nhật quyền thành công.'
+            'message' => 'Cập nhật quyền thành công.',
         ]);
     })->name('he-thong.rbac.toggle');
 

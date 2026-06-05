@@ -61,6 +61,6 @@ class HoKhauService
      */
     public function deleteHoKhau(HoKhau $hoKhau): bool
     {
-        return $hoKhau->delete();
+        return (bool) $hoKhau->delete();
     }
 }
