@@ -10,6 +10,9 @@ use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DanQuanTuVeController;
+use App\Http\Controllers\LaoDongController;
+use App\Http\Controllers\DoanhNghiepController;
+use App\Http\Controllers\KetNoiViecLamController;
 use App\Models\HoKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
@@ -253,6 +256,23 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->latest()
                 ->limit(10)
                 ->get();
+        } elseif ($module === 'kinh-te-lao-dong') {
+            $stats = [
+                'lao_dong' => $count('lao_dong'),
+                'doanh_nghiep' => $count('doanh_nghiep_ho_kinh_doanh'),
+                'ket_noi_viec_lam' => $count('ket_noi_viec_lam'),
+                'xuat_khau_lao_dong' => DB::table('lao_dong')->where('xuat_khau_lao_dong', true)->count(),
+            ];
+
+            $extraData['dsLaoDong'] = \App\Models\LaoDong::query()
+                ->with(['nhanKhau'])
+                ->latest()
+                ->limit(10)
+                ->get()
+                ->map(function ($ld) {
+                    $ld->ho_ten = $ld->nhanKhau?->ho_ten;
+                    return $ld;
+                });
         }
 
         return view($selected['view'] ?? 'modules.show', array_merge(
@@ -364,6 +384,41 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
             ->names('api.dan-quan-tu-ve');
 
+        // API cho Kinh tế, Lao động & Việc làm
+        Route::middleware('can:manage_lao_dong')->group(function () {
+            Route::apiResource('lao-dong/ho-so', LaoDongController::class)
+                ->except(['index', 'show'])
+                ->parameters(['ho-so' => 'hoSo'])
+                ->names('api.ho-so');
+
+            Route::apiResource('lao-dong/doanh-nghiep', DoanhNghiepController::class)
+                ->except(['index', 'show'])
+                ->parameters(['doanh-nghiep' => 'doanhNghiep'])
+                ->names('api.doanh-nghiep');
+
+            Route::apiResource('lao-dong/ket-noi', KetNoiViecLamController::class)
+                ->except(['index', 'show'])
+                ->parameters(['ket-noi' => 'ketNoi'])
+                ->names('api.ket-noi');
+        });
+
+        Route::middleware('can:view_lao_dong')->group(function () {
+            Route::apiResource('lao-dong/ho-so', LaoDongController::class)
+                ->only(['index', 'show'])
+                ->parameters(['ho-so' => 'hoSo'])
+                ->names('api.ho-so');
+
+            Route::apiResource('lao-dong/doanh-nghiep', DoanhNghiepController::class)
+                ->only(['index', 'show'])
+                ->parameters(['doanh-nghiep' => 'doanhNghiep'])
+                ->names('api.doanh-nghiep');
+
+            Route::apiResource('lao-dong/ket-noi', KetNoiViecLamController::class)
+                ->only(['index', 'show'])
+                ->parameters(['ket-noi' => 'ketNoi'])
+                ->names('api.ket-noi');
+        });
+
         // API cho Xác thực (Đã đăng nhập)
         Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
         Route::post('switch-user', [AuthController::class, 'switchUser'])->name('api.switch-user');
@@ -457,6 +512,49 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
         ->names('bao-tro-xa-hoi');
+
+    // --- Phân hệ Kinh tế, Lao động & Việc làm ---
+    // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động/Admin được làm)
+    Route::middleware('can:manage_lao_dong')->group(function () {
+        Route::resource('lao-dong/ho-so', LaoDongController::class)
+            ->except(['index', 'show'])
+            ->parameters(['ho-so' => 'hoSo'])
+            ->names('ho-so');
+
+        Route::resource('lao-dong/doanh-nghiep', DoanhNghiepController::class)
+            ->except(['index', 'show'])
+            ->parameters(['doanh-nghiep' => 'doanhNghiep'])
+            ->names('doanh-nghiep');
+
+        Route::resource('lao-dong/ket-noi', KetNoiViecLamController::class)
+            ->except(['index', 'show'])
+            ->parameters(['ket-noi' => 'ketNoi'])
+            ->names('ket-noi');
+
+        // AJAX endpoints phục vụ auto-matching (được phép chỉnh sửa/tạo)
+        Route::get('api/lao-dong/ho-so/{laoDong}/jobs', [KetNoiViecLamController::class, 'getJobsForLabor'])
+            ->name('lao-dong.ho-so.jobs');
+        Route::get('api/lao-dong/doanh-nghiep/{doanhNghiep}/labors', [KetNoiViecLamController::class, 'getLaborsForJob'])
+            ->name('lao-dong.doanh-nghiep.labors');
+    });
+
+    // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
+    Route::middleware('can:view_lao_dong')->group(function () {
+        Route::resource('lao-dong/ho-so', LaoDongController::class)
+            ->only(['index', 'show'])
+            ->parameters(['ho-so' => 'hoSo'])
+            ->names('ho-so');
+
+        Route::resource('lao-dong/doanh-nghiep', DoanhNghiepController::class)
+            ->only(['index', 'show'])
+            ->parameters(['doanh-nghiep' => 'doanhNghiep'])
+            ->names('doanh-nghiep');
+
+        Route::resource('lao-dong/ket-noi', KetNoiViecLamController::class)
+            ->only(['index', 'show'])
+            ->parameters(['ket-noi' => 'ketNoi'])
+            ->names('ket-noi');
+    });
 
     // --- Phân quyền RBAC ---
     Route::get('/he-thong/phan-quyen', function () {

@@ -99,6 +99,16 @@ class NhanKhau extends Model
         return $this->hasOne(DanQuanTuVe::class, 'nhan_khau_id');
     }
 
+    public function laoDong(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(LaoDong::class, 'nhan_khau_id');
+    }
+
+    public function doanhNghiepDaiDien(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DoanhNghiep::class, 'nguoi_dai_dien_nhan_khau_id');
+    }
+
     public function gioiTinhLabel(): string
     {
         return self::GIOI_TINH[$this->gioi_tinh] ?? 'Không xác định';
