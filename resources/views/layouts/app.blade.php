@@ -231,11 +231,12 @@
                             ];
                         } elseif ($isNghiaVu) {
                             $isNghiaVuActive = request()->routeIs('nghia-vu-quan-su.*');
-                            $isActive = $isModuleActive || $isNghiaVuActive;
+                            $isDanQuanActive = request()->routeIs('dan-quan-tu-ve.*');
+                            $isActive = $isModuleActive || $isNghiaVuActive || $isDanQuanActive;
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'nghia-vu-an-ninh'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                                ['title' => 'Đăng ký nghĩa vụ quân sự', 'disabled' => true, 'icon' => 'bi-person-check'],
-                                ['title' => 'Lực lượng dân quân tự vệ', 'disabled' => true, 'icon' => 'bi-people-fill'],
+                                ['title' => 'Quản lý Nghĩa vụ quân sự', 'url' => route('nghia-vu-quan-su.index'), 'icon' => 'bi-person-check', 'active' => $isNghiaVuActive],
+                                ['title' => 'Lực lượng dân quân tự vệ', 'url' => route('dan-quan-tu-ve.index'), 'icon' => 'bi-people-fill', 'active' => $isDanQuanActive],
                                 ['title' => 'An ninh trật tự', 'disabled' => true, 'icon' => 'bi-shield-exclamation'],
                             ];
                         } elseif ($isDatDai) {

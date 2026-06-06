@@ -78,7 +78,7 @@ class ModuleRegistry
                 'color' => 'warning',
                 'view' => 'modules.nghia-vu-an-ninh',
                 'description' => 'Quản lý nghĩa vụ quân sự, dân quân tự vệ, danh sách rà soát và nhóm hồ sơ an ninh trật tự.',
-                'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve'],
+                'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve', 'dan_quan_hoat_dong'],
                 'features' => [
                     'Lọc danh sách nam công dân trong độ tuổi nghĩa vụ quân sự.',
                     'Theo dõi trạng thái: đủ điều kiện, tạm hoãn, trúng tuyển, nhập ngũ, xuất ngũ.',
