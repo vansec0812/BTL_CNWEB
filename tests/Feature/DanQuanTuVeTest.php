@@ -73,7 +73,7 @@ class DanQuanTuVeTest extends TestCase
 
         $response = $this->post(route('dan-quan-tu-ve.store'), [
             'nhan_khau_ids' => [$nhanKhauId1, $nhanKhauId2],
-            'chuc_vu' => 'Chiến sĩ tập thể',
+            'chuc_vu' => 'Chiến sĩ',
             'don_vi' => 'Tổ 3 Thôn 3',
             'ngay_gia_nhap' => '2026-06-01',
             'trang_thai' => 'dang_phuc_vu',
@@ -82,11 +82,11 @@ class DanQuanTuVeTest extends TestCase
         $response->assertRedirect(route('dan-quan-tu-ve.index'));
         $this->assertDatabaseHas('dan_quan_tu_ve', [
             'nhan_khau_id' => $nhanKhauId1,
-            'chuc_vu' => 'Chiến sĩ tập thể',
+            'chuc_vu' => 'Chiến sĩ',
         ]);
         $this->assertDatabaseHas('dan_quan_tu_ve', [
             'nhan_khau_id' => $nhanKhauId2,
-            'chuc_vu' => 'Chiến sĩ tập thể',
+            'chuc_vu' => 'Chiến sĩ',
         ]);
     }
 
@@ -113,6 +113,72 @@ class DanQuanTuVeTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors(['nhan_khau_ids.0']);
+    }
+
+    public function test_store_fails_when_ngay_ket_thuc_is_not_after_ngay_gia_nhap(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Test Date Validation');
+
+        // Test equal dates
+        $response = $this->post(route('dan-quan-tu-ve.store'), [
+            'nhan_khau_id' => $nhanKhauId,
+            'chuc_vu' => 'Chiến sĩ',
+            'don_vi' => 'Tổ 1 Thôn 1',
+            'ngay_gia_nhap' => '2026-06-01',
+            'ngay_ket_thuc' => '2026-06-01',
+            'trang_thai' => 'dang_phuc_vu',
+        ]);
+
+        $response->assertSessionHasErrors(['ngay_ket_thuc']);
+
+        // Test before dates
+        $response = $this->post(route('dan-quan-tu-ve.store'), [
+            'nhan_khau_id' => $nhanKhauId,
+            'chuc_vu' => 'Chiến sĩ',
+            'don_vi' => 'Tổ 1 Thôn 1',
+            'ngay_gia_nhap' => '2026-06-01',
+            'ngay_ket_thuc' => '2026-05-31',
+            'trang_thai' => 'dang_phuc_vu',
+        ]);
+
+        $response->assertSessionHasErrors(['ngay_ket_thuc']);
+    }
+
+    public function test_create_excludes_enlisted_military_citizens(): void
+    {
+        $eligibleId = $this->createNhanKhau('Eligible Citizen');
+        $enlistedId = $this->createNhanKhau('Enlisted Soldier');
+        $selectedId = $this->createNhanKhau('Selected Soldier');
+
+        // Gán nghĩa vụ quân sự
+        DB::table('nghia_vu_quan_su')->insert([
+            [
+                'nhan_khau_id' => $enlistedId,
+                'trang_thai_nvqs' => 'da_nhap_ngu',
+                'ly_do_tam_hoan' => 'khong_ap_dung',
+                'ket_qua_kham_suc_khoe' => 'chua_kham',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nhan_khau_id' => $selectedId,
+                'trang_thai_nvqs' => 'trung_tuyen',
+                'ly_do_tam_hoan' => 'khong_ap_dung',
+                'ket_qua_kham_suc_khoe' => 'chua_kham',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ]);
+
+        $response = $this->getJson(route('dan-quan-tu-ve.create'));
+        $response->assertOk();
+        
+        $nhanKhauData = $response->json('data.nhanKhau');
+        $nhanKhauIds = collect($nhanKhauData)->pluck('id')->all();
+
+        $this->assertContains($eligibleId, $nhanKhauIds);
+        $this->assertNotContains($enlistedId, $nhanKhauIds);
+        $this->assertNotContains($selectedId, $nhanKhauIds);
     }
 
     public function test_api_index_returns_json(): void
