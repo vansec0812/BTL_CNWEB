@@ -11,6 +11,16 @@ class DanQuanTuVe extends Model
 {
     protected $table = 'dan_quan_tu_ve';
 
+    public const CHUC_VU_LIST = [
+        'Chiến sĩ',
+        'Tổ trưởng',
+        'Thôn đội trưởng',
+        'Tiểu đội trưởng',
+        'Trung đội trưởng',
+        'Phó Đại đội trưởng',
+        'Đại đội trưởng',
+    ];
+
     protected $fillable = [
         'nhan_khau_id',
         'chuc_vu',

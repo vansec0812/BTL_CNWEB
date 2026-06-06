@@ -125,10 +125,10 @@
                             <span class="badge bg-{{ $color }} bg-opacity-10 text-{{ $color }} px-2 py-1">{{ $trangThai[$row->trang_thai] ?? $row->trang_thai }}</span>
                         </td>
                         <td class="text-end pe-3">
-                            <div class="d-inline-flex gap-1">
-                                <a href="{{ route('dan-quan-tu-ve.show', $row->id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i> Xem</a>
+                            <div class="d-flex justify-content-end gap-1">
+                                <a href="{{ route('dan-quan-tu-ve.show', $row->id) }}" class="btn btn-sm btn-outline-secondary" title="Chi tiết"><i class="bi bi-eye"></i></a>
                                 @can('manage_nghia_vu')
-                                <a href="{{ route('dan-quan-tu-ve.edit', $row->id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i> Sửa</a>
+                                <a href="{{ route('dan-quan-tu-ve.edit', $row->id) }}" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa"><i class="bi bi-pencil"></i></a>
                                 <form method="POST" action="{{ route('dan-quan-tu-ve.destroy', $row->id) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xoá thành viên {{ $row->nhanKhau->ho_ten ?? '' }} khỏi lực lượng dân quân tự vệ?">
                                     @csrf
                                     @method('DELETE')

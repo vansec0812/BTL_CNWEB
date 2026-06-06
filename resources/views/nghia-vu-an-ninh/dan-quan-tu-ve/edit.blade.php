@@ -16,23 +16,21 @@
                     @method('PUT')
                     
                     <div class="mb-3">
-                        <label for="nhan_khau_id" class="form-label fw-semibold">Chọn công dân <span class="text-danger">*</span></label>
-                        <select name="nhan_khau_id" id="nhan_khau_id" class="form-select @error('nhan_khau_id') is-invalid @enderror">
-                            @foreach($nhanKhau as $person)
-                                <option value="{{ $person->id }}" {{ old('nhan_khau_id', $record->nhan_khau_id) == $person->id ? 'selected' : '' }}>
-                                    {{ $person->ho_ten }} (CCCD: {{ $person->cccd_cmnd ?? 'Chưa cập nhật' }} - Sinh năm: {{ $person->ngay_sinh ? $person->ngay_sinh->format('Y') : '—' }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('nhan_khau_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <label class="form-label fw-semibold">Công dân phục vụ</label>
+                        <input type="text" class="form-control bg-light" value="{{ $record->nhanKhau->ho_ten }} (CCCD: {{ $record->nhanKhau->cccd_cmnd ?? 'Chưa cập nhật' }} - Sinh năm: {{ $record->nhanKhau->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('Y') : '—' }})" readonly>
+                        <input type="hidden" name="nhan_khau_id" value="{{ $record->nhan_khau_id }}">
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="chuc_vu" class="form-label fw-semibold">Chức vụ trong lực lượng</label>
-                            <input type="text" name="chuc_vu" id="chuc_vu" class="form-control @error('chuc_vu') is-invalid @enderror" placeholder="Ví dụ: Chiến sĩ, Tiểu đội trưởng..." value="{{ old('chuc_vu', $record->chuc_vu) }}">
+                            <select name="chuc_vu" id="chuc_vu" class="form-select @error('chuc_vu') is-invalid @enderror">
+                                @foreach(\App\Models\DanQuanTuVe::CHUC_VU_LIST as $val)
+                                    <option value="{{ $val }}" {{ old('chuc_vu', $record->chuc_vu) === $val ? 'selected' : '' }}>
+                                        {{ $val }}
+                                    </option>
+                                @endforeach
+                            </select>
                             @error('chuc_vu')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

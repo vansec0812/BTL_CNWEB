@@ -6,6 +6,7 @@ use App\Http\Requests\StoreDanQuanTuVeRequest;
 use App\Http\Requests\UpdateDanQuanTuVeRequest;
 use App\Models\DanQuanTuVe;
 use App\Models\NhanKhau;
+use App\Services\DanQuanTuVeService;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 
@@ -17,28 +18,16 @@ class DanQuanTuVeController extends Controller
         'da_roi' => 'Đã rời lực lượng',
     ];
 
+    public function __construct(
+        private DanQuanTuVeService $danQuanTuVeService
+    ) {}
+
     public function index(Request $request)
     {
         $filters = $request->only(['q', 'trang_thai', 'don_vi']);
         $perPage = $request->integer('per_page', 10);
 
-        $query = DanQuanTuVe::query()
-            ->with('nhanKhau')
-            ->when($filters['q'] ?? null, function ($query, string $keyword): void {
-                $query->where(function ($query) use ($keyword): void {
-                    $query->where('chuc_vu', 'like', "%{$keyword}%")
-                        ->orWhere('don_vi', 'like', "%{$keyword}%")
-                        ->orWhereHas('nhanKhau', function ($query) use ($keyword): void {
-                            $query->where('ho_ten', 'like', "%{$keyword}%")
-                                ->orWhere('cccd_cmnd', 'like', "%{$keyword}%");
-                        });
-                });
-            })
-            ->when($filters['trang_thai'] ?? null, fn ($query, string $value) => $query->where('trang_thai', $value))
-            ->when($filters['don_vi'] ?? null, fn ($query, string $value) => $query->where('don_vi', 'like', "%{$value}%"))
-            ->latest();
-
-        $records = $query->paginate($perPage)->withQueryString();
+        $records = $this->danQuanTuVeService->getDanQuanList($filters, $perPage);
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -76,26 +65,7 @@ class DanQuanTuVeController extends Controller
 
     public function store(StoreDanQuanTuVeRequest $request)
     {
-        $validated = $request->validated();
-        $records = [];
-
-        \Illuminate\Support\Facades\DB::transaction(function () use ($validated, &$records): void {
-            if (isset($validated['nhan_khau_ids']) && is_array($validated['nhan_khau_ids'])) {
-                foreach ($validated['nhan_khau_ids'] as $id) {
-                    $records[] = DanQuanTuVe::create([
-                        'nhan_khau_id' => $id,
-                        'chuc_vu' => $validated['chuc_vu'] ?? null,
-                        'don_vi' => $validated['don_vi'] ?? null,
-                        'ngay_gia_nhap' => $validated['ngay_gia_nhap'] ?? null,
-                        'ngay_ket_thuc' => $validated['ngay_ket_thuc'] ?? null,
-                        'trang_thai' => $validated['trang_thai'],
-                        'ghi_chu' => $validated['ghi_chu'] ?? null,
-                    ]);
-                }
-            } else {
-                $records[] = DanQuanTuVe::create($validated);
-            }
-        });
+        $records = $this->danQuanTuVeService->storeMilitia($request->validated());
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -143,7 +113,7 @@ class DanQuanTuVeController extends Controller
 
     public function update(UpdateDanQuanTuVeRequest $request, DanQuanTuVe $danQuanTuVe)
     {
-        $danQuanTuVe->update($request->validated());
+        $this->danQuanTuVeService->updateMilitia($danQuanTuVe, $request->validated());
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -160,7 +130,7 @@ class DanQuanTuVeController extends Controller
 
     public function destroy(DanQuanTuVe $danQuanTuVe, Request $request)
     {
-        $danQuanTuVe->delete();
+        $this->danQuanTuVeService->deleteMilitia($danQuanTuVe);
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -183,6 +153,9 @@ class DanQuanTuVeController extends Controller
             'nhanKhau' => NhanKhau::query()
                 ->whereNull('deleted_at')
                 ->where('trang_thai', '!=', 'da_mat')
+                ->whereDoesntHave('nghiaVuQuanSu', function ($query) {
+                    $query->whereIn('trang_thai_nvqs', ['trung_tuyen', 'da_nhap_ngu']);
+                })
                 ->where(function ($query) use ($record): void {
                     $query->whereDoesntHave('danQuanTuVe');
                     if ($record?->nhan_khau_id) {
