@@ -42,7 +42,7 @@ class NghiaVuQuanSuService
             });
         }
 
-        return $query->orderBy('id', 'asc')->paginate($perPage);
+        return $query->orderBy('id', 'asc')->paginate($perPage)->withQueryString();
     }
 
     /**
