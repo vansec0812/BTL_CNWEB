@@ -56,4 +56,14 @@ class User extends Authenticatable
             'ngay_sinh' => 'date',
         ];
     }
+
+    public function lichSuCongViec(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LichSuCongViec::class, 'nguoi_cap_nhat_id');
+    }
+
+    public function ketNoiViecLam(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(KetNoiViecLam::class, 'nguoi_phu_trach_id');
+    }
 }

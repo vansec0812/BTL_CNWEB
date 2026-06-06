@@ -210,12 +210,16 @@
                                 ['title' => 'Khai báo tạm trú / tạm vắng', 'url' => route('tam-tru.index'), 'icon' => 'bi-luggage', 'active' => request()->routeIs('tam-tru.*')],
                             ];
                         } elseif ($isKinhTe) {
-                            $isActive = $isModuleActive;
+                            $isHoSoActive = request()->routeIs('ho-so.*');
+                            $isDoanhNghiepActive = request()->routeIs('doanh-nghiep.*');
+                            $isKetNoiActive = request()->routeIs('ket-noi.*');
+                            $isActive = $isModuleActive || $isHoSoActive || $isDoanhNghiepActive || $isKetNoiActive;
+                            
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'kinh-te-lao-dong'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                                ['title' => 'Hồ sơ lao động', 'disabled' => true, 'icon' => 'bi-person-workspace'],
-                                ['title' => 'Doanh nghiệp & Hộ kinh doanh', 'disabled' => true, 'icon' => 'bi-building'],
-                                ['title' => 'Kết nối việc làm', 'disabled' => true, 'icon' => 'bi-link-45deg'],
+                                ['title' => 'Hồ sơ lao động', 'url' => route('ho-so.index'), 'icon' => 'bi-person-workspace', 'active' => $isHoSoActive],
+                                ['title' => 'Doanh nghiệp & Hộ kinh doanh', 'url' => route('doanh-nghiep.index'), 'icon' => 'bi-building', 'active' => $isDoanhNghiepActive],
+                                ['title' => 'Kết nối việc làm', 'url' => route('ket-noi.index'), 'icon' => 'bi-link-45deg', 'active' => $isKetNoiActive],
                             ];
                         } elseif ($isAnSinh) {
                             $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*');
