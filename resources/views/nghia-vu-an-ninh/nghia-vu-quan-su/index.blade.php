@@ -225,18 +225,18 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('nghia-vu-quan-su.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Chi tiết">
-                                        <i class="bi bi-eye"></i> Xem
+                                    <a href="{{ route('nghia-vu-quan-su.show', $record) }}" class="btn btn-sm btn-outline-secondary" title="Chi tiết">
+                                        <i class="bi bi-eye"></i>
                                     </a>
                                     @can('manage_nghia_vu')
-                                    <a href="{{ route('nghia-vu-quan-su.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
-                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    <a href="{{ route('nghia-vu-quan-su.edit', $record) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('nghia-vu-quan-su.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hồ sơ nghĩa vụ quân sự của công dân này?">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-action-delete d-inline-flex align-items-center gap-1" type="submit" title="Xóa">
-                                            <i class="bi bi-trash"></i> Xóa
+                                        <button class="btn btn-sm btn-outline-danger" type="submit" title="Xóa">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                     @endcan

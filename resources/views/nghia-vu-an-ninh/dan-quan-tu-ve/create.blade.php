@@ -19,7 +19,13 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="chuc_vu" class="form-label fw-semibold">Chức vụ trong lực lượng</label>
-                        <input type="text" name="chuc_vu" id="chuc_vu" class="form-control @error('chuc_vu') is-invalid @enderror" placeholder="Ví dụ: Chiến sĩ, Tiểu đội trưởng..." value="{{ old('chuc_vu') }}">
+                        <select name="chuc_vu" id="chuc_vu" class="form-select @error('chuc_vu') is-invalid @enderror">
+                            @foreach(\App\Models\DanQuanTuVe::CHUC_VU_LIST as $val)
+                                <option value="{{ $val }}" {{ old('chuc_vu', 'Chiến sĩ') === $val ? 'selected' : '' }}>
+                                    {{ $val }}
+                                </option>
+                            @endforeach
+                        </select>
                         @error('chuc_vu')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
