@@ -16,14 +16,11 @@ class DoiTuongChinhSachTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->seed(\Database\Seeders\UserSeeder::class);
+        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
 
-        $user = User::factory()->create();
+        $user = \App\Models\User::where('email', 'laodong@ubnd-xa.vn')->first();
         $this->actingAs($user);
-
-        $this->withoutMiddleware([
-            Authenticate::class,
-            Authorize::class,
-        ]);
     }
 
     public function test_index_page_renders_policy_records(): void

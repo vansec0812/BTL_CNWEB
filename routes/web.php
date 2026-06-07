@@ -273,6 +273,18 @@ Route::middleware('auth')->group(function () use ($modules) {
                     $ld->ho_ten = $ld->nhanKhau?->ho_ten;
                     return $ld;
                 });
+        } elseif ($module === 'an-sinh-y-te-giao-duc') {
+            $stats = [
+                'doi_tuong_chinh_sach' => $count('doi_tuong_chinh_sach'),
+                'bao_tro_xa_hoi' => $count('bao_tro_xa_hoi'),
+                'dot_tro_cap' => $count('dot_tro_cap'),
+                'y_te' => $count('y_te_nhan_khau'),
+            ];
+
+            $extraData['dsDotTroCap'] = \App\Models\DotTroCap::query()
+                ->latest()
+                ->limit(10)
+                ->get();
         }
 
         return view($selected['view'] ?? 'modules.show', array_merge(
@@ -488,7 +500,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['tam-tru' => 'tamTruTamVang'])
         ->names('tam-tru');
 
-    // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội) ---
+    // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội, Đợt trợ cấp) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
     Route::middleware('can:manage_an_sinh')->group(function () {
         Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
@@ -500,6 +512,16 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->except(['index', 'show'])
             ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
             ->names('bao-tro-xa-hoi');
+
+        Route::resource('an-sinh/dot-tro-cap', \App\Http\Controllers\DotTroCapController::class)
+            ->except(['index', 'show'])
+            ->parameters(['dot-tro-cap' => 'dotTroCap'])
+            ->names('dot-tro-cap');
+
+        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm/{detailId}', [\App\Http\Controllers\DotTroCapController::class, 'confirmReceipt'])->name('dot-tro-cap.confirm');
+        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm-batch', [\App\Http\Controllers\DotTroCapController::class, 'confirmReceiptBatch'])->name('dot-tro-cap.confirm-batch');
+        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/add-recipient', [\App\Http\Controllers\DotTroCapController::class, 'addRecipient'])->name('dot-tro-cap.add-recipient');
+        Route::delete('an-sinh/dot-tro-cap/{dotTroCap}/remove-recipient/{detailId}', [\App\Http\Controllers\DotTroCapController::class, 'removeRecipient'])->name('dot-tro-cap.remove-recipient');
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
@@ -512,6 +534,11 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
         ->names('bao-tro-xa-hoi');
+
+    Route::resource('an-sinh/dot-tro-cap', \App\Http\Controllers\DotTroCapController::class)
+        ->only(['index', 'show'])
+        ->parameters(['dot-tro-cap' => 'dotTroCap'])
+        ->names('dot-tro-cap');
 
     // --- Phân hệ Kinh tế, Lao động & Việc làm ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động/Admin được làm)
