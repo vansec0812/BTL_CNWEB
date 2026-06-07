@@ -166,7 +166,7 @@
 </head>
 <body>
     <div class="app-shell d-lg-flex">
-        <aside class="app-sidebar flex-shrink-0 p-3 p-lg-4" style="width: 300px;">
+        <aside class="app-sidebar shrink p-3 p-lg-4" style="width: 300px;">
             <a href="{{ route('dashboard') }}" class="d-flex align-items-center gap-3 mb-4 text-decoration-none text-dark">
                 <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold">QO</span>
                 <span>
@@ -325,7 +325,7 @@
             </div>
         </aside>
 
-        <main class="flex-grow-1">
+        <main class="grow">
             <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top py-2">
                 <div class="container-fluid px-3 px-lg-4">
                     <span class="navbar-brand mb-0 h1">@yield('page_title', 'Bảng điều khiển')</span>
