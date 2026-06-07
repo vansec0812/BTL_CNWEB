@@ -166,7 +166,7 @@
 </head>
 <body>
     <div class="app-shell d-lg-flex">
-        <aside class="app-sidebar flex-shrink-0 p-3 p-lg-4" style="width: 300px;">
+        <aside class="app-sidebar shrink p-3 p-lg-4" style="width: 300px;">
             <a href="{{ route('dashboard') }}" class="d-flex align-items-center gap-3 mb-4 text-decoration-none text-dark">
                 <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold">QO</span>
                 <span>
@@ -224,13 +224,14 @@
                         } elseif ($isAnSinh) {
                             $isPolicyActive = request()->routeIs('doi-tuong-chinh-sach.*');
                             $isBaoTroActive = request()->routeIs('bao-tro-xa-hoi.*');
-                            $isActive = $isModuleActive || $isPolicyActive || $isBaoTroActive;
+                            $isDotActive = request()->routeIs('dot-tro-cap.*');
+                            $isActive = $isModuleActive || $isPolicyActive || $isBaoTroActive || $isDotActive;
                             
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'an-sinh-y-te-giao-duc'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.*')],
-                                ['title' => 'Bảo trợ xã hội', 'url' => route('bao-tro-xa-hoi.index'), 'icon' => 'bi-shield-heart', 'active' => request()->routeIs('bao-tro-xa-hoi.*')],
-                                ['title' => 'Đợt trợ cấp & Quà tặng', 'disabled' => true, 'icon' => 'bi-gift'],
+                                ['title' => 'Bảo trợ xã hội', 'url' => route('bao-tro-xa-hoi.index'), 'icon' => 'bi-shield', 'active' => request()->routeIs('bao-tro-xa-hoi.*')],
+                                ['title' => 'Đợt trợ cấp & Quỹ từ thiện', 'url' => route('dot-tro-cap.index'), 'icon' => 'bi-gift', 'active' => $isDotActive],
                                 ['title' => 'Theo dõi Y tế & Giáo dục', 'disabled' => true, 'icon' => 'bi-heart-pulse'],
                             ];
                         } elseif ($isNghiaVu) {
@@ -324,7 +325,7 @@
             </div>
         </aside>
 
-        <main class="flex-grow-1">
+        <main class="grow">
             <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top py-2">
                 <div class="container-fluid px-3 px-lg-4">
                     <span class="navbar-brand mb-0 h1">@yield('page_title', 'Bảng điều khiển')</span>

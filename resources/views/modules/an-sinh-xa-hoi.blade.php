@@ -68,12 +68,14 @@
                     </li>
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-gift small"></i></span>
-                        Tạo đợt trợ cấp
+                        <a href="{{ route('dot-tro-cap.index') }}" class="text-decoration-none text-dark fw-semibold">Quản lý Gói trợ cấp &amp; Quỹ từ thiện</a>
                     </li>
+                    @can('manage_an_sinh')
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-check2-square small"></i></span>
-                        Ghi nhận đã nhận trợ cấp
+                        <a href="{{ route('dot-tro-cap.create') }}" class="text-decoration-none text-dark fw-semibold">Tạo đợt trợ cấp mới</a>
                     </li>
+                    @endcan
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-heart-pulse small"></i></span>
                         Theo dõi y tế &amp; BHYT
@@ -88,10 +90,11 @@
     </div>
     <div class="col-lg-7">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <span><i class="bi bi-table me-1"></i>Đợt trợ cấp gần đây</span>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('doi-tuong-chinh-sach.create') }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-plus-lg"></i> Thêm diện chính sách</a>
+                    <a href="{{ route('dot-tro-cap.index') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-gift"></i> Xem tất cả</a>
+                    <a href="{{ route('doi-tuong-chinh-sach.create') }}" class="btn btn-sm btn-outline-success"><i class="bi bi-plus-lg"></i> Thêm diện chính sách</a>
                     <a href="{{ route('bao-tro-xa-hoi.create') }}" class="btn btn-sm btn-outline-success"><i class="bi bi-plus-lg"></i> Thêm bảo trợ</a>
                 </div>
             </div>
@@ -116,13 +119,12 @@
                                 <td>{{ $dot->tong_so_doi_tuong }}</td>
                                 <td>{{ $dot->so_da_nhan }}</td>
                                 <td>
-                                    @php $tt = $dot->trang_thai ?? 'sap_dien_ra'; @endphp
-                                    <span class="badge bg-{{ $tt === 'hoan_thanh' ? 'success' : ($tt === 'dang_thuc_hien' ? 'warning' : 'secondary') }}">
-                                        {{ $tt === 'hoan_thanh' ? 'Hoàn thành' : ($tt === 'dang_thuc_hien' ? 'Đang thực hiện' : ($tt === 'huy_bo' ? 'Hủy bỏ' : 'Sắp diễn ra')) }}
+                                    <span class="badge bg-{{ $dot->trangThaiBadgeColor() }}">
+                                        {{ $dot->trangThaiLabel() }}
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></button>
+                                    <a href="{{ route('dot-tro-cap.show', $dot) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i> Chi tiết</a>
                                 </td>
                             </tr>
                             @empty
