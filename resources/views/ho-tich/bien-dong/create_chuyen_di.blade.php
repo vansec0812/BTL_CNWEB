@@ -136,7 +136,10 @@
                         </div>
                         <div class="col-12">
                             <label for="ghi_chu" class="form-label">Ghi chú</label>
-                            <textarea id="ghi_chu" name="ghi_chu" rows="2" class="form-control" placeholder="Ghi chú thêm...">{{ old('ghi_chu') }}</textarea>
+                            <textarea id="ghi_chu" name="ghi_chu" rows="2" class="form-control @error('ghi_chu') is-invalid @enderror" placeholder="Ghi chú thêm...">{{ old('ghi_chu') }}</textarea>
+                            @error('ghi_chu')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
