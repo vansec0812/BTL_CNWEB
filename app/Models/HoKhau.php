@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\AuditableTrait;
+
 class HoKhau extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, AuditableTrait;
+
+    protected $auditModule = 'ho_khau';
 
     public const PHAN_LOAI = [
         'thuong_tru' => 'Thường trú',

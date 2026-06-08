@@ -14,6 +14,7 @@ use App\Http\Controllers\DanQuanHoatDongController;
 use App\Http\Controllers\LaoDongController;
 use App\Http\Controllers\DoanhNghiepController;
 use App\Http\Controllers\KetNoiViecLamController;
+use App\Http\Controllers\AuditLogController;
 use App\Models\HoKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
@@ -654,4 +655,10 @@ Route::middleware('auth')->group(function () use ($modules) {
     });
 
     Route::get('he-thong/users/{user}', [UserController::class, 'show'])->name('users.show');
+
+    // --- Nhật ký hệ thống ---
+    Route::middleware('can:view_audit_logs')->group(function () {
+        Route::get('he-thong/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+        Route::get('he-thong/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit-logs.show');
+    });
 });

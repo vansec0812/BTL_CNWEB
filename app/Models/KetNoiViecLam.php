@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class KetNoiViecLam extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'ket_noi_viec_lam';
+
     protected $table = 'ket_noi_viec_lam';
 
     public const KET_QUA = [

@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('tam-tru.update', $record) }}">
+<form method="POST" action="{{ route('tam-tru.update', $record) }}" novalidate>
     @csrf
     @method('PUT')
 
@@ -139,7 +139,10 @@
 
                     <div class="mb-3">
                         <label for="ghi_chu" class="form-label">Ghi chú cán bộ</label>
-                        <textarea id="ghi_chu" name="ghi_chu" rows="2" class="form-control">{{ old('ghi_chu', $record->ghi_chu) }}</textarea>
+                        <textarea id="ghi_chu" name="ghi_chu" rows="2" class="form-control @error('ghi_chu') is-invalid @enderror">{{ old('ghi_chu', $record->ghi_chu) }}</textarea>
+                        @error('ghi_chu')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>

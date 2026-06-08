@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TamTruTamVang extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'tam_tru_tam_vang';
+
     protected $table = 'tam_tru_tam_vang';
 
     public const LOAI = [

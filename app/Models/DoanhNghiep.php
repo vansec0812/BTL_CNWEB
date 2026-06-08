@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DoanhNghiep extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, AuditableTrait;
+
+    protected $auditModule = 'doanh_nghiep';
 
     protected $table = 'doanh_nghiep_ho_kinh_doanh';
 

@@ -272,16 +272,20 @@
                                 ['title' => 'Thuế & Phí địa phương', 'disabled' => true, 'icon' => 'bi-cash-coin'],
                             ];
                         } elseif ($isHeThong) {
-                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*');
+                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*') || request()->routeIs('audit-logs.*');
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'he-thong-bao-cao'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                             ];
                             if (auth()->user()->can('manage_users')) {
                                 $submenu[] = ['title' => 'Tài khoản cán bộ', 'url' => route('users.index'), 'icon' => 'bi-person-badge', 'active' => request()->routeIs('users.*')];
                             }
+                            if (auth()->user()->can('view_audit_logs')) {
+                                $submenu[] = ['title' => 'Nhật ký hệ thống (Audit)', 'url' => route('audit-logs.index'), 'icon' => 'bi-clock-history', 'active' => request()->routeIs('audit-logs.*')];
+                            } else {
+                                $submenu[] = ['title' => 'Nhật ký hệ thống (Audit)', 'disabled' => true, 'icon' => 'bi-clock-history'];
+                            }
                             $submenu = array_merge($submenu, [
                                 ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
-                                ['title' => 'Nhật ký hệ thống (Audit)', 'disabled' => true, 'icon' => 'bi-clock-history'],
                                 ['title' => 'Dashboard & Biểu đồ', 'disabled' => true, 'icon' => 'bi-graph-up'],
                                 ['title' => 'Bộ lọc động & Tìm kiếm', 'disabled' => true, 'icon' => 'bi-funnel'],
                                 ['title' => 'Xuất báo cáo Excel', 'disabled' => true, 'icon' => 'bi-file-earmark-excel'],

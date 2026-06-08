@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DanQuanTuVe extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'dan_quan_tu_ve';
+
     protected $table = 'dan_quan_tu_ve';
 
     public const CHUC_VU_LIST = [

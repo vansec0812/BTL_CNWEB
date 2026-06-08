@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('bien-dong.store') }}">
+<form method="POST" action="{{ route('bien-dong.store') }}" novalidate>
     @csrf
     <input type="hidden" name="loai_bien_dong" value="tach_ho">
 
@@ -178,11 +178,14 @@
                         </div>
                         <div class="col-md-6">
                             <label for="phan_loai_moi" class="form-label">Phân loại cư trú</label>
-                            <select id="phan_loai_moi" name="phan_loai_moi" class="form-select">
+                            <select id="phan_loai_moi" name="phan_loai_moi" class="form-select @error('phan_loai_moi') is-invalid @enderror">
                                 @foreach($phanLoai as $val => $lbl)
                                     <option value="{{ $val }}" @selected(old('phan_loai_moi') == $val)>{{ $lbl }}</option>
                                 @endforeach
                             </select>
+                            @error('phan_loai_moi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-12">
                             <label for="dia_chi_thuong_tru_moi" class="form-label">Địa chỉ thường trú mới <span class="text-danger">*</span></label>
@@ -193,7 +196,10 @@
                         </div>
                         <div class="col-12">
                             <label for="ghi_chu_moi" class="form-label">Ghi chú sổ mới</label>
-                            <textarea id="ghi_chu_moi" name="ghi_chu_moi" rows="2" class="form-control" placeholder="Ghi chú thêm về sổ hộ khẩu mới...">{{ old('ghi_chu_moi') }}</textarea>
+                            <textarea id="ghi_chu_moi" name="ghi_chu_moi" rows="2" class="form-control @error('ghi_chu_moi') is-invalid @enderror" placeholder="Ghi chú thêm về sổ hộ khẩu mới...">{{ old('ghi_chu_moi') }}</textarea>
+                            @error('ghi_chu_moi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -228,7 +234,10 @@
                         </div>
                         <div class="col-12">
                             <label for="ghi_chu" class="form-label">Ghi chú biến động</label>
-                            <textarea id="ghi_chu" name="ghi_chu" rows="2" class="form-control">{{ old('ghi_chu') }}</textarea>
+                            <textarea id="ghi_chu" name="ghi_chu" rows="2" class="form-control @error('ghi_chu') is-invalid @enderror">{{ old('ghi_chu') }}</textarea>
+                            @error('ghi_chu')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>

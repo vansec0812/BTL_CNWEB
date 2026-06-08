@@ -87,7 +87,10 @@
 
                     <div class="mb-3">
                         <label for="ghi_chu" class="form-label fw-semibold">Ghi chú</label>
-                        <textarea name="ghi_chu" id="ghi_chu" rows="3" class="form-control" placeholder="Nhập ghi chú thêm nếu có...">{{ old('ghi_chu', $record->ghi_chu) }}</textarea>
+                        <textarea name="ghi_chu" id="ghi_chu" rows="3" class="form-control @error('ghi_chu') is-invalid @enderror" placeholder="Nhập ghi chú thêm nếu có...">{{ old('ghi_chu', $record->ghi_chu) }}</textarea>
+                        @error('ghi_chu')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="d-flex justify-content-between pt-3">

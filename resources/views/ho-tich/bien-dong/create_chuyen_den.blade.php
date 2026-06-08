@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('bien-dong.store') }}">
+<form method="POST" action="{{ route('bien-dong.store') }}" novalidate>
     @csrf
     <input type="hidden" name="loai_bien_dong" value="chuyen_den">
 
@@ -165,16 +165,22 @@
                         </div>
                         <div class="col-md-6">
                             <label for="ton_giao" class="form-label">Tôn giáo</label>
-                            <input type="text" id="ton_giao" name="nhan_khau[ton_giao]" value="{{ old('nhan_khau.ton_giao', 'Không') }}" class="form-control">
+                            <input type="text" id="ton_giao" name="nhan_khau[ton_giao]" value="{{ old('nhan_khau.ton_giao', 'Không') }}" class="form-control @error('nhan_khau.ton_giao') is-invalid @enderror">
+                            @error('nhan_khau.ton_giao')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="trinh_do_hoc_van" class="form-label">Trình độ học vấn</label>
-                            <select id="trinh_do_hoc_van" name="nhan_khau[trinh_do_hoc_van]" class="form-select">
+                            <select id="trinh_do_hoc_van" name="nhan_khau[trinh_do_hoc_van]" class="form-select @error('nhan_khau.trinh_do_hoc_van') is-invalid @enderror">
                                 <option value="">-- Chọn trình độ --</option>
                                 @foreach($trinhDoHocVan as $val => $lbl)
                                     <option value="{{ $val }}" @selected(old('nhan_khau.trinh_do_hoc_van') == $val)>{{ $lbl }}</option>
                                 @endforeach
                             </select>
+                            @error('nhan_khau.trinh_do_hoc_van')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="tinh_trang_hon_nhan" class="form-label">Tình trạng hôn nhân <span class="text-danger">*</span></label>
@@ -189,11 +195,17 @@
                         </div>
                         <div class="col-12">
                             <label for="que_quan" class="form-label">Quê quán</label>
-                            <input type="text" id="que_quan" name="nhan_khau[que_quan]" value="{{ old('nhan_khau.que_quan') }}" class="form-control" placeholder="Xã/Huyện/Tỉnh...">
+                            <input type="text" id="que_quan" name="nhan_khau[que_quan]" value="{{ old('nhan_khau.que_quan') }}" class="form-control @error('nhan_khau.que_quan') is-invalid @enderror" placeholder="Xã/Huyện/Tỉnh...">
+                            @error('nhan_khau.que_quan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-12">
                             <label for="noi_sinh" class="form-label">Nơi sinh</label>
-                            <input type="text" id="noi_sinh" name="nhan_khau[noi_sinh]" value="{{ old('nhan_khau.noi_sinh') }}" class="form-control" placeholder="Nhà thương/Bệnh viện/Quận/Tỉnh...">
+                            <input type="text" id="noi_sinh" name="nhan_khau[noi_sinh]" value="{{ old('nhan_khau.noi_sinh') }}" class="form-control @error('nhan_khau.noi_sinh') is-invalid @enderror" placeholder="Nhà thương/Bệnh viện/Quận/Tỉnh...">
+                            @error('nhan_khau.noi_sinh')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                 </div>
