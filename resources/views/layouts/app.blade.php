@@ -16,10 +16,27 @@
 
         body {
             background: var(--admin-bg);
+            overflow-x: hidden;
         }
 
         .app-shell {
             min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar cố định chiều rộng, không co */
+        .shrink {
+            flex-shrink: 0;
+        }
+
+        /* Main content chiếm hết phần còn lại, min-width:0 ngăn overflow */
+        .grow {
+            flex: 1 1 0%;
+            min-width: 0;
+            overflow-x: hidden;
         }
 
         .app-sidebar {
@@ -165,7 +182,7 @@
     </style>
 </head>
 <body>
-    <div class="app-shell d-lg-flex">
+    <div class="app-shell d-flex">
         <aside class="app-sidebar shrink p-3 p-lg-4" style="width: 300px;">
             <a href="{{ route('dashboard') }}" class="d-flex align-items-center gap-3 mb-4 text-decoration-none text-dark">
                 <span class="brand-mark d-inline-flex align-items-center justify-content-center fw-bold">QO</span>
@@ -237,11 +254,13 @@
                         } elseif ($isNghiaVu) {
                             $isNghiaVuActive = request()->routeIs('nghia-vu-quan-su.*');
                             $isDanQuanActive = request()->routeIs('dan-quan-tu-ve.*');
-                            $isActive = $isModuleActive || $isNghiaVuActive || $isDanQuanActive;
+                            $isDanQuanHoatDongActive = request()->routeIs('dan-quan-hoat-dong.*');
+                            $isActive = $isModuleActive || $isNghiaVuActive || $isDanQuanActive || $isDanQuanHoatDongActive;
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'nghia-vu-an-ninh'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Quản lý Nghĩa vụ quân sự', 'url' => route('nghia-vu-quan-su.index'), 'icon' => 'bi-person-check', 'active' => $isNghiaVuActive],
                                 ['title' => 'Lực lượng dân quân tự vệ', 'url' => route('dan-quan-tu-ve.index'), 'icon' => 'bi-people-fill', 'active' => $isDanQuanActive],
+                                ['title' => 'Hoạt động dân quân', 'url' => route('dan-quan-hoat-dong.index'), 'icon' => 'bi-calendar-event', 'active' => $isDanQuanHoatDongActive],
                                 ['title' => 'An ninh trật tự', 'disabled' => true, 'icon' => 'bi-shield-exclamation'],
                             ];
                         } elseif ($isDatDai) {
