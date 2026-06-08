@@ -206,7 +206,7 @@
                                 @endif
                             </td>
                             <td>{{ $record->ngay_bien_dong?->format('d/m/Y') }}</td>
-                            <td><code class="text-dark">{{ $record->so_quyet_dinh ?? 'N/A' }}</code></td>
+                            <td>{{ $record->so_quyet_dinh ?? '—' }}</td>
                             <td>
                                 <div class="small fw-semibold">{{ $record->nguoiThucHien?->name ?? 'Hệ thống' }}</div>
                             </td>
