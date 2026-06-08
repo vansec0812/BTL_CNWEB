@@ -4,12 +4,24 @@
 @section('page_title', 'Đăng ký Dân quân tự vệ')
 
 @section('content')
+<div class="mb-4">
+    <div class="small text-secondary mb-1">
+        <a href="{{ route('modules.show', $parentModule['slug']) }}" class="text-decoration-none text-muted">{{ $parentModule['title'] }}</a>
+        <span class="mx-1">/</span>
+        <a href="{{ route('dan-quan-tu-ve.index') }}" class="text-decoration-none text-muted">Lực lượng dân quân tự vệ</a>
+        <span class="mx-1">/</span>
+        <span class="text-dark">Đăng ký mới</span>
+    </div>
+    <h2 class="fw-bold mb-1">Đăng ký Dân quân tự vệ</h2>
+    <p class="text-secondary mb-0">Thêm mới công dân vào lực lượng dân quân tự vệ nòng cốt của địa phương.</p>
+</div>
+
 <form action="{{ route('dan-quan-tu-ve.store') }}" method="POST" id="militiaForm">
     @csrf
-    
-    <div class="row g-4">
+
+    <div class="row g-3 align-items-stretch">
         <!-- Cột trái: Thông tin chung -->
-        <div class="col-lg-5">
+        <div class="col-md-4">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-white py-3 border-bottom-0">
                     <h5 class="mb-0 fw-bold text-success">
@@ -76,9 +88,9 @@
         </div>
 
         <!-- Cột phải: Chọn công dân đăng ký hàng loạt -->
-        <div class="col-lg-7">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom-0">
+        <div class="col">
+            <div class="card shadow-sm border-0 h-100" style="display:flex; flex-direction:column;">
+                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
                     <h5 class="mb-0 fw-bold text-success">
                         <i class="bi bi-people-fill me-1"></i>Chọn công dân đăng ký
                     </h5>
@@ -86,7 +98,7 @@
                         Đã chọn: <span id="selectedCount">0</span>
                     </span>
                 </div>
-                <div class="card-body d-flex flex-column" style="min-height: 480px;">
+                <div class="card-body d-flex flex-column p-3" style="flex: 1 1 0; min-height: 0;">
                     <!-- Search Input -->
                     <div class="input-group mb-3">
                         <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
@@ -98,9 +110,9 @@
                     @enderror
 
                     <!-- Citizen Table -->
-                    <div class="flex-grow-1 border rounded" style="max-height: 380px; overflow-y: auto; position: relative;">
+                    <div class="flex-grow-1 border rounded overflow-y-auto" id="citizenTableWrapper">
                         <table class="table table-hover align-middle mb-0" id="citizenTable">
-                            <thead class="table-light sticky-top shadow-sm" style="z-index: 10;">
+                            <thead class="table-light sticky-top" style="z-index: 10;">
                                 <tr>
                                     <th width="50" class="text-center">
                                         <input type="checkbox" id="selectAll" class="form-check-input">
@@ -135,15 +147,14 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <div class="d-flex justify-content-between pt-4 mt-auto">
-                        <a href="{{ route('dan-quan-tu-ve.index') }}" class="btn btn-outline-secondary fw-semibold">
-                            <i class="bi bi-x-circle me-1"></i> Huỷ bỏ
-                        </a>
-                        <button type="submit" class="btn btn-success fw-semibold px-4" id="submitBtn" disabled>
-                            <i class="bi bi-check-circle me-1"></i> Đăng ký thành viên
-                        </button>
-                    </div>
+                </div>
+                <div class="card-footer bg-white d-flex justify-content-between py-3">
+                    <a href="{{ route('dan-quan-tu-ve.index') }}" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-arrow-left me-1"></i>Quay lại
+                    </a>
+                    <button type="submit" class="btn btn-success fw-semibold px-4" id="submitBtn" disabled>
+                        <i class="bi bi-check-lg me-1"></i>Đăng ký thành viên
+                    </button>
                 </div>
             </div>
         </div>
@@ -154,20 +165,33 @@
     .bg-success-subtle {
         background-color: rgba(25, 135, 84, 0.1) !important;
     }
-    .text-success {
-        color: #198754 !important;
-    }
     .border-success-subtle {
         border-color: rgba(25, 135, 84, 0.2) !important;
     }
     .fs-7 {
         font-size: 0.875rem;
     }
-    .sticky-top {
+    /* Sticky thead trong bảng */
+    #citizenTable thead th {
         position: sticky;
         top: 0;
-        background: #fff;
+        background: #f8f9fa;
         z-index: 10;
+    }
+    /* Table wrapper cuộn theo chiều dọc, fill hết card-body */
+    #citizenTableWrapper {
+        overflow-y: auto;
+        flex: 1 1 0;
+        min-height: 200px;
+    }
+    /* Card bên phải (col) fill full height qua flex */
+    #militiaForm .card-body.flex-column {
+        flex: 1 1 0 !important;
+        min-height: 0 !important;
+    }
+    /* Chiều cao tối thiểu của row để cân bằng hai cột */
+    #militiaForm .row {
+        min-height: 540px;
     }
 </style>
 
