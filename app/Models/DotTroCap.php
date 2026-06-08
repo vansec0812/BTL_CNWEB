@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DotTroCap extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'dot_tro_cap';
     public const LOAI_TRO_CAP = [
         'tien_mat' => 'Tiền mặt',
         'hien_vat' => 'Hiện vật',

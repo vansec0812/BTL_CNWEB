@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LaoDong extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'lao_dong';
+
     protected $table = 'lao_dong';
 
     public const TRANG_THAI_LAO_DONG = [

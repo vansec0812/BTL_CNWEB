@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DoiTuongChinhSach extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, AuditableTrait;
+
+    protected $auditModule = 'doi_tuong_chinh_sach';
 
     public const LOAI_CHINH_SACH = [
         'thuong_binh' => 'Thương binh',

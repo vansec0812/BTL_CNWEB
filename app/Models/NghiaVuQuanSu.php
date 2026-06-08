@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NghiaVuQuanSu extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'nghia_vu_quan_su';
+
     protected $table = 'nghia_vu_quan_su';
 
     protected $fillable = [

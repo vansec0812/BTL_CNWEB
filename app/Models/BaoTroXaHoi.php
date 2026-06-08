@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BaoTroXaHoi extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, AuditableTrait;
+
+    protected $auditModule = 'bao_tro_xa_hoi';
 
     public const LOAI_BAO_TRO = [
         'ho_ngheo' => 'Hộ nghèo',

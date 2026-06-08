@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\AuditableTrait;
+
 class NhanKhau extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, AuditableTrait;
+
+    protected $auditModule = 'nhan_khau';
 
     public const GIOI_TINH = [
         'nam' => 'Nam',

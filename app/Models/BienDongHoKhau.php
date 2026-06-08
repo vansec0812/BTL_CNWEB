@@ -5,8 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Traits\AuditableTrait;
+
 class BienDongHoKhau extends Model
 {
+    use AuditableTrait;
+
+    protected $auditModule = 'bien_dong_ho_khau';
     protected $table = 'bien_dong_ho_khau';
 
     public const LOAI_BIEN_DONG = [
