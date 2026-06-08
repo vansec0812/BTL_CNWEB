@@ -10,6 +10,7 @@ use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DanQuanTuVeController;
+use App\Http\Controllers\DanQuanHoatDongController;
 use App\Http\Controllers\LaoDongController;
 use App\Http\Controllers\DoanhNghiepController;
 use App\Http\Controllers\KetNoiViecLamController;
@@ -310,6 +311,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
             ->names('dan-quan-tu-ve');
 
+        Route::resource('nghia-vu-an-ninh/dan-quan-hoat-dong', DanQuanHoatDongController::class)
+            ->except(['index', 'show'])
+            ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
+            ->names('dan-quan-hoat-dong');
+
 
     });
 
@@ -447,11 +453,20 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
         ->names('dan-quan-tu-ve');
 
+    Route::resource('nghia-vu-an-ninh/dan-quan-hoat-dong', DanQuanHoatDongController::class)
+        ->only(['index', 'show'])
+        ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
+        ->names('dan-quan-hoat-dong');
+
 
 
     // API phục vụ autocomplete
     Route::get('api/nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])
         ->name('nghia-vu-quan-su.eligible-citizens')
+        ->middleware('can:view_nghia_vu');
+
+    Route::get('api/dan-quan-hoat-dong/eligible-militia', [DanQuanHoatDongController::class, 'eligibleMilitia'])
+        ->name('dan-quan-hoat-dong.eligible-militia')
         ->middleware('can:view_nghia_vu');
 
     // --- Phân hệ Hộ tịch & Cư trú (Hộ khẩu & Nhân khẩu) ---

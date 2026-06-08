@@ -13,7 +13,7 @@ class UpdateDanQuanTuVeRequest extends FormRequest
 
     public function rules(): array
     {
-        $militiaModel = $this->route('dan_quan_tu_ve');
+        $militiaModel = $this->route('danQuanTuVe') ?? $this->route('dan_quan_tu_ve');
         $militiaId = is_object($militiaModel) ? $militiaModel->id : $militiaModel;
 
         return [

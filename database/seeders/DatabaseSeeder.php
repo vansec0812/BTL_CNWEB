@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             // ─── NGƯỜI 5: NVQS, Đất đai & Thuế phí ─────────────────────────
             NghiaVuQuanSuSeeder::class,
             DanQuanTuVeSeeder::class,
+            DanQuanHoatDongSeeder::class,
             DatDaiTaiSanSeeder::class,
             ThueVaPhiSeeder::class,
         ]);

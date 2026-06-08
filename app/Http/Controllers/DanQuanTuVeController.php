@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDanQuanTuVeRequest;
 use App\Http\Requests\UpdateDanQuanTuVeRequest;
+use App\Http\Controllers\DanQuanHoatDongController;
 use App\Models\DanQuanTuVe;
 use App\Models\NhanKhau;
 use App\Services\DanQuanTuVeService;
@@ -83,7 +84,10 @@ class DanQuanTuVeController extends Controller
 
     public function show(DanQuanTuVe $danQuanTuVe, Request $request)
     {
-        $danQuanTuVe->load('nhanKhau');
+        $danQuanTuVe->load([
+            'nhanKhau',
+            'hoatDong' => fn ($query) => $query->latest('ngay_thuc_hien')->latest('id'),
+        ]);
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -165,6 +169,8 @@ class DanQuanTuVeController extends Controller
                 ->orderBy('ho_ten')
                 ->get(['id', 'ho_ten', 'cccd_cmnd', 'ngay_sinh']),
             'trangThai' => self::TRANG_THAI,
+            'loaiHoatDong' => DanQuanHoatDongController::LOAI_HOAT_DONG,
+            'trangThaiHoatDong' => DanQuanHoatDongController::TRANG_THAI,
         ];
     }
 
