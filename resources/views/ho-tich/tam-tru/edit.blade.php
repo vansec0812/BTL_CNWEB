@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('tam-tru.update', $record) }}">
+<form method="POST" action="{{ route('tam-tru.update', $record) }}" novalidate>
     @csrf
     @method('PUT')
 

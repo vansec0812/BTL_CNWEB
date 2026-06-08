@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('bien-dong.store') }}">
+<form method="POST" action="{{ route('bien-dong.store') }}" novalidate>
     @csrf
     <input type="hidden" name="loai_bien_dong" value="tach_ho">
 

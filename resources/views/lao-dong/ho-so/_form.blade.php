@@ -101,7 +101,8 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="tinh_thanh_lam_viec" class="form-label">Tỉnh/Thành phố đang làm việc</label>
-                        <input type="text" id="tinh_thanh_lam_viec" name="tinh_thanh_lam_viec" value="{{ old('tinh_thanh_lam_viec', $record?->tinh_thanh_lam_viec) }}" class="form-control" placeholder="Ví dụ: Hà Nội, TP. Hồ Chí Minh...">
+                        <input type="text" id="tinh_thanh_lam_viec" name="tinh_thanh_lam_viec" value="{{ old('tinh_thanh_lam_viec', $record?->tinh_thanh_lam_viec) }}" class="form-control @error('tinh_thanh_lam_viec') is-invalid @enderror" placeholder="Ví dụ: Hà Nội, TP. Hồ Chí Minh...">
+                        @error('tinh_thanh_lam_viec')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
             </div>
@@ -112,19 +113,23 @@
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="quoc_gia_lam_viec" class="form-label">Quốc gia đang làm việc</label>
-                        <input type="text" id="quoc_gia_lam_viec" name="quoc_gia_lam_viec" value="{{ old('quoc_gia_lam_viec', $record?->quoc_gia_lam_viec) }}" class="form-control" placeholder="Ví dụ: Nhật Bản, Hàn Quốc...">
+                        <input type="text" id="quoc_gia_lam_viec" name="quoc_gia_lam_viec" value="{{ old('quoc_gia_lam_viec', $record?->quoc_gia_lam_viec) }}" class="form-control @error('quoc_gia_lam_viec') is-invalid @enderror" placeholder="Ví dụ: Nhật Bản, Hàn Quốc...">
+                        @error('quoc_gia_lam_viec')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-8">
                         <label for="ten_cong_ty_nuoc_ngoai" class="form-label">Tên công ty / Nghiệp đoàn nước ngoài</label>
-                        <input type="text" id="ten_cong_ty_nuoc_ngoai" name="ten_cong_ty_nuoc_ngoai" value="{{ old('ten_cong_ty_nuoc_ngoai', $record?->ten_cong_ty_nuoc_ngoai) }}" class="form-control" placeholder="Tên đối tác hoặc nơi làm việc ở nước ngoài">
+                        <input type="text" id="ten_cong_ty_nuoc_ngoai" name="ten_cong_ty_nuoc_ngoai" value="{{ old('ten_cong_ty_nuoc_ngoai', $record?->ten_cong_ty_nuoc_ngoai) }}" class="form-control @error('ten_cong_ty_nuoc_ngoai') is-invalid @enderror" placeholder="Tên đối tác hoặc nơi làm việc ở nước ngoài">
+                        @error('ten_cong_ty_nuoc_ngoai')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-6">
                         <label for="ngay_xuat_canh" class="form-label">Ngày xuất cảnh</label>
-                        <input type="date" id="ngay_xuat_canh" name="ngay_xuat_canh" value="{{ old('ngay_xuat_canh', $record?->ngay_xuat_canh ? $record->ngay_xuat_canh->format('Y-m-d') : '') }}" class="form-control">
+                        <input type="date" id="ngay_xuat_canh" name="ngay_xuat_canh" value="{{ old('ngay_xuat_canh', $record?->ngay_xuat_canh ? $record->ngay_xuat_canh->format('Y-m-d') : '') }}" class="form-control @error('ngay_xuat_canh') is-invalid @enderror">
+                        @error('ngay_xuat_canh')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-md-6">
                         <label for="ngay_het_hop_dong_nuoc_ngoai" class="form-label">Ngày hết hạn hợp đồng</label>
-                        <input type="date" id="ngay_het_hop_dong_nuoc_ngoai" name="ngay_het_hop_dong_nuoc_ngoai" value="{{ old('ngay_het_hop_dong_nuoc_ngoai', $record?->ngay_het_hop_dong_nuoc_ngoai ? $record->ngay_het_hop_dong_nuoc_ngoai->format('Y-m-d') : '') }}" class="form-control">
+                        <input type="date" id="ngay_het_hop_dong_nuoc_ngoai" name="ngay_het_hop_dong_nuoc_ngoai" value="{{ old('ngay_het_hop_dong_nuoc_ngoai', $record?->ngay_het_hop_dong_nuoc_ngoai ? $record->ngay_het_hop_dong_nuoc_ngoai->format('Y-m-d') : '') }}" class="form-control @error('ngay_het_hop_dong_nuoc_ngoai') is-invalid @enderror">
+                        @error('ngay_het_hop_dong_nuoc_ngoai')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
             </div>
@@ -133,14 +138,16 @@
             @if (isset($record))
             <div class="col-12 border-top pt-3">
                 <label for="ly_do_thay_doi" class="form-label fw-semibold text-danger">Lý do cập nhật hồ sơ (Lưu vào lịch sử công việc)</label>
-                <input type="text" id="ly_do_thay_doi" name="ly_do_thay_doi" value="{{ old('ly_do_thay_doi') }}" class="form-control" placeholder="Ví dụ: Thay đổi công việc từ nông dân sang công nhân may, đi XKLD...">
+                <input type="text" id="ly_do_thay_doi" name="ly_do_thay_doi" value="{{ old('ly_do_thay_doi') }}" class="form-control @error('ly_do_thay_doi') is-invalid @enderror" placeholder="Ví dụ: Thay đổi công việc từ nông dân sang công nhân may, đi XKLD...">
+                @error('ly_do_thay_doi')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             @endif
 
             {{-- Ghi chú --}}
             <div class="col-12 border-top pt-3">
                 <label for="ghi_chu" class="form-label fw-semibold">Ghi chú</label>
-                <textarea id="ghi_chu" name="ghi_chu" rows="3" class="form-control">{{ old('ghi_chu', $record?->ghi_chu) }}</textarea>
+                <textarea id="ghi_chu" name="ghi_chu" rows="3" class="form-control @error('ghi_chu') is-invalid @enderror">{{ old('ghi_chu', $record?->ghi_chu) }}</textarea>
+                @error('ghi_chu')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
         </div>
     </div>

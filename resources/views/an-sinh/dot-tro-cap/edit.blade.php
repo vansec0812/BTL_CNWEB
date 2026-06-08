@@ -68,57 +68,84 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="ten_dot" class="form-label">Tên đợt trợ cấp <span class="text-danger">*</span></label>
-                        <input type="text" id="ten_dot" name="ten_dot" value="{{ old('ten_dot', $record->ten_dot) }}" class="form-control" placeholder="Ví dụ: Phát quà Tết Nguyên Đán Ất Tỵ 2025" required>
+                        <input type="text" id="ten_dot" name="ten_dot" value="{{ old('ten_dot', $record->ten_dot) }}" class="form-control @error('ten_dot') is-invalid @enderror" placeholder="Ví dụ: Phát quà Tết Nguyên Đán Ất Tỵ 2025" required>
+                        @error('ten_dot')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-3">
                         <label for="mo_ta" class="form-label">Mô tả chi tiết</label>
-                        <textarea id="mo_ta" name="mo_ta" class="form-control" rows="3" placeholder="Nhập mục đích, thông điệp cứu trợ hoặc thông tin thêm về đợt trợ cấp này...">{{ old('mo_ta', $record->mo_ta) }}</textarea>
+                        <textarea id="mo_ta" name="mo_ta" class="form-control @error('mo_ta') is-invalid @enderror" rows="3" placeholder="Nhập mục đích, thông điệp cứu trợ hoặc thông tin thêm về đợt trợ cấp này...">{{ old('mo_ta', $record->mo_ta) }}</textarea>
+                        @error('mo_ta')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="loai_tro_cap" class="form-label">Hình thức trợ cấp <span class="text-danger">*</span></label>
-                            <select id="loai_tro_cap" name="loai_tro_cap" class="form-select" required>
+                            <select id="loai_tro_cap" name="loai_tro_cap" class="form-select @error('loai_tro_cap') is-invalid @enderror" required>
                                 @foreach ($loaiTroCap as $value => $label)
                                     <option value="{{ $value }}" @selected(old('loai_tro_cap', $record->loai_tro_cap) === $value)>{{ $label }}</option>
                                 @endforeach
                             </select>
+                            @error('loai_tro_cap')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="gia_tri_quy_doi" class="form-label">Giá trị quy đổi/suất (VNĐ)</label>
-                            <input type="number" id="gia_tri_quy_doi" name="gia_tri_quy_doi" value="{{ old('gia_tri_quy_doi', $record->gia_tri_quy_doi) }}" class="form-control" min="0" placeholder="Ví dụ: 500000">
+                            <input type="number" id="gia_tri_quy_doi" name="gia_tri_quy_doi" value="{{ old('gia_tri_quy_doi', $record->gia_tri_quy_doi) }}" class="form-control @error('gia_tri_quy_doi') is-invalid @enderror" min="0" placeholder="Ví dụ: 500000">
+                            @error('gia_tri_quy_doi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="nguon_kinh_phi" class="form-label">Nguồn kinh phí</label>
-                        <input type="text" id="nguon_kinh_phi" name="nguon_kinh_phi" value="{{ old('nguon_kinh_phi', $record->nguon_kinh_phi) }}" class="form-control" placeholder="Ví dụ: Quỹ Vì Người Nghèo xã, ngân sách huyện, Mạnh thường quân tài trợ...">
+                        <input type="text" id="nguon_kinh_phi" name="nguon_kinh_phi" value="{{ old('nguon_kinh_phi', $record->nguon_kinh_phi) }}" class="form-control @error('nguon_kinh_phi') is-invalid @enderror" placeholder="Ví dụ: Quỹ Vì Người Nghèo xã, ngân sách huyện, Mạnh thường quân tài trợ...">
+                        @error('nguon_kinh_phi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="ngay_bat_dau_cap_phat" class="form-label">Ngày bắt đầu cấp phát <span class="text-danger">*</span></label>
-                            <input type="date" id="ngay_bat_dau_cap_phat" name="ngay_bat_dau_cap_phat" value="{{ old('ngay_bat_dau_cap_phat', $record->ngay_bat_dau_cap_phat?->format('Y-m-d')) }}" class="form-control" required>
+                            <input type="date" id="ngay_bat_dau_cap_phat" name="ngay_bat_dau_cap_phat" value="{{ old('ngay_bat_dau_cap_phat', $record->ngay_bat_dau_cap_phat?->format('Y-m-d')) }}" class="form-control @error('ngay_bat_dau_cap_phat') is-invalid @enderror" required>
+                            @error('ngay_bat_dau_cap_phat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="ngay_ket_thuc_cap_phat" class="form-label">Ngày kết thúc (Dự kiến)</label>
-                            <input type="date" id="ngay_ket_thuc_cap_phat" name="ngay_ket_thuc_cap_phat" value="{{ old('ngay_ket_thuc_cap_phat', $record->ngay_ket_thuc_cap_phat?->format('Y-m-d')) }}" class="form-control">
+                            <input type="date" id="ngay_ket_thuc_cap_phat" name="ngay_ket_thuc_cap_phat" value="{{ old('ngay_ket_thuc_cap_phat', $record->ngay_ket_thuc_cap_phat?->format('Y-m-d')) }}" class="form-control @error('ngay_ket_thuc_cap_phat') is-invalid @enderror">
+                            @error('ngay_ket_thuc_cap_phat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="trang_thai" class="form-label">Trạng thái <span class="text-danger">*</span></label>
-                        <select id="trang_thai" name="trang_thai" class="form-select" required>
+                        <select id="trang_thai" name="trang_thai" class="form-select @error('trang_thai') is-invalid @enderror" required>
                             @foreach ($trangThai as $value => $label)
                                 <option value="{{ $value }}" @selected(old('trang_thai', $record->trang_thai) === $value)>{{ $label }}</option>
                             @endforeach
                         </select>
+                        @error('trang_thai')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="mb-0">
                         <label for="ghi_chu" class="form-label">Ghi chú</label>
-                        <textarea id="ghi_chu" name="ghi_chu" class="form-control" rows="2" placeholder="Ghi chú nội bộ nếu có...">{{ old('ghi_chu', $record->ghi_chu) }}</textarea>
+                        <textarea id="ghi_chu" name="ghi_chu" class="form-control @error('ghi_chu') is-invalid @enderror" rows="2" placeholder="Ghi chú nội bộ nếu có...">{{ old('ghi_chu', $record->ghi_chu) }}</textarea>
+                        @error('ghi_chu')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
             </div>

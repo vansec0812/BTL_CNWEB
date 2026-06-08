@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('tam-tru.store') }}">
+<form method="POST" action="{{ route('tam-tru.store') }}" novalidate>
     @csrf
 
     <div class="row g-4">
