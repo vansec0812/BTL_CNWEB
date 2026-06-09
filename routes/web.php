@@ -1,21 +1,26 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BaoTroXaHoiController;
 use App\Http\Controllers\BienDongHoKhauController;
+use App\Http\Controllers\BieuDoController;
+use App\Http\Controllers\DanQuanHoatDongController;
+use App\Http\Controllers\DanQuanTuVeController;
+use App\Http\Controllers\DoanhNghiepController;
 use App\Http\Controllers\DoiTuongChinhSachController;
+use App\Http\Controllers\DotTroCapController;
 use App\Http\Controllers\HoKhauController;
+use App\Http\Controllers\KetNoiViecLamController;
+use App\Http\Controllers\LaoDongController;
 use App\Http\Controllers\NghiaVuQuanSuController;
 use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DanQuanTuVeController;
-use App\Http\Controllers\DanQuanHoatDongController;
-use App\Http\Controllers\LaoDongController;
-use App\Http\Controllers\DoanhNghiepController;
-use App\Http\Controllers\KetNoiViecLamController;
-use App\Http\Controllers\AuditLogController;
+use App\Models\DotTroCap;
 use App\Models\HoKhau;
+use App\Models\LaoDong;
+use App\Models\NghiaVuQuanSu;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -253,7 +258,7 @@ Route::middleware('auth')->group(function () use ($modules) {
                 'tam_hoan' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'tam_hoan')->count(),
             ];
 
-            $extraData['dsNVQS'] = \App\Models\NghiaVuQuanSu::query()
+            $extraData['dsNVQS'] = NghiaVuQuanSu::query()
                 ->with(['nhanKhau.hoKhau'])
                 ->latest()
                 ->limit(10)
@@ -266,13 +271,14 @@ Route::middleware('auth')->group(function () use ($modules) {
                 'xuat_khau_lao_dong' => DB::table('lao_dong')->where('xuat_khau_lao_dong', true)->count(),
             ];
 
-            $extraData['dsLaoDong'] = \App\Models\LaoDong::query()
+            $extraData['dsLaoDong'] = LaoDong::query()
                 ->with(['nhanKhau'])
                 ->latest()
                 ->limit(10)
                 ->get()
                 ->map(function ($ld) {
                     $ld->ho_ten = $ld->nhanKhau?->ho_ten;
+
                     return $ld;
                 });
         } elseif ($module === 'an-sinh-y-te-giao-duc') {
@@ -283,7 +289,7 @@ Route::middleware('auth')->group(function () use ($modules) {
                 'y_te' => $count('y_te_nhan_khau'),
             ];
 
-            $extraData['dsDotTroCap'] = \App\Models\DotTroCap::query()
+            $extraData['dsDotTroCap'] = DotTroCap::query()
                 ->latest()
                 ->limit(10)
                 ->get();
@@ -316,7 +322,6 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->except(['index', 'show'])
             ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
             ->names('dan-quan-hoat-dong');
-
 
     });
 
@@ -459,8 +464,6 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
         ->names('dan-quan-hoat-dong');
 
-
-
     // API phục vụ autocomplete
     Route::get('api/nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])
         ->name('nghia-vu-quan-su.eligible-citizens')
@@ -529,15 +532,15 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
             ->names('bao-tro-xa-hoi');
 
-        Route::resource('an-sinh/dot-tro-cap', \App\Http\Controllers\DotTroCapController::class)
+        Route::resource('an-sinh/dot-tro-cap', DotTroCapController::class)
             ->except(['index', 'show'])
             ->parameters(['dot-tro-cap' => 'dotTroCap'])
             ->names('dot-tro-cap');
 
-        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm/{detailId}', [\App\Http\Controllers\DotTroCapController::class, 'confirmReceipt'])->name('dot-tro-cap.confirm');
-        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm-batch', [\App\Http\Controllers\DotTroCapController::class, 'confirmReceiptBatch'])->name('dot-tro-cap.confirm-batch');
-        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/add-recipient', [\App\Http\Controllers\DotTroCapController::class, 'addRecipient'])->name('dot-tro-cap.add-recipient');
-        Route::delete('an-sinh/dot-tro-cap/{dotTroCap}/remove-recipient/{detailId}', [\App\Http\Controllers\DotTroCapController::class, 'removeRecipient'])->name('dot-tro-cap.remove-recipient');
+        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm/{detailId}', [DotTroCapController::class, 'confirmReceipt'])->name('dot-tro-cap.confirm');
+        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm-batch', [DotTroCapController::class, 'confirmReceiptBatch'])->name('dot-tro-cap.confirm-batch');
+        Route::post('an-sinh/dot-tro-cap/{dotTroCap}/add-recipient', [DotTroCapController::class, 'addRecipient'])->name('dot-tro-cap.add-recipient');
+        Route::delete('an-sinh/dot-tro-cap/{dotTroCap}/remove-recipient/{detailId}', [DotTroCapController::class, 'removeRecipient'])->name('dot-tro-cap.remove-recipient');
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
@@ -551,7 +554,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
         ->names('bao-tro-xa-hoi');
 
-    Route::resource('an-sinh/dot-tro-cap', \App\Http\Controllers\DotTroCapController::class)
+    Route::resource('an-sinh/dot-tro-cap', DotTroCapController::class)
         ->only(['index', 'show'])
         ->parameters(['dot-tro-cap' => 'dotTroCap'])
         ->names('dot-tro-cap');
@@ -661,4 +664,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         Route::get('he-thong/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
         Route::get('he-thong/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit-logs.show');
     });
+
+    // --- Dashboard & Biểu đồ trực quan ---
+    Route::get('he-thong/dashboard-bieu-do', [BieuDoController::class, 'index'])->name('he-thong.dashboard-bieu-do');
 });

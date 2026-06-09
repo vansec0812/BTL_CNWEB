@@ -272,7 +272,7 @@
                                 ['title' => 'Thuế & Phí địa phương', 'disabled' => true, 'icon' => 'bi-cash-coin'],
                             ];
                         } elseif ($isHeThong) {
-                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*') || request()->routeIs('audit-logs.*');
+                            $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*') || request()->routeIs('audit-logs.*') || request()->routeIs('he-thong.dashboard-bieu-do');
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'he-thong-bao-cao'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                             ];
@@ -286,7 +286,7 @@
                             }
                             $submenu = array_merge($submenu, [
                                 ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
-                                ['title' => 'Dashboard & Biểu đồ', 'disabled' => true, 'icon' => 'bi-graph-up'],
+                                ['title' => 'Dashboard & Biểu đồ', 'url' => route('he-thong.dashboard-bieu-do'), 'icon' => 'bi-graph-up', 'active' => request()->routeIs('he-thong.dashboard-bieu-do')],
                                 ['title' => 'Bộ lọc động & Tìm kiếm', 'disabled' => true, 'icon' => 'bi-funnel'],
                                 ['title' => 'Xuất báo cáo Excel', 'disabled' => true, 'icon' => 'bi-file-earmark-excel'],
                                 ['title' => 'Xuất báo cáo PDF', 'disabled' => true, 'icon' => 'bi-file-earmark-pdf'],
