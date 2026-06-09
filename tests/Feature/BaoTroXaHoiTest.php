@@ -220,6 +220,163 @@ class BaoTroXaHoiTest extends TestCase
         $this->assertSoftDeleted('bao_tro_xa_hoi', ['id' => $recordId]);
     }
 
+    public function test_api_index_returns_json(): void
+    {
+        $hoKhauId = $this->createHoKhau('HK-API-001');
+        $this->createHouseholdSupport($hoKhauId, 'QD-API-HO');
+
+        $response = $this->getJson(route('api.bao-tro-xa-hoi.index'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'ho_khau_id',
+                            'nhan_khau_id',
+                            'loai_bao_tro',
+                            'so_quyet_dinh',
+                        ],
+                    ],
+                ],
+                'stats',
+            ])
+            ->assertJsonFragment(['so_quyet_dinh' => 'QD-API-HO']);
+    }
+
+    public function test_api_create_returns_json(): void
+    {
+        $response = $this->getJson(route('bao-tro-xa-hoi.create'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'hoKhau',
+                    'nhanKhau',
+                    'loaiBaoTro',
+                    'mucDoKhuyetTat',
+                    'trangThai',
+                ],
+            ]);
+    }
+
+    public function test_api_store_returns_json(): void
+    {
+        $hoKhauId = $this->createHoKhau('HK-API-STORE');
+
+        $response = $this->postJson(route('api.bao-tro-xa-hoi.store'), [
+            'loai_bao_tro' => 'ho_ngheo',
+            'ho_khau_id' => $hoKhauId,
+            'muc_do_khuyet_tat' => 'khong_ap_dung',
+            'so_quyet_dinh' => 'QD-API-STORE',
+            'trang_thai' => 'dang_huong',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'ho_khau_id',
+                    'loai_bao_tro',
+                    'so_quyet_dinh',
+                ],
+            ])
+            ->assertJsonFragment(['so_quyet_dinh' => 'QD-API-STORE']);
+
+        $this->assertDatabaseHas('bao_tro_xa_hoi', [
+            'ho_khau_id' => $hoKhauId,
+            'so_quyet_dinh' => 'QD-API-STORE',
+        ]);
+    }
+
+    public function test_api_show_returns_json(): void
+    {
+        $hoKhauId = $this->createHoKhau('HK-API-SHOW');
+        $recordId = $this->createHouseholdSupport($hoKhauId, 'QD-API-SHOW');
+
+        $response = $this->getJson(route('api.bao-tro-xa-hoi.show', $recordId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'ho_khau_id',
+                    'so_quyet_dinh',
+                    'ho_khau',
+                ],
+            ])
+            ->assertJsonFragment(['so_quyet_dinh' => 'QD-API-SHOW']);
+    }
+
+    public function test_api_edit_returns_json(): void
+    {
+        $hoKhauId = $this->createHoKhau('HK-API-EDIT');
+        $recordId = $this->createHouseholdSupport($hoKhauId, 'QD-API-EDIT');
+
+        $response = $this->getJson(route('bao-tro-xa-hoi.edit', $recordId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'record',
+                    'hoKhau',
+                    'nhanKhau',
+                    'loaiBaoTro',
+                    'mucDoKhuyetTat',
+                    'trangThai',
+                ],
+            ]);
+    }
+
+    public function test_api_update_returns_json(): void
+    {
+        $hoKhauId = $this->createHoKhau('HK-API-UPDATE');
+        $recordId = $this->createHouseholdSupport($hoKhauId, 'QD-API-OLD');
+
+        $response = $this->putJson(route('api.bao-tro-xa-hoi.update', $recordId), [
+            'loai_bao_tro' => 'ho_can_ngheo',
+            'ho_khau_id' => $hoKhauId,
+            'muc_do_khuyet_tat' => 'khong_ap_dung',
+            'so_quyet_dinh' => 'QD-API-NEW',
+            'trang_thai' => 'tam_ngung',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'loai_bao_tro',
+                    'so_quyet_dinh',
+                    'trang_thai',
+                ],
+            ])
+            ->assertJsonFragment(['so_quyet_dinh' => 'QD-API-NEW']);
+    }
+
+    public function test_api_destroy_returns_json(): void
+    {
+        $hoKhauId = $this->createHoKhau('HK-API-DELETE');
+        $recordId = $this->createHouseholdSupport($hoKhauId, 'QD-API-DELETE');
+
+        $response = $this->deleteJson(route('api.bao-tro-xa-hoi.destroy', $recordId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
+        $this->assertSoftDeleted('bao_tro_xa_hoi', ['id' => $recordId]);
+    }
+
     private function createHouseholdSupport(string|int $hoKhauId, string $decision, string $type = 'ho_ngheo', string $status = 'dang_huong'): int
     {
         return DB::table('bao_tro_xa_hoi')->insertGetId([

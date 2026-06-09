@@ -17,7 +17,7 @@ use Illuminate\View\View;
 
 class DotTroCapController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $filters = $request->only(['q', 'loai_tro_cap', 'trang_thai']);
 
@@ -33,6 +33,15 @@ class DotTroCapController extends Controller
 
         $dotTroCap = $query->paginate(10)->withQueryString();
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách đợt trợ cấp thành công.',
+                'data' => $dotTroCap,
+                'stats' => $this->stats(),
+            ], 200);
+        }
+
         return view('an-sinh.dot-tro-cap.index', [
             'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('an-sinh-y-te-giao-duc'),
@@ -44,12 +53,22 @@ class DotTroCapController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request)
     {
-        return view('an-sinh.dot-tro-cap.create', $this->formData());
+        $formData = $this->formData();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form tạo mới thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('an-sinh.dot-tro-cap.create', $formData);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'ten_dot' => ['required', 'string', 'max:255'],
@@ -91,17 +110,32 @@ class DotTroCapController extends Controller
 
             DB::commit();
 
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã tạo đợt trợ cấp mới và tự động quét danh sách đối tượng hưởng.',
+                    'data' => $dotTroCap,
+                ], 201);
+            }
+
             return redirect()
                 ->route('dot-tro-cap.index')
                 ->with('status', 'Đã tạo đợt trợ cấp mới và tự động quét danh sách đối tượng hưởng.');
         } catch (\Exception $e) {
             DB::rollBack();
 
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi tạo đợt trợ cấp: '.$e->getMessage(),
+                ], 422);
+            }
+
             return back()->withErrors(['error' => 'Lỗi tạo đợt trợ cấp: '.$e->getMessage()])->withInput();
         }
     }
 
-    public function show(DotTroCap $dotTroCap, Request $request): View
+    public function show(DotTroCap $dotTroCap, Request $request)
     {
         $filters = $request->only(['q', 'da_nhan']);
 
@@ -126,6 +160,17 @@ class DotTroCapController extends Controller
             });
 
         $recipients = $query->paginate(15)->withQueryString();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy chi tiết đợt trợ cấp thành công.',
+                'data' => [
+                    'record' => $dotTroCap,
+                    'recipients' => $recipients,
+                ],
+            ], 200);
+        }
 
         // Data for manual additions form
         $allNhanKhau = NhanKhau::query()
@@ -155,14 +200,14 @@ class DotTroCapController extends Controller
         ]);
     }
 
-    public function edit(DotTroCap $dotTroCap): View
+    public function edit(DotTroCap $dotTroCap, Request $request)
     {
         $dieuKien = $dotTroCap->dieu_kien_doi_tuong ?? [];
         $selectedBaoTro = $dieuKien['loai_bao_tro'] ?? [];
         $selectedChinhSach = $dieuKien['loai_chinh_sach'] ?? [];
         $selectedThonXom = $dieuKien['thon_xom'] ?? [];
 
-        return view('an-sinh.dot-tro-cap.edit', array_merge(
+        $formData = array_merge(
             $this->formData(),
             [
                 'record' => $dotTroCap,
@@ -170,10 +215,20 @@ class DotTroCapController extends Controller
                 'selectedChinhSach' => $selectedChinhSach,
                 'selectedThonXom' => $selectedThonXom,
             ]
-        ));
+        );
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu form chỉnh sửa thành công.',
+                'data' => $formData,
+            ], 200);
+        }
+
+        return view('an-sinh.dot-tro-cap.edit', $formData);
     }
 
-    public function update(Request $request, DotTroCap $dotTroCap): RedirectResponse
+    public function update(Request $request, DotTroCap $dotTroCap)
     {
         $validated = $request->validate([
             'ten_dot' => ['required', 'string', 'max:255'],
@@ -224,19 +279,41 @@ class DotTroCapController extends Controller
 
             DB::commit();
 
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã cập nhật đợt trợ cấp thành công.',
+                    'data' => $dotTroCap,
+                ], 200);
+            }
+
             return redirect()
                 ->route('dot-tro-cap.index')
                 ->with('status', 'Đã cập nhật đợt trợ cấp thành công.');
         } catch (\Exception $e) {
             DB::rollBack();
 
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi cập nhật: '.$e->getMessage(),
+                ], 422);
+            }
+
             return back()->withErrors(['error' => 'Lỗi cập nhật: '.$e->getMessage()])->withInput();
         }
     }
 
-    public function destroy(DotTroCap $dotTroCap): RedirectResponse
+    public function destroy(DotTroCap $dotTroCap, Request $request)
     {
         $dotTroCap->delete();
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xóa đợt trợ cấp thành công.',
+            ], 200);
+        }
 
         return redirect()
             ->route('dot-tro-cap.index')
@@ -246,7 +323,7 @@ class DotTroCapController extends Controller
     /**
      * Xác nhận đã nhận trợ cấp cho một cá nhân/hộ gia đình.
      */
-    public function confirmReceipt(DotTroCap $dotTroCap, int $detailId): RedirectResponse
+    public function confirmReceipt(DotTroCap $dotTroCap, int $detailId, Request $request)
     {
         $detail = $dotTroCap->chiTietCapPhats()->findOrFail($detailId);
 
@@ -261,16 +338,30 @@ class DotTroCapController extends Controller
             });
         }
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xác nhận nhận trợ cấp.',
+                'data' => $detail,
+            ], 200);
+        }
+
         return back()->with('status', 'Đã xác nhận nhận trợ cấp.');
     }
 
     /**
      * Xác nhận nhận trợ cấp hàng loạt.
      */
-    public function confirmReceiptBatch(DotTroCap $dotTroCap, Request $request): RedirectResponse
+    public function confirmReceiptBatch(DotTroCap $dotTroCap, Request $request)
     {
         $ids = $request->input('ids', []);
         if (empty($ids)) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vui lòng chọn ít nhất một đối tượng để xác nhận.',
+                ], 422);
+            }
             return back()->withErrors(['error' => 'Vui lòng chọn ít nhất một đối tượng để xác nhận.']);
         }
 
@@ -290,13 +381,20 @@ class DotTroCapController extends Controller
             }
         });
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xác nhận nhận trợ cấp cho '.count($ids).' đối tượng.',
+            ], 200);
+        }
+
         return back()->with('status', 'Đã xác nhận nhận trợ cấp cho '.count($ids).' đối tượng.');
     }
 
     /**
      * Thêm đối tượng nhận thủ công ngoài danh sách tự động quét.
      */
-    public function addRecipient(DotTroCap $dotTroCap, Request $request): RedirectResponse
+    public function addRecipient(DotTroCap $dotTroCap, Request $request)
     {
         $validated = $request->validate([
             'type' => ['required', Rule::in(['ho_khau', 'nhan_khau'])],
@@ -318,11 +416,18 @@ class DotTroCapController extends Controller
             ->exists();
 
         if ($exists) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Đối tượng này đã có trong danh sách nhận của đợt trợ cấp này.',
+                ], 422);
+            }
             return back()->withErrors(['error' => 'Đối tượng này đã có trong danh sách nhận của đợt trợ cấp này.']);
         }
 
-        DB::transaction(function () use ($dotTroCap, $hoKhauId, $nhanKhauId, $validated) {
-            ChiTietCapPhatTroCap::create([
+        $detail = null;
+        DB::transaction(function () use ($dotTroCap, $hoKhauId, $nhanKhauId, $validated, &$detail) {
+            $detail = ChiTietCapPhatTroCap::create([
                 'dot_tro_cap_id' => $dotTroCap->id,
                 'ho_khau_id' => $hoKhauId,
                 'nhan_khau_id' => $nhanKhauId,
@@ -335,13 +440,21 @@ class DotTroCapController extends Controller
             $dotTroCap->increment('tong_so_doi_tuong');
         });
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã thêm đối tượng nhận trợ cấp thủ công.',
+                'data' => $detail,
+            ], 200);
+        }
+
         return back()->with('status', 'Đã thêm đối tượng nhận trợ cấp thủ công.');
     }
 
     /**
      * Xóa một đối tượng khỏi danh sách nhận.
      */
-    public function removeRecipient(DotTroCap $dotTroCap, int $detailId): RedirectResponse
+    public function removeRecipient(DotTroCap $dotTroCap, int $detailId, Request $request)
     {
         $detail = $dotTroCap->chiTietCapPhats()->findOrFail($detailId);
 
@@ -352,6 +465,13 @@ class DotTroCapController extends Controller
             $dotTroCap->decrement('tong_so_doi_tuong');
             $detail->delete();
         });
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xóa đối tượng khỏi danh sách nhận.',
+            ], 200);
+        }
 
         return back()->with('status', 'Đã xóa đối tượng khỏi danh sách nhận.');
     }

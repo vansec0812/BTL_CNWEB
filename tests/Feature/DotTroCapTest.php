@@ -241,6 +241,376 @@ class DotTroCapTest extends TestCase
         ]);
     }
 
+    public function test_api_index_returns_json(): void
+    {
+        DB::table('dot_tro_cap')->insert([
+            'ten_dot' => 'Cứu trợ lũ lụt API',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 1000000,
+            'nguon_kinh_phi' => 'Mạnh thường quân',
+            'ngay_bat_dau_cap_phat' => '2026-06-01',
+            'tong_so_doi_tuong' => 0,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'sap_dien_ra',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('api.dot-tro-cap.index'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'ten_dot',
+                            'loai_tro_cap',
+                            'trang_thai',
+                        ],
+                    ],
+                ],
+                'stats',
+            ])
+            ->assertJsonFragment(['ten_dot' => 'Cứu trợ lũ lụt API']);
+    }
+
+    public function test_api_create_returns_json(): void
+    {
+        $response = $this->getJson(route('dot-tro-cap.create'));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'loaiBaoTro',
+                    'loaiChinhSach',
+                    'loaiTroCap',
+                    'trangThai',
+                    'thonXoms',
+                ],
+            ]);
+    }
+
+    public function test_api_store_returns_json(): void
+    {
+        $response = $this->postJson(route('api.dot-tro-cap.store'), [
+            'ten_dot' => 'Quà hỗ trợ khó khăn API',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 500000,
+            'nguon_kinh_phi' => 'Ngân sách xã',
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'trang_thai' => 'sap_dien_ra',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'ten_dot',
+                    'loai_tro_cap',
+                ],
+            ])
+            ->assertJsonFragment(['ten_dot' => 'Quà hỗ trợ khó khăn API']);
+
+        $this->assertDatabaseHas('dot_tro_cap', [
+            'ten_dot' => 'Quà hỗ trợ khó khăn API',
+        ]);
+    }
+
+    public function test_api_show_returns_json(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ y tế API',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 200000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 0,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'dang_thuc_hien',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('api.dot-tro-cap.show', $dotId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'record',
+                    'recipients',
+                ],
+            ])
+            ->assertJsonFragment(['ten_dot' => 'Hỗ trợ y tế API']);
+    }
+
+    public function test_api_edit_returns_json(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ cứu đói API',
+            'loai_tro_cap' => 'hien_vat',
+            'gia_tri_quy_doi' => 300000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 0,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'dang_thuc_hien',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('dot-tro-cap.edit', $dotId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'record',
+                    'loaiBaoTro',
+                    'loaiChinhSach',
+                    'loaiTroCap',
+                    'trangThai',
+                    'thonXoms',
+                ],
+            ]);
+    }
+
+    public function test_api_update_returns_json(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ cũ',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 200000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 0,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'sap_dien_ra',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->putJson(route('api.dot-tro-cap.update', $dotId), [
+            'ten_dot' => 'Hỗ trợ mới',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 250000,
+            'ngay_bat_dau_cap_phat' => '2026-06-06',
+            'trang_thai' => 'dang_thuc_hien',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'ten_dot',
+                    'gia_tri_quy_doi',
+                ],
+            ])
+            ->assertJsonFragment(['ten_dot' => 'Hỗ trợ mới']);
+    }
+
+    public function test_api_destroy_returns_json(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ xóa API',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 200000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 0,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'sap_dien_ra',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->deleteJson(route('api.dot-tro-cap.destroy', $dotId));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
+        $this->assertDatabaseMissing('dot_tro_cap', ['id' => $dotId]);
+    }
+
+    public function test_api_confirm_receipt(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ y tế API',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 200000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 1,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'dang_thuc_hien',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $nkId = $this->createNhanKhau('Lý Thị D API');
+        $detailId = DB::table('chi_tiet_cap_phat_tro_cap')->insertGetId([
+            'dot_tro_cap_id' => $dotId,
+            'nhan_khau_id' => $nkId,
+            'so_suat' => 1,
+            'gia_tri_nhan' => 200000,
+            'da_nhan' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->postJson(route('api.dot-tro-cap.confirm', [$dotId, $detailId]));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'da_nhan',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('chi_tiet_cap_phat_tro_cap', [
+            'id' => $detailId,
+            'da_nhan' => true,
+        ]);
+    }
+
+    public function test_api_confirm_receipt_batch(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ cứu trợ API 2',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 200000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 2,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'dang_thuc_hien',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $nk1Id = $this->createNhanKhau('Lý Thị D API 1');
+        $nk2Id = $this->createNhanKhau('Lý Thị D API 2');
+        $detail1Id = DB::table('chi_tiet_cap_phat_tro_cap')->insertGetId([
+            'dot_tro_cap_id' => $dotId,
+            'nhan_khau_id' => $nk1Id,
+            'so_suat' => 1,
+            'gia_tri_nhan' => 200000,
+            'da_nhan' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $detail2Id = DB::table('chi_tiet_cap_phat_tro_cap')->insertGetId([
+            'dot_tro_cap_id' => $dotId,
+            'nhan_khau_id' => $nk2Id,
+            'so_suat' => 1,
+            'gia_tri_nhan' => 200000,
+            'da_nhan' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->postJson(route('api.dot-tro-cap.confirm-batch', $dotId), [
+            'ids' => [$detail1Id, $detail2Id],
+        ]);
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
+        $this->assertDatabaseHas('chi_tiet_cap_phat_tro_cap', [
+            'id' => $detail1Id,
+            'da_nhan' => true,
+        ]);
+        $this->assertDatabaseHas('chi_tiet_cap_phat_tro_cap', [
+            'id' => $detail2Id,
+            'da_nhan' => true,
+        ]);
+    }
+
+    public function test_api_add_recipient(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ cứu đói giáp hạt API 2',
+            'loai_tro_cap' => 'hien_vat',
+            'gia_tri_quy_doi' => 300000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 0,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'dang_thuc_hien',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $nkId = $this->createNhanKhau('Vương Văn E API');
+
+        $response = $this->postJson(route('api.dot-tro-cap.add-recipient', $dotId), [
+            'type' => 'nhan_khau',
+            'nhan_khau_id' => $nkId,
+            'so_suat' => 2,
+            'gia_tri_nhan' => 600000,
+            'ghi_chu' => 'Hoàn cảnh neo đơn đặc biệt API',
+        ]);
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'nhan_khau_id',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('chi_tiet_cap_phat_tro_cap', [
+            'dot_tro_cap_id' => $dotId,
+            'nhan_khau_id' => $nkId,
+            'so_suat' => 2,
+            'ghi_chu' => 'Hoàn cảnh neo đơn đặc biệt API',
+        ]);
+    }
+
+    public function test_api_remove_recipient(): void
+    {
+        $dotId = DB::table('dot_tro_cap')->insertGetId([
+            'ten_dot' => 'Hỗ trợ cứu trợ API 3',
+            'loai_tro_cap' => 'tien_mat',
+            'gia_tri_quy_doi' => 200000,
+            'ngay_bat_dau_cap_phat' => '2026-06-05',
+            'tong_so_doi_tuong' => 1,
+            'so_da_nhan' => 0,
+            'trang_thai' => 'dang_thuc_hien',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $nkId = $this->createNhanKhau('Lý Thị D API 3');
+        $detailId = DB::table('chi_tiet_cap_phat_tro_cap')->insertGetId([
+            'dot_tro_cap_id' => $dotId,
+            'nhan_khau_id' => $nkId,
+            'so_suat' => 1,
+            'gia_tri_nhan' => 200000,
+            'da_nhan' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->deleteJson(route('api.dot-tro-cap.remove-recipient', [$dotId, $detailId]));
+        $response->assertOk()
+            ->assertJsonStructure([
+                'success',
+                'message',
+            ]);
+
+        $this->assertDatabaseMissing('chi_tiet_cap_phat_tro_cap', [
+            'id' => $detailId,
+        ]);
+    }
+
     private function createHoKhau(string $soSo, string $maHo, string $thonXom): int
     {
         return DB::table('ho_khau')->insertGetId([
