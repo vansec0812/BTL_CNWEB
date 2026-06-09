@@ -377,12 +377,37 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->except(['index', 'show'])
                 ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
                 ->names('api.doi-tuong-chinh-sach');
+
+            Route::apiResource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
+                ->except(['index', 'show'])
+                ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
+                ->names('api.bao-tro-xa-hoi');
+
+            Route::apiResource('an-sinh/dot-tro-cap', DotTroCapController::class)
+                ->except(['index', 'show'])
+                ->parameters(['dot-tro-cap' => 'dotTroCap'])
+                ->names('api.dot-tro-cap');
+
+            Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm/{detailId}', [DotTroCapController::class, 'confirmReceipt'])->name('api.dot-tro-cap.confirm');
+            Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm-batch', [DotTroCapController::class, 'confirmReceiptBatch'])->name('api.dot-tro-cap.confirm-batch');
+            Route::post('an-sinh/dot-tro-cap/{dotTroCap}/add-recipient', [DotTroCapController::class, 'addRecipient'])->name('api.dot-tro-cap.add-recipient');
+            Route::delete('an-sinh/dot-tro-cap/{dotTroCap}/remove-recipient/{detailId}', [DotTroCapController::class, 'removeRecipient'])->name('api.dot-tro-cap.remove-recipient');
         });
 
         Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
             ->only(['index', 'show'])
             ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
             ->names('api.doi-tuong-chinh-sach');
+
+        Route::apiResource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
+            ->only(['index', 'show'])
+            ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
+            ->names('api.bao-tro-xa-hoi');
+
+        Route::apiResource('an-sinh/dot-tro-cap', DotTroCapController::class)
+            ->only(['index', 'show'])
+            ->parameters(['dot-tro-cap' => 'dotTroCap'])
+            ->names('api.dot-tro-cap');
 
         // API cho Quản lý Cán bộ (Users)
         Route::middleware('can:manage_users')->group(function () {
