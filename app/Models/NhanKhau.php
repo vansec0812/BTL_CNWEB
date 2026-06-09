@@ -103,6 +103,11 @@ class NhanKhau extends Model
         return $this->hasOne(DanQuanTuVe::class, 'nhan_khau_id');
     }
 
+    public function yTeNhanKhau(): HasOne
+    {
+        return $this->hasOne(YTeNhanKhau::class, 'nhan_khau_id');
+    }
+
     public function laoDong(): HasOne
     {
         return $this->hasOne(LaoDong::class, 'nhan_khau_id');

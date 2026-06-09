@@ -17,6 +17,7 @@ use App\Http\Controllers\NghiaVuQuanSuController;
 use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\YTeNhanKhauController;
 use App\Models\DotTroCap;
 use App\Models\HoKhau;
 use App\Models\LaoDong;
@@ -392,6 +393,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm-batch', [DotTroCapController::class, 'confirmReceiptBatch'])->name('api.dot-tro-cap.confirm-batch');
             Route::post('an-sinh/dot-tro-cap/{dotTroCap}/add-recipient', [DotTroCapController::class, 'addRecipient'])->name('api.dot-tro-cap.add-recipient');
             Route::delete('an-sinh/dot-tro-cap/{dotTroCap}/remove-recipient/{detailId}', [DotTroCapController::class, 'removeRecipient'])->name('api.dot-tro-cap.remove-recipient');
+
+            Route::apiResource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
+                ->except(['index', 'show'])
+                ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
+                ->names('api.y-te-nhan-khau');
         });
 
         Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
@@ -408,6 +414,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->only(['index', 'show'])
             ->parameters(['dot-tro-cap' => 'dotTroCap'])
             ->names('api.dot-tro-cap');
+
+        Route::apiResource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
+            ->names('api.y-te-nhan-khau');
 
         // API cho Quản lý Cán bộ (Users)
         Route::middleware('can:manage_users')->group(function () {
@@ -544,7 +555,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->parameters(['tam-tru' => 'tamTruTamVang'])
         ->names('tam-tru');
 
-    // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội, Đợt trợ cấp) ---
+    // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội, Đợt trợ cấp, Y tế) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
     Route::middleware('can:manage_an_sinh')->group(function () {
         Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
@@ -566,6 +577,11 @@ Route::middleware('auth')->group(function () use ($modules) {
         Route::post('an-sinh/dot-tro-cap/{dotTroCap}/confirm-batch', [DotTroCapController::class, 'confirmReceiptBatch'])->name('dot-tro-cap.confirm-batch');
         Route::post('an-sinh/dot-tro-cap/{dotTroCap}/add-recipient', [DotTroCapController::class, 'addRecipient'])->name('dot-tro-cap.add-recipient');
         Route::delete('an-sinh/dot-tro-cap/{dotTroCap}/remove-recipient/{detailId}', [DotTroCapController::class, 'removeRecipient'])->name('dot-tro-cap.remove-recipient');
+
+        Route::resource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
+            ->except(['index', 'show'])
+            ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
+            ->names('y-te-nhan-khau');
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
@@ -583,6 +599,11 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['dot-tro-cap' => 'dotTroCap'])
         ->names('dot-tro-cap');
+
+    Route::resource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
+        ->only(['index', 'show'])
+        ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
+        ->names('y-te-nhan-khau');
 
     // --- Phân hệ Kinh tế, Lao động & Việc làm ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động/Admin được làm)
