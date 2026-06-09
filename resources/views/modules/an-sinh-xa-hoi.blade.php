@@ -78,7 +78,7 @@
                     @endcan
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-heart-pulse small"></i></span>
-                        Theo dõi y tế &amp; BHYT
+                        <a href="{{ route('y-te-nhan-khau.index') }}" class="text-decoration-none text-dark fw-semibold">Theo dõi y tế &amp; BHYT</a>
                     </li>
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-danger bg-opacity-10 text-danger rounded-circle p-1"><i class="bi bi-mortarboard small"></i></span>

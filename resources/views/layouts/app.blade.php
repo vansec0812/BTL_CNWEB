@@ -249,7 +249,7 @@
                                 ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.*')],
                                 ['title' => 'Bảo trợ xã hội', 'url' => route('bao-tro-xa-hoi.index'), 'icon' => 'bi-shield', 'active' => request()->routeIs('bao-tro-xa-hoi.*')],
                                 ['title' => 'Đợt trợ cấp & Quỹ từ thiện', 'url' => route('dot-tro-cap.index'), 'icon' => 'bi-gift', 'active' => $isDotActive],
-                                ['title' => 'Theo dõi Y tế & Giáo dục', 'disabled' => true, 'icon' => 'bi-heart-pulse'],
+                                ['title' => 'Theo dõi Y tế & Giáo dục', 'url' => route('y-te-nhan-khau.index'), 'icon' => 'bi-heart-pulse', 'active' => request()->routeIs('y-te-nhan-khau.*')],
                             ];
                         } elseif ($isNghiaVu) {
                             $isNghiaVuActive = request()->routeIs('nghia-vu-quan-su.*');
