@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\DoiTuongChinhSach;
 use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class DoiTuongChinhSachController extends Controller
 {

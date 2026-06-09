@@ -15,6 +15,7 @@ class AuditLogTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $regularUser;
 
     protected function setUp(): void
@@ -102,9 +103,10 @@ class AuditLogTest extends TestCase
      */
     private function forceCreateCo(string $modelClass, array $data)
     {
-        $model = new $modelClass();
+        $model = new $modelClass;
         $model->fill($data);
         $model->save();
+
         return $model;
     }
 }

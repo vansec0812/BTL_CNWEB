@@ -51,7 +51,7 @@ class BienDongHoKhauController extends Controller
     public function create(Request $request)
     {
         $type = $request->input('type');
-        if (!in_array($type, ['tach_ho', 'nhap_ho', 'chuyen_di', 'chuyen_den'])) {
+        if (! in_array($type, ['tach_ho', 'nhap_ho', 'chuyen_di', 'chuyen_den'])) {
             abort(404, 'Loại biến động không hợp lệ');
         }
 
@@ -109,6 +109,7 @@ class BienDongHoKhauController extends Controller
                     'message' => 'Loại biến động không hợp lệ.',
                 ], 400);
             }
+
             return redirect()->back()->withErrors(['loai_bien_dong' => 'Loại biến động không hợp lệ.']);
         }
 

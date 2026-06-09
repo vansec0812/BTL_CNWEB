@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\NhanKhau;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\NhanKhau;
 
 class DanQuanTuVeSeeder extends Seeder
 {
     public function run(): void
     {
         $now = now();
-        
+
         // Lấy danh sách nhân khẩu còn sống, không bị xóa tạm, và không đang nhập ngũ/trúng tuyển nghĩa vụ quân sự
         $eligibleNhanKhau = NhanKhau::query()
             ->whereNull('deleted_at')
@@ -24,6 +24,7 @@ class DanQuanTuVeSeeder extends Seeder
 
         if ($eligibleNhanKhau->isEmpty()) {
             $this->command->warn('⚠️ Không tìm thấy nhân khẩu hợp lệ để tạo Dân quân tự vệ.');
+
             return;
         }
 
@@ -35,7 +36,7 @@ class DanQuanTuVeSeeder extends Seeder
             $chucVu = $positions[$index % count($positions)];
             $donVi = $units[$index % count($units)];
             $ngayGiaNhap = now()->subYears($index + 1)->format('Y-m-d');
-            
+
             // Một số người đã kết thúc, một số đang phục vụ
             $trangThai = ($index === 0) ? 'da_hoan_thanh' : 'dang_phuc_vu';
             $ngayKetThuc = ($trangThai === 'da_hoan_thanh') ? now()->subDays(10)->format('Y-m-d') : null;
@@ -54,6 +55,6 @@ class DanQuanTuVeSeeder extends Seeder
         }
 
         DB::table('dan_quan_tu_ve')->insert($records);
-        $this->command->info('✅ Đã tạo ' . count($records) . ' thành viên Dân quân tự vệ mẫu.');
+        $this->command->info('✅ Đã tạo '.count($records).' thành viên Dân quân tự vệ mẫu.');
     }
 }

@@ -213,7 +213,7 @@ class BienDongHoKhauService
             } elseif (! empty($data['ho_khau_id'])) {
                 // Chuyển đi cả hộ
                 $hoKhau = HoKhau::findOrFail($data['ho_khau_id']);
-                
+
                 $hoKhau->update([
                     'trang_thai' => 'chuyen_di',
                 ]);

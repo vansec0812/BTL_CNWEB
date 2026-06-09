@@ -44,9 +44,9 @@ class ChiTietCapPhatTroCap extends Model
     public function getRecipentNameAttribute(): string
     {
         if ($this->ho_khau_id) {
-            return $this->hoKhau?->chuHo?->ho_ten 
-                ? 'Hộ gia đình: ' . $this->hoKhau->chuHo->ho_ten . ' (Sổ: ' . $this->hoKhau->so_so_ho_khau . ')'
-                : 'Hộ gia đình (Sổ: ' . $this->hoKhau?->so_so_ho_khau . ')';
+            return $this->hoKhau?->chuHo?->ho_ten
+                ? 'Hộ gia đình: '.$this->hoKhau->chuHo->ho_ten.' (Sổ: '.$this->hoKhau->so_so_ho_khau.')'
+                : 'Hộ gia đình (Sổ: '.$this->hoKhau?->so_so_ho_khau.')';
         }
 
         return $this->nhanKhau?->ho_ten ?? 'Nhân khẩu không xác định';

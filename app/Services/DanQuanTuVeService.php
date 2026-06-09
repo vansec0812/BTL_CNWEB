@@ -65,6 +65,7 @@ class DanQuanTuVeService
     public function updateMilitia(DanQuanTuVe $danQuanTuVe, array $data): DanQuanTuVe
     {
         $danQuanTuVe->update($data);
+
         return $danQuanTuVe;
     }
 

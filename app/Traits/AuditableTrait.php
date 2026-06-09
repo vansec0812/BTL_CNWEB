@@ -31,7 +31,7 @@ trait AuditableTrait
                 $new[$key] = $value;
             }
 
-            if (!empty($new)) {
+            if (! empty($new)) {
                 $model->logActivity('update', $old, $new);
             }
         });
@@ -78,21 +78,22 @@ trait AuditableTrait
 
     protected function getAuditDescription(string $action): string
     {
-        $name = isset($this->ho_ten) ? $this->ho_ten : (isset($this->so_so_ho_khau) ? $this->so_so_ho_khau : (isset($this->ten_dot) ? $this->ten_dot : (isset($this->ten_doanh_nghiep) ? $this->ten_doanh_nghiep : 'Bản ghi #' . $this->id)));
-        
+        $name = isset($this->ho_ten) ? $this->ho_ten : (isset($this->so_so_ho_khau) ? $this->so_so_ho_khau : (isset($this->ten_dot) ? $this->ten_dot : (isset($this->ten_doanh_nghiep) ? $this->ten_doanh_nghiep : 'Bản ghi #'.$this->id)));
+
         $actionLabel = [
             'create' => 'Thêm mới',
             'update' => 'Cập nhật',
             'delete' => 'Xóa',
         ][$action] ?? $action;
 
-        return "$actionLabel bản ghi [$name] trong module " . $this->getAuditModule();
+        return "$actionLabel bản ghi [$name] trong module ".$this->getAuditModule();
     }
 
     protected function getAuditAttributes(): array
     {
         $attributes = $this->toArray();
         unset($attributes['password'], $attributes['remember_token']);
+
         return $attributes;
     }
 }

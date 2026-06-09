@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Traits\AuditableTrait;
-
 class NhanKhau extends Model
 {
-    use SoftDeletes, AuditableTrait;
+    use AuditableTrait, SoftDeletes;
 
     protected $auditModule = 'nhan_khau';
 
@@ -103,12 +103,12 @@ class NhanKhau extends Model
         return $this->hasOne(DanQuanTuVe::class, 'nhan_khau_id');
     }
 
-    public function laoDong(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function laoDong(): HasOne
     {
         return $this->hasOne(LaoDong::class, 'nhan_khau_id');
     }
 
-    public function doanhNghiepDaiDien(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function doanhNghiepDaiDien(): HasMany
     {
         return $this->hasMany(DoanhNghiep::class, 'nguoi_dai_dien_nhan_khau_id');
     }

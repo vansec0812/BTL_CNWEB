@@ -9,9 +9,6 @@ use App\Models\NhanKhau;
 use App\Services\DoanhNghiepService;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\JsonResponse;
 
 class DoanhNghiepController extends Controller
 {

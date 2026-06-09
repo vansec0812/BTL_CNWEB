@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\KetNoiViecLam;
+use App\Models\LaoDong;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +26,7 @@ class StoreKetNoiViecLamRequest extends FormRequest
                 'integer',
                 'exists:lao_dong,id',
                 function ($attribute, $value, $fail) {
-                    $laoDong = \App\Models\LaoDong::find($value);
+                    $laoDong = LaoDong::find($value);
                     if ($laoDong && $laoDong->trang_thai_lao_dong !== 'that_nghiep') {
                         // Vẫn cho phép kết nối nhưng cảnh báo hoặc ngăn chặn tùy nghiệp vụ. Hãy cho phép kết nối, nhưng thường là người thất nghiệp.
                         // Để kiểm tra chuẩn xác, ta kiểm tra nếu đang kết nối ở dạng chờ phản hồi
@@ -37,7 +38,7 @@ class StoreKetNoiViecLamRequest extends FormRequest
                             $fail('Người lao động này đã có kết nối đang chờ phản hồi với doanh nghiệp này.');
                         }
                     }
-                }
+                },
             ],
             'doanh_nghiep_id' => 'required|integer|exists:doanh_nghiep_ho_kinh_doanh,id',
             'ngay_ket_noi' => [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,14 +40,14 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            \App\Models\AuditLog::create([
+            AuditLog::create([
                 'user_id' => Auth::id(),
                 'user_name' => Auth::user()->name,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'action' => 'login',
                 'module' => 'he-thong',
-                'mo_ta' => 'Cán bộ [' . Auth::user()->name . '] đăng nhập hệ thống thành công.',
+                'mo_ta' => 'Cán bộ ['.Auth::user()->name.'] đăng nhập hệ thống thành công.',
             ]);
 
             if ($request->expectsJson() || $request->is('api/*')) {
@@ -79,14 +80,14 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            \App\Models\AuditLog::create([
+            AuditLog::create([
                 'user_id' => $user->id,
                 'user_name' => $user->name,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'action' => 'logout',
                 'module' => 'he-thong',
-                'mo_ta' => 'Cán bộ [' . $user->name . '] đăng xuất khỏi hệ thống.',
+                'mo_ta' => 'Cán bộ ['.$user->name.'] đăng xuất khỏi hệ thống.',
             ]);
         }
 
@@ -119,14 +120,14 @@ class AuthController extends Controller
         $newUser = Auth::user();
 
         if ($newUser) {
-            \App\Models\AuditLog::create([
+            AuditLog::create([
                 'user_id' => $newUser->id,
                 'user_name' => $newUser->name,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'action' => 'login',
                 'module' => 'he-thong',
-                'mo_ta' => 'Cán bộ chuyển đổi nhanh tài khoản sang [' . $newUser->name . '] từ [' . ($oldUser?->name ?? 'Khách') . '].',
+                'mo_ta' => 'Cán bộ chuyển đổi nhanh tài khoản sang ['.$newUser->name.'] từ ['.($oldUser?->name ?? 'Khách').'].',
             ]);
         }
 

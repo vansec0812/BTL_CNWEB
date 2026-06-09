@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\DanQuanHoatDong;
+use App\Models\DanQuanTuVe;
 use App\Models\HoKhau;
 use App\Models\NhanKhau;
-use App\Models\DanQuanTuVe;
-use App\Models\DanQuanHoatDong;
 use App\Models\User;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\Authorize;

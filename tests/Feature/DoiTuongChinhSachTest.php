@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Auth\Middleware\Authenticate;
-use Illuminate\Auth\Middleware\Authorize;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -16,10 +16,10 @@ class DoiTuongChinhSachTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\UserSeeder::class);
-        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $this->seed(UserSeeder::class);
+        $this->seed(RolesAndPermissionsSeeder::class);
 
-        $user = \App\Models\User::where('email', 'laodong@ubnd-xa.vn')->first();
+        $user = User::where('email', 'laodong@ubnd-xa.vn')->first();
         $this->actingAs($user);
     }
 
@@ -243,10 +243,10 @@ class DoiTuongChinhSachTest extends TestCase
                             'nhan_khau_id',
                             'loai_chinh_sach',
                             'so_quyet_dinh_cong_nhan',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
-                'stats'
+                'stats',
             ])
             ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-001']);
     }
@@ -262,7 +262,7 @@ class DoiTuongChinhSachTest extends TestCase
                     'nhanKhau',
                     'loaiChinhSach',
                     'trangThai',
-                ]
+                ],
             ]);
     }
 
@@ -289,7 +289,7 @@ class DoiTuongChinhSachTest extends TestCase
                     'nhan_khau_id',
                     'loai_chinh_sach',
                     'so_quyet_dinh_cong_nhan',
-                ]
+                ],
             ])
             ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-002']);
 
@@ -321,7 +321,7 @@ class DoiTuongChinhSachTest extends TestCase
                     'nhan_khau_id',
                     'loai_chinh_sach',
                     'nhan_khau',
-                ]
+                ],
             ])
             ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-003']);
     }
@@ -348,7 +348,7 @@ class DoiTuongChinhSachTest extends TestCase
                     'nhanKhau',
                     'loaiChinhSach',
                     'trangThai',
-                ]
+                ],
             ]);
     }
 
@@ -382,7 +382,7 @@ class DoiTuongChinhSachTest extends TestCase
                     'loai_chinh_sach',
                     'so_quyet_dinh_cong_nhan',
                     'trang_thai',
-                ]
+                ],
             ])
             ->assertJsonFragment(['so_quyet_dinh_cong_nhan' => 'QD-API-NEW']);
     }

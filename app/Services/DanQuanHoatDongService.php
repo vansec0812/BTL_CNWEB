@@ -18,11 +18,11 @@ class DanQuanHoatDongService
         if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('ten_hoat_dong', 'like', '%' . $search . '%')
-                  ->orWhereHas('danQuanTuVe.nhanKhau', function ($sub) use ($search) {
-                      $sub->where('ho_ten', 'like', '%' . $search . '%')
-                          ->orWhere('cccd_cmnd', 'like', '%' . $search . '%');
-                  });
+                $q->where('ten_hoat_dong', 'like', '%'.$search.'%')
+                    ->orWhereHas('danQuanTuVe.nhanKhau', function ($sub) use ($search) {
+                        $sub->where('ho_ten', 'like', '%'.$search.'%')
+                            ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -39,7 +39,7 @@ class DanQuanHoatDongService
         // Lọc theo đơn vị của dân quân tự vệ
         if (! empty($filters['don_vi'])) {
             $query->whereHas('danQuanTuVe', function ($q) use ($filters) {
-                $q->where('don_vi', 'like', '%' . $filters['don_vi'] . '%');
+                $q->where('don_vi', 'like', '%'.$filters['don_vi'].'%');
             });
         }
 
@@ -60,6 +60,7 @@ class DanQuanHoatDongService
     public function updateHoatDongRecord(DanQuanHoatDong $record, array $data): DanQuanHoatDong
     {
         $record->update($data);
+
         return $record;
     }
 

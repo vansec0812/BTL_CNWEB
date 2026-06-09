@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\ChiTietCapPhatTroCap;
+use App\Models\DotTroCap;
+use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\DotTroCap;
-use App\Models\ChiTietCapPhatTroCap;
 
 class DotTroCapTest extends TestCase
 {
@@ -16,8 +18,8 @@ class DotTroCapTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\UserSeeder::class);
-        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $this->seed(UserSeeder::class);
+        $this->seed(RolesAndPermissionsSeeder::class);
 
         $user = User::where('email', 'laodong@ubnd-xa.vn')->first();
         $this->actingAs($user);
@@ -256,7 +258,7 @@ class DotTroCapTest extends TestCase
 
     private function createNhanKhau(string $hoTen, string $trangThai = 'hoat_dong', string $thonXom = 'Thôn 1'): int
     {
-        $hoKhauId = $this->createHoKhau('HK' . str()->random(5), 'MH' . str()->random(5), $thonXom);
+        $hoKhauId = $this->createHoKhau('HK'.str()->random(5), 'MH'.str()->random(5), $thonXom);
 
         return DB::table('nhan_khau')->insertGetId([
             'ho_khau_id' => $hoKhauId,

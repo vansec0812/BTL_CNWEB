@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\NhanKhau;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateNghiaVuQuanSuRequest extends FormRequest
@@ -23,11 +24,11 @@ class UpdateNghiaVuQuanSuRequest extends FormRequest
                 'exists:nhan_khau,id',
                 'unique:nghia_vu_quan_su,nhan_khau_id,'.$id,
                 function ($attribute, $value, $fail) {
-                    $nhanKhau = \App\Models\NhanKhau::find($value);
+                    $nhanKhau = NhanKhau::find($value);
                     if ($nhanKhau && $nhanKhau->gioi_tinh !== 'nam') {
                         $fail('Chỉ nam công dân mới được đăng ký nghĩa vụ quân sự.');
                     }
-                }
+                },
             ],
             'nam_tuoi_tuyen_quan' => 'nullable|integer|min:1900|max:2100',
             'trang_thai_nvqs' => 'nullable|in:chua_den_tuoi,du_dieu_kien,tam_hoan,mien_goi,trung_tuyen,da_nhap_ngu,xuat_ngu,da_qua_tuoi',
