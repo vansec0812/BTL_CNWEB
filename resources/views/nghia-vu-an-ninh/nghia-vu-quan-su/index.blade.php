@@ -186,13 +186,13 @@
                         <tr>
                             <td>{{ $loop->iteration + ($records->currentPage() - 1) * $records->perPage() }}</td>
                             <td>
-                                <div class="fw-semibold">{{ $record->nhanKhau->ho_ten }}</div>
-                                <div class="small text-secondary">CCCD: {{ $record->nhanKhau->cccd_cmnd ?? 'Chưa cập nhật' }}</div>
+                                <div class="fw-semibold">{{ $record->nhanKhau?->ho_ten ?? 'Không xác định' }}</div>
+                                <div class="small text-secondary">CCCD: {{ $record->nhanKhau?->cccd_cmnd ?? 'Chưa cập nhật' }}</div>
                             </td>
-                            <td>{{ $record->nhanKhau->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('Y') : '—' }}</td>
+                            <td>{{ $record->nhanKhau?->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('Y') : '—' }}</td>
                             <td>
-                                <div>{{ $record->nhanKhau->hoKhau->dia_chi_thuong_tru ?? '—' }}</div>
-                                <div class="small text-secondary">Thôn/Xóm: {{ $record->nhanKhau->hoKhau->thon_xom ?? '—' }}</div>
+                                <div>{{ $record->nhanKhau?->hoKhau?->dia_chi_thuong_tru ?? '—' }}</div>
+                                <div class="small text-secondary">Thôn/Xóm: {{ $record->nhanKhau?->hoKhau?->thon_xom ?? '—' }}</div>
                             </td>
                             <td><span class="badge text-bg-light">{{ $record->nam_tuoi_tuyen_quan }}</span></td>
                             <td>

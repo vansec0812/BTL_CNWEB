@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DanQuanTuVe extends Model
@@ -44,7 +43,7 @@ class DanQuanTuVe extends Model
 
     public function nhanKhau(): BelongsTo
     {
-        return $this->belongsTo(NhanKhau::class, 'nhan_khau_id');
+        return $this->belongsTo(NhanKhau::class, 'nhan_khau_id')->withTrashed();
     }
 
     public function hoatDong(): HasMany

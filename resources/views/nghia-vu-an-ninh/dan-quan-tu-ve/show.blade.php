@@ -37,9 +37,9 @@
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body text-center py-4">
                 <div class="rounded-circle bg-success bg-opacity-10 text-success d-inline-flex align-items-center justify-content-center fw-bold mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
-                    {{ substr($record->nhanKhau->ho_ten ?? 'D', 0, 1) }}
+                    {{ substr($record->nhanKhau?->ho_ten ?? 'D', 0, 1) }}
                 </div>
-                <h4 class="fw-bold mb-1 text-dark">{{ $record->nhanKhau->ho_ten ?? '—' }}</h4>
+                <h4 class="fw-bold mb-1 text-dark">{{ $record->nhanKhau?->ho_ten ?? '—' }}</h4>
                 <p class="text-muted mb-3">{{ $record->chuc_vu ?? 'Chiến sĩ' }} — {{ $record->don_vi ?? 'Chưa biên chế' }}</p>
                 <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
                     <i class="bi bi-shield-fill-check me-1"></i> {{ $trangThai[$record->trang_thai] ?? $record->trang_thai }}
@@ -58,17 +58,17 @@
                     <tbody>
                         <tr>
                             <td class="text-muted fw-semibold ps-4 py-3">Số CCCD/CMND:</td>
-                            <td class="pe-4 py-3 text-end fw-semibold">{{ $record->nhanKhau->cccd_cmnd ?? 'Chưa cập nhật' }}</td>
+                            <td class="pe-4 py-3 text-end fw-semibold">{{ $record->nhanKhau?->cccd_cmnd ?? 'Chưa cập nhật' }}</td>
                         </tr>
                         <tr>
                             <td class="text-muted fw-semibold ps-4 py-3">Ngày sinh:</td>
-                            <td class="pe-4 py-3 text-end">{{ $record->nhanKhau->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('d/m/Y') : '—' }}</td>
+                            <td class="pe-4 py-3 text-end">{{ $record->nhanKhau?->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('d/m/Y') : '—' }}</td>
                         </tr>
                         <tr>
                             <td class="text-muted fw-semibold ps-4 py-3">Giới tính:</td>
                             <td class="pe-4 py-3 text-end">
-                                <span class="badge bg-opacity-10 text-{{ ($record->nhanKhau->gioi_tinh ?? '') === 'nam' ? 'primary bg-primary' : (($record->nhanKhau->gioi_tinh ?? '') === 'nu' ? 'danger bg-danger' : 'secondary bg-secondary') }}">
-                                    {{ ($record->nhanKhau->gioi_tinh ?? '') === 'nam' ? 'Nam' : (($record->nhanKhau->gioi_tinh ?? '') === 'nu' ? 'Nữ' : 'Khác') }}
+                                <span class="badge bg-opacity-10 text-{{ ($record->nhanKhau?->gioi_tinh ?? '') === 'nam' ? 'primary bg-primary' : (($record->nhanKhau?->gioi_tinh ?? '') === 'nu' ? 'danger bg-danger' : 'secondary bg-secondary') }}">
+                                    {{ ($record->nhanKhau?->gioi_tinh ?? '') === 'nam' ? 'Nam' : (($record->nhanKhau?->gioi_tinh ?? '') === 'nu' ? 'Nữ' : 'Khác') }}
                                 </span>
                             </td>
                         </tr>

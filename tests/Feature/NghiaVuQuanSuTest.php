@@ -226,4 +226,45 @@ class NghiaVuQuanSuTest extends TestCase
 
         $this->assertNull(NghiaVuQuanSu::find($nvqs->id));
     }
+
+    public function test_nvqs_page_handles_soft_deleted_nhan_khau(): void
+    {
+        $hoKhau = HoKhau::create([
+            'so_so_ho_khau' => 'SHK003',
+            'ma_ho' => 'MH003',
+            'dia_chi_thuong_tru' => 'Thôn 3, Xã X',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nhanKhau = NhanKhau::create([
+            'ho_khau_id' => $hoKhau->id,
+            'ho_ten' => 'Nguyễn Bị Xóa',
+            'cccd_cmnd' => '123456789098',
+            'ngay_sinh' => '2005-05-15',
+            'gioi_tinh' => 'nam',
+            'dan_toc' => 'Kinh',
+            'trinh_do_hoc_van' => 'thpt',
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nvqs = NghiaVuQuanSu::create([
+            'nhan_khau_id' => $nhanKhau->id,
+            'nam_tuoi_tuyen_quan' => 2026,
+            'trang_thai_nvqs' => 'du_dieu_kien',
+        ]);
+
+        // Soft-delete the nhan khau
+        $nhanKhau->delete();
+
+        // Check index page renders correctly
+        $response = $this->get(route('nghia-vu-quan-su.index'));
+        $response->assertStatus(200)
+            ->assertSee('Nguyễn Bị Xóa');
+
+        // Check show page renders correctly
+        $response = $this->get(route('nghia-vu-quan-su.show', $nvqs));
+        $response->assertStatus(200)
+            ->assertSee('Nguyễn Bị Xóa');
+    }
 }
