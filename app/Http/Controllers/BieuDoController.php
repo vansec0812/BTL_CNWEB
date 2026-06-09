@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Support\ModuleRegistry;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +12,7 @@ class BieuDoController extends Controller
     /**
      * Display the dashboard and charts.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $modules = ModuleRegistry::all();
 
@@ -136,6 +135,36 @@ class BieuDoController extends Controller
         }
         $avgAge = count($ages) > 0 ? round(array_sum($ages), 1) / count($ages) : 0;
         $avgAge = round($avgAge, 1);
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy dữ liệu thống kê biểu đồ thành công.',
+                'data' => [
+                    'pyramid' => [
+                        'labels' => $pyramidLabels,
+                        'male' => $pyramidMale,
+                        'female' => $pyramidFemale,
+                    ],
+                    'poverty' => [
+                        'ho_ngheo' => $hoNgheoCount,
+                        'ho_can_ngheo' => $hoCanNgheoCount,
+                        'ho_binh_thuong' => $normalHoKhauCount,
+                        'tong_so_ho' => $totalHoKhau,
+                    ],
+                    'labor' => [
+                        'labels' => $laborTrendLabels,
+                        'values' => $laborTrendValues,
+                    ],
+                    'metrics' => [
+                        'tong_nhan_khau' => $totalNhanKhau,
+                        'tong_lao_dong' => $totalLaoDong,
+                        'tong_doanh_nghiep' => $totalDoanhNghiep,
+                        'tuoi_trung_binh' => $avgAge,
+                    ],
+                ],
+            ], 200);
+        }
 
         return view('he-thong.dashboard_bieu_do', compact(
             'modules',

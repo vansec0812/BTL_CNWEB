@@ -40,6 +40,45 @@ class BieuDoTest extends TestCase
     }
 
     /**
+     * Test that an authenticated user can get dashboard statistics via JSON API.
+     */
+    public function test_authenticated_user_can_get_dashboard_data_via_json_api(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->getJson(route('he-thong.dashboard-bieu-do'));
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'pyramid' => [
+                        'labels',
+                        'male',
+                        'female',
+                    ],
+                    'poverty' => [
+                        'ho_ngheo',
+                        'ho_can_ngheo',
+                        'ho_binh_thuong',
+                        'tong_so_ho',
+                    ],
+                    'labor' => [
+                        'labels',
+                        'values',
+                    ],
+                    'metrics' => [
+                        'tong_nhan_khau',
+                        'tong_lao_dong',
+                        'tong_doanh_nghiep',
+                        'tuoi_trung_binh',
+                    ],
+                ],
+            ])
+            ->assertJsonPath('success', true);
+    }
+
+    /**
      * Test that a guest user cannot view the dashboard and charts.
      */
     public function test_guest_user_cannot_view_dashboard_and_charts(): void

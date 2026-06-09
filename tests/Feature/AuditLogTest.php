@@ -51,6 +51,58 @@ class AuditLogTest extends TestCase
         $response->assertSee('Admin logged in');
     }
 
+    public function test_admin_can_view_audit_logs_via_json_api(): void
+    {
+        AuditLog::create([
+            'user_id' => $this->admin->id,
+            'user_name' => $this->admin->name,
+            'ip_address' => '127.0.0.1',
+            'action' => 'login',
+            'module' => 'he-thong',
+            'mo_ta' => 'Admin logged in API',
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->getJson(route('audit-logs.index'));
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'data',
+                    'current_page',
+                ],
+            ])
+            ->assertJsonPath('success', true);
+    }
+
+    public function test_admin_can_view_single_audit_log_via_json_api(): void
+    {
+        $log = AuditLog::create([
+            'user_id' => $this->admin->id,
+            'user_name' => $this->admin->name,
+            'ip_address' => '127.0.0.1',
+            'action' => 'login',
+            'module' => 'he-thong',
+            'mo_ta' => 'Admin view single log',
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->getJson(route('audit-logs.show', $log->id));
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'id',
+                    'mo_ta',
+                ],
+            ])
+            ->assertJsonPath('data.mo_ta', 'Admin view single log');
+    }
+
     public function test_regular_user_cannot_view_audit_logs(): void
     {
         $response = $this->actingAs($this->regularUser)

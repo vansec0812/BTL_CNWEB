@@ -67,11 +67,27 @@ class AuditLogController extends Controller
             'title' => 'Hệ thống, Tiện ích & Báo cáo',
         ];
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy danh sách nhật ký thao tác thành công.',
+                'data' => $logs,
+            ], 200);
+        }
+
         return view('he-thong.audit-logs.index', compact('logs', 'users', 'actions', 'logModules', 'modules', 'parentModule'));
     }
 
-    public function show(AuditLog $auditLog)
+    public function show(AuditLog $auditLog, Request $request)
     {
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Lấy chi tiết nhật ký thao tác thành công.',
+                'data' => $auditLog->load('user'),
+            ], 200);
+        }
+
         $modules = ModuleRegistry::all();
         $parentModule = [
             'slug' => 'he-thong-bao-cao',
