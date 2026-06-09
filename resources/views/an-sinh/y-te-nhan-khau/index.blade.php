@@ -45,7 +45,7 @@
     <div class="card-body">
         <form method="GET" action="{{ route('y-te-nhan-khau.index') }}" class="row g-3">
             <div class="col-lg-3">
-                <label for="q" class="form-label">Tìm theo tên, CCCD hoặc số thẻ BHYT</label>
+                <label for="q" class="form-label">Tìm theo tên/CCCD/số thẻ BHYT</label>
                 <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Ví dụ: Nguyễn Văn A">
             </div>
             <div class="col-lg-3">
