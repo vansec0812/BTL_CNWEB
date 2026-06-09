@@ -8,10 +8,8 @@ use App\Models\DanQuanHoatDong;
 use App\Models\DanQuanTuVe;
 use App\Services\DanQuanHoatDongService;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class DanQuanHoatDongController extends Controller
 {
@@ -183,15 +181,15 @@ class DanQuanHoatDongController extends Controller
     public function eligibleMilitia(Request $request): JsonResponse
     {
         $search = $request->input('search');
-        
+
         $query = DanQuanTuVe::query()
             ->with(['nhanKhau'])
             ->where('trang_thai', 'dang_phuc_vu');
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->whereHas('nhanKhau', function ($q) use ($search) {
-                $q->where('ho_ten', 'like', '%' . $search . '%')
-                  ->orWhere('cccd_cmnd', 'like', '%' . $search . '%');
+                $q->where('ho_ten', 'like', '%'.$search.'%')
+                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
             });
         }
 

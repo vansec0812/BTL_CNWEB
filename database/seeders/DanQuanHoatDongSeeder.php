@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\DanQuanTuVe;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\DanQuanTuVe;
 
 class DanQuanHoatDongSeeder extends Seeder
 {
@@ -15,6 +15,7 @@ class DanQuanHoatDongSeeder extends Seeder
 
         if ($tuVes->isEmpty()) {
             $this->command->warn('⚠️ Không tìm thấy thành viên Dân quân tự vệ nào. Vui lòng chạy DanQuanTuVeSeeder trước.');
+
             return;
         }
 
@@ -55,7 +56,7 @@ class DanQuanHoatDongSeeder extends Seeder
             for ($i = 0; $i < 3; $i++) {
                 $activityTemplate = $activities[($index + $i) % count($activities)];
                 $statusList = $activityTemplate['statuses'];
-                
+
                 // Trạng thái ngẫu nhiên nhưng hợp lệ với loại hoạt động
                 $trangThai = $statusList[($index + $i) % count($statusList)];
                 $ngayThucHien = now()->subDays(($index * 2) + $i + 1)->format('Y-m-d');

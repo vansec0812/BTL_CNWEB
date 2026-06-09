@@ -41,15 +41,15 @@ class AuditLogController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('mo_ta', 'like', "%{$search}%")
-                  ->orWhere('ip_address', 'like', "%{$search}%")
-                  ->orWhere('user_name', 'like', "%{$search}%");
+                    ->orWhere('ip_address', 'like', "%{$search}%")
+                    ->orWhere('user_name', 'like', "%{$search}%");
             });
         }
 
         $logs = $query->latest()->paginate(15)->withQueryString();
 
         $users = User::all();
-        
+
         $actions = [
             'create' => 'Thêm mới',
             'update' => 'Cập nhật',

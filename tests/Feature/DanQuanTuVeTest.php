@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\NhanKhau;
-use App\Models\DanQuanTuVe;
+use App\Models\User;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -93,7 +92,7 @@ class DanQuanTuVeTest extends TestCase
     public function test_store_bulk_validation_fails_for_already_enrolled(): void
     {
         $nhanKhauId = $this->createNhanKhau('Đã Tham Gia Dân Quân');
-        
+
         DB::table('dan_quan_tu_ve')->insert([
             'nhan_khau_id' => $nhanKhauId,
             'chuc_vu' => 'Chiến sĩ',
@@ -167,12 +166,12 @@ class DanQuanTuVeTest extends TestCase
                 'ket_qua_kham_suc_khoe' => 'chua_kham',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
         ]);
 
         $response = $this->getJson(route('dan-quan-tu-ve.create'));
         $response->assertOk();
-        
+
         $nhanKhauData = $response->json('data.nhanKhau');
         $nhanKhauIds = collect($nhanKhauData)->pluck('id')->all();
 
@@ -205,9 +204,9 @@ class DanQuanTuVeTest extends TestCase
                             'id',
                             'nhan_khau_id',
                             'chuc_vu',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ]);
     }
 
@@ -241,5 +240,32 @@ class DanQuanTuVeTest extends TestCase
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+    }
+
+    public function test_militia_page_handles_soft_deleted_nhan_khau(): void
+    {
+        $nhanKhauId = $this->createNhanKhau('Dân Quân Bị Xóa');
+        $militiaId = DB::table('dan_quan_tu_ve')->insertGetId([
+            'nhan_khau_id' => $nhanKhauId,
+            'chuc_vu' => 'Chiến sĩ',
+            'don_vi' => 'Tổ 1 Thôn 1',
+            'ngay_gia_nhap' => '2026-06-01',
+            'trang_thai' => 'dang_phuc_vu',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Soft-delete the nhan khau
+        NhanKhau::find($nhanKhauId)->delete();
+
+        // Check index page renders correctly
+        $this->get(route('dan-quan-tu-ve.index'))
+            ->assertOk()
+            ->assertSee('Dân Quân Bị Xóa');
+
+        // Check show page renders correctly
+        $this->get(route('dan-quan-tu-ve.show', $militiaId))
+            ->assertOk()
+            ->assertSee('Dân Quân Bị Xóa');
     }
 }

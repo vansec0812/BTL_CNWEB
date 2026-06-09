@@ -85,7 +85,7 @@ class NghiaVuQuanSuService
             foreach ($nhanKhauIds as $nhanKhauId) {
                 // Kiểm tra xem đã có bản ghi chưa để tránh chèn trùng lặp
                 $exists = NghiaVuQuanSu::where('nhan_khau_id', $nhanKhauId)->exists();
-                if (!$exists) {
+                if (! $exists) {
                     NghiaVuQuanSu::create([
                         'nhan_khau_id' => $nhanKhauId,
                         'nam_tuoi_tuyen_quan' => $targetYear,

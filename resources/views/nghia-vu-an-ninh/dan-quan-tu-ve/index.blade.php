@@ -180,7 +180,7 @@
                         <td class="ps-3">{{ $index + 1 + ($records->currentPage() - 1) * $records->perPage() }}</td>
                         <td class="fw-semibold">{{ $row->nhanKhau->ho_ten ?? '—' }}</td>
                         <td>{{ $row->nhanKhau->cccd_cmnd ?? '—' }}</td>
-                        <td>{{ $row->nhanKhau->ngay_sinh ? $row->nhanKhau->ngay_sinh->format('Y') : '—' }}</td>
+                        <td>{{ $row->nhanKhau?->ngay_sinh ? $row->nhanKhau->ngay_sinh->format('Y') : '—' }}</td>
                         <td>{{ $row->chuc_vu ?? 'Chiến sĩ' }}</td>
                         <td>{{ $row->don_vi ?? '—' }}</td>
                         <td>{{ $row->ngay_gia_nhap ? $row->ngay_gia_nhap->format('d/m/Y') : '—' }}</td>

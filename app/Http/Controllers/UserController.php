@@ -6,10 +6,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -201,6 +199,7 @@ class UserController extends Controller
                     'message' => 'Không thể khóa tài khoản vai trò Admin Hệ thống.',
                 ], 400);
             }
+
             return redirect()
                 ->back()
                 ->with('error', 'Không thể khóa tài khoản vai trò Admin Hệ thống.');

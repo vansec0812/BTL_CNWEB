@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DotTroCap;
-use App\Models\ChiTietCapPhatTroCap;
 use App\Models\BaoTroXaHoi;
+use App\Models\ChiTietCapPhatTroCap;
 use App\Models\DoiTuongChinhSach;
+use App\Models\DotTroCap;
 use App\Models\HoKhau;
 use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
 
 class DotTroCapController extends Controller
 {
@@ -96,14 +96,15 @@ class DotTroCapController extends Controller
                 ->with('status', 'Đã tạo đợt trợ cấp mới và tự động quét danh sách đối tượng hưởng.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Lỗi tạo đợt trợ cấp: ' . $e->getMessage()])->withInput();
+
+            return back()->withErrors(['error' => 'Lỗi tạo đợt trợ cấp: '.$e->getMessage()])->withInput();
         }
     }
 
     public function show(DotTroCap $dotTroCap, Request $request): View
     {
         $filters = $request->only(['q', 'da_nhan']);
-        
+
         $query = $dotTroCap->chiTietCapPhats()
             ->with(['hoKhau.chuHo', 'nhanKhau.hoKhau', 'nguoiXacNhan'])
             ->when($filters['q'] ?? null, function ($query, string $keyword): void {
@@ -112,12 +113,12 @@ class DotTroCapController extends Controller
                         $query->where('ho_ten', 'like', "%{$keyword}%")
                             ->orWhere('cccd_cmnd', 'like', "%{$keyword}%");
                     })
-                    ->orWhereHas('hoKhau.chuHo', function ($query) use ($keyword) {
-                        $query->where('ho_ten', 'like', "%{$keyword}%");
-                    })
-                    ->orWhereHas('hoKhau', function ($query) use ($keyword) {
-                        $query->where('so_so_ho_khau', 'like', "%{$keyword}%");
-                    });
+                        ->orWhereHas('hoKhau.chuHo', function ($query) use ($keyword) {
+                            $query->where('ho_ten', 'like', "%{$keyword}%");
+                        })
+                        ->orWhereHas('hoKhau', function ($query) use ($keyword) {
+                            $query->where('so_so_ho_khau', 'like', "%{$keyword}%");
+                        });
                 });
             })
             ->when(isset($filters['da_nhan']) && $filters['da_nhan'] !== '', function ($query) use ($filters) {
@@ -139,7 +140,7 @@ class DotTroCapController extends Controller
             ->map(function ($ho) {
                 return [
                     'id' => $ho->id,
-                    'label' => 'Sổ: ' . $ho->so_so_ho_khau . ' - Chủ hộ: ' . ($ho->chuHo?->ho_ten ?? 'Chưa xác định'),
+                    'label' => 'Sổ: '.$ho->so_so_ho_khau.' - Chủ hộ: '.($ho->chuHo?->ho_ten ?? 'Chưa xác định'),
                 ];
             });
 
@@ -216,7 +217,7 @@ class DotTroCapController extends Controller
                     $dotTroCap->chiTietCapPhats()->delete();
                     $dotTroCap->update(['so_da_nhan' => 0]);
                 }
-                
+
                 // Re-scan
                 $this->scanAndSaveRecipients($dotTroCap, $loaiBaoTro, $loaiChinhSach, $selectedThonXom);
             }
@@ -228,7 +229,8 @@ class DotTroCapController extends Controller
                 ->with('status', 'Đã cập nhật đợt trợ cấp thành công.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Lỗi cập nhật: ' . $e->getMessage()])->withInput();
+
+            return back()->withErrors(['error' => 'Lỗi cập nhật: '.$e->getMessage()])->withInput();
         }
     }
 
@@ -248,7 +250,7 @@ class DotTroCapController extends Controller
     {
         $detail = $dotTroCap->chiTietCapPhats()->findOrFail($detailId);
 
-        if (!$detail->da_nhan) {
+        if (! $detail->da_nhan) {
             DB::transaction(function () use ($dotTroCap, $detail) {
                 $detail->update([
                     'da_nhan' => true,
@@ -288,7 +290,7 @@ class DotTroCapController extends Controller
             }
         });
 
-        return back()->with('status', 'Đã xác nhận nhận trợ cấp cho ' . count($ids) . ' đối tượng.');
+        return back()->with('status', 'Đã xác nhận nhận trợ cấp cho '.count($ids).' đối tượng.');
     }
 
     /**
@@ -362,7 +364,7 @@ class DotTroCapController extends Controller
         $recipients = collect();
 
         // 1. Quét đối tượng bảo trợ xã hội
-        if (!empty($loaiBaoTro)) {
+        if (! empty($loaiBaoTro)) {
             $baoTroRecords = BaoTroXaHoi::query()
                 ->where('trang_thai', 'dang_huong')
                 ->whereIn('loai_bao_tro', $loaiBaoTro)
@@ -391,7 +393,7 @@ class DotTroCapController extends Controller
         }
 
         // 2. Quét đối tượng diện chính sách
-        if (!empty($loaiChinhSach)) {
+        if (! empty($loaiChinhSach)) {
             $chinhSachRecords = DoiTuongChinhSach::query()
                 ->where('trang_thai', 'dang_huong_che_do')
                 ->whereIn('loai_chinh_sach', $loaiChinhSach)
@@ -410,7 +412,7 @@ class DotTroCapController extends Controller
         }
 
         // 3. Lọc theo thôn xóm nếu có
-        if (!empty($selectedThonXom)) {
+        if (! empty($selectedThonXom)) {
             $recipients = $recipients->filter(function ($item) use ($selectedThonXom) {
                 return in_array($item['thon_xom'], $selectedThonXom, true);
             });
@@ -426,9 +428,9 @@ class DotTroCapController extends Controller
             $nhanKhauId = $item['type'] === 'nhan_khau' ? $item['id'] : null;
 
             if ($hoKhauId) {
-                if (!in_array($hoKhauId, $uniqueHoKhauIds)) {
+                if (! in_array($hoKhauId, $uniqueHoKhauIds)) {
                     $uniqueHoKhauIds[] = $hoKhauId;
-                    
+
                     ChiTietCapPhatTroCap::create([
                         'dot_tro_cap_id' => $dotTroCap->id,
                         'ho_khau_id' => $hoKhauId,
@@ -440,8 +442,8 @@ class DotTroCapController extends Controller
                     ]);
                     $insertedCount++;
                 }
-            } else if ($nhanKhauId) {
-                if (!in_array($nhanKhauId, $uniqueNhanKhauIds)) {
+            } elseif ($nhanKhauId) {
+                if (! in_array($nhanKhauId, $uniqueNhanKhauIds)) {
                     $uniqueNhanKhauIds[] = $nhanKhauId;
 
                     ChiTietCapPhatTroCap::create([

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDanQuanTuVeRequest;
 use App\Http\Requests\UpdateDanQuanTuVeRequest;
-use App\Http\Controllers\DanQuanHoatDongController;
 use App\Models\DanQuanTuVe;
 use App\Models\NhanKhau;
 use App\Services\DanQuanTuVeService;
@@ -76,7 +75,8 @@ class DanQuanTuVeController extends Controller
             ], 201);
         }
 
-        $msg = 'Đã thêm ' . count($records) . ' thành viên dân quân tự vệ thành công.';
+        $msg = 'Đã thêm '.count($records).' thành viên dân quân tự vệ thành công.';
+
         return redirect()
             ->route('dan-quan-tu-ve.index')
             ->with('status', $msg);

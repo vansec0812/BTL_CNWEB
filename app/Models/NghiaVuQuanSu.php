@@ -43,6 +43,6 @@ class NghiaVuQuanSu extends Model
      */
     public function nhanKhau(): BelongsTo
     {
-        return $this->belongsTo(NhanKhau::class, 'nhan_khau_id');
+        return $this->belongsTo(NhanKhau::class, 'nhan_khau_id')->withTrashed();
     }
 }

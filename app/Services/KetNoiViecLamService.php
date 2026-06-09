@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\DoanhNghiep;
 use App\Models\KetNoiViecLam;
 use App\Models\LaoDong;
-use App\Models\DoanhNghiep;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -181,7 +181,7 @@ class KetNoiViecLamService
     {
         $laoDong = LaoDong::find($laoDongId);
         if ($laoDong && $laoDong->trang_thai_lao_dong === 'that_nghiep') {
-            $laoDongService = new LaoDongService();
+            $laoDongService = new LaoDongService;
             $laoDongService->updateLaoDongRecord($laoDong, [
                 'trang_thai_lao_dong' => 'co_viec_lam',
                 'nghe_nghiep' => $jobTitle ?: 'Nhân viên',

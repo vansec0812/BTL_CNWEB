@@ -8,10 +8,9 @@ use App\Models\NghiaVuQuanSu;
 use App\Models\NhanKhau;
 use App\Services\NghiaVuQuanSuService;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class NghiaVuQuanSuController extends Controller
 {
@@ -246,16 +245,16 @@ class NghiaVuQuanSuController extends Controller
     public function eligibleCitizens(Request $request): JsonResponse
     {
         $search = $request->input('search');
-        
+
         $query = NhanKhau::query()
             ->where('gioi_tinh', 'nam')
             ->whereIn('trang_thai', ['hoat_dong', 'tam_tru', 'tam_vang'])
             ->whereDoesntHave('nghiaVuQuanSu');
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('ho_ten', 'like', '%' . $search . '%')
-                  ->orWhere('cccd_cmnd', 'like', '%' . $search . '%');
+                $q->where('ho_ten', 'like', '%'.$search.'%')
+                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
             });
         }
 
@@ -273,12 +272,12 @@ class NghiaVuQuanSuController extends Controller
             ->where('gioi_tinh', 'nam')
             ->whereIn('trang_thai', ['hoat_dong', 'tam_tru', 'tam_vang']);
 
-        if (!$record) {
+        if (! $record) {
             $nhanKhauQuery->whereDoesntHave('nghiaVuQuanSu');
         } else {
             $nhanKhauQuery->where(function ($q) use ($record) {
                 $q->whereDoesntHave('nghiaVuQuanSu')
-                  ->orWhere('id', $record->nhan_khau_id);
+                    ->orWhere('id', $record->nhan_khau_id);
             });
         }
 

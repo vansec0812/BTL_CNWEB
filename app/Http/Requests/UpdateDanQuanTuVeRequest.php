@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\DanQuanTuVe;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDanQuanTuVeRequest extends FormRequest
@@ -17,8 +18,8 @@ class UpdateDanQuanTuVeRequest extends FormRequest
         $militiaId = is_object($militiaModel) ? $militiaModel->id : $militiaModel;
 
         return [
-            'nhan_khau_id' => ['required', 'integer', 'exists:nhan_khau,id', 'unique:dan_quan_tu_ve,nhan_khau_id,' . $militiaId],
-            'chuc_vu' => ['nullable', 'string', 'in:' . implode(',', \App\Models\DanQuanTuVe::CHUC_VU_LIST)],
+            'nhan_khau_id' => ['required', 'integer', 'exists:nhan_khau,id', 'unique:dan_quan_tu_ve,nhan_khau_id,'.$militiaId],
+            'chuc_vu' => ['nullable', 'string', 'in:'.implode(',', DanQuanTuVe::CHUC_VU_LIST)],
             'don_vi' => ['nullable', 'string', 'max:255'],
             'ngay_gia_nhap' => ['nullable', 'date'],
             'ngay_ket_thuc' => ['nullable', 'date', 'after:ngay_gia_nhap'],

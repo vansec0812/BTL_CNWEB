@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -57,12 +58,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function lichSuCongViec(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function lichSuCongViec(): HasMany
     {
         return $this->hasMany(LichSuCongViec::class, 'nguoi_cap_nhat_id');
     }
 
-    public function ketNoiViecLam(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function ketNoiViecLam(): HasMany
     {
         return $this->hasMany(KetNoiViecLam::class, 'nguoi_phu_trach_id');
     }

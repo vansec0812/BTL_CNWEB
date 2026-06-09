@@ -12,6 +12,7 @@ class DotTroCap extends Model
     use AuditableTrait;
 
     protected $auditModule = 'dot_tro_cap';
+
     public const LOAI_TRO_CAP = [
         'tien_mat' => 'Tiền mặt',
         'hien_vat' => 'Hiện vật',

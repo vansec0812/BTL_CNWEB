@@ -9,9 +9,6 @@ use App\Models\NhanKhau;
 use App\Services\LaoDongService;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\JsonResponse;
 
 class LaoDongController extends Controller
 {
@@ -25,13 +22,13 @@ class LaoDongController extends Controller
     public function index(Request $request)
     {
         $filters = $request->only([
-            'search', 
-            'trang_thai_lao_dong', 
-            'nganh_nghe', 
-            'loai_hinh_cong_viec', 
-            'xuat_khau_lao_dong', 
+            'search',
+            'trang_thai_lao_dong',
+            'nganh_nghe',
+            'loai_hinh_cong_viec',
+            'xuat_khau_lao_dong',
             'lam_viec_ngoai_tinh',
-            'thon_xom'
+            'thon_xom',
         ]);
         $perPage = $request->integer('per_page', 10);
 
@@ -178,12 +175,12 @@ class LaoDongController extends Controller
             ->whereIn('trang_thai', ['hoat_dong', 'tam_tru', 'tam_vang']);
 
         // Chỉ hiển thị người chưa có hồ sơ lao động
-        if (!$record) {
+        if (! $record) {
             $nhanKhauQuery->whereDoesntHave('laoDong');
         } else {
             $nhanKhauQuery->where(function ($q) use ($record) {
                 $q->whereDoesntHave('laoDong')
-                  ->orWhere('id', $record->nhan_khau_id);
+                    ->orWhere('id', $record->nhan_khau_id);
             });
         }
 

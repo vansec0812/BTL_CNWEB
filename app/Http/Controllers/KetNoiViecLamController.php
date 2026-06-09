@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreKetNoiViecLamRequest;
 use App\Http\Requests\UpdateKetNoiViecLamRequest;
+use App\Models\DoanhNghiep;
 use App\Models\KetNoiViecLam;
 use App\Models\LaoDong;
-use App\Models\DoanhNghiep;
 use App\Services\KetNoiViecLamService;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class KetNoiViecLamController extends Controller
 {
@@ -169,9 +167,10 @@ class KetNoiViecLamController extends Controller
     public function getJobsForLabor(LaoDong $laoDong): JsonResponse
     {
         $jobs = $this->ketNoiViecLamService->matchEligibleJobsForLabor($laoDong);
+
         return response()->json([
             'success' => true,
-            'data' => $jobs
+            'data' => $jobs,
         ]);
     }
 
@@ -187,12 +186,13 @@ class KetNoiViecLamController extends Controller
                 'ho_ten' => $l->nhanKhau->ho_ten,
                 'cccd_cmnd' => $l->nhanKhau->cccd_cmnd ?? 'Chưa cập nhật',
                 'nganh_nghe' => $l->nganhNgheLabel(),
-                'nghe_nghiep' => $l->nghe_nghiep ?? '—'
+                'nghe_nghiep' => $l->nghe_nghiep ?? '—',
             ];
         });
+
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -211,7 +211,7 @@ class KetNoiViecLamController extends Controller
                 'id' => $l->id,
                 'ho_ten' => $l->nhanKhau->ho_ten,
                 'cccd_cmnd' => $l->nhanKhau->cccd_cmnd ?? '—',
-                'nganh_nghe' => $l->nganhNgheLabel()
+                'nganh_nghe' => $l->nganhNgheLabel(),
             ];
         });
 

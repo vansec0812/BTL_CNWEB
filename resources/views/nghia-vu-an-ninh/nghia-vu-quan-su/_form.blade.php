@@ -21,7 +21,7 @@
             <div class="col-lg-6">
                 <label for="nhan_khau_id" class="form-label fw-semibold text-dark">Họ tên công dân <span class="text-danger">*</span></label>
                 @if(isset($record) || ($isReadOnly ?? false))
-                    <input type="text" class="form-control" value="{{ $record->nhanKhau->ho_ten }} - CCCD: {{ $record->nhanKhau->cccd_cmnd ?? 'Chưa có' }} (Sinh ngày: {{ $record->nhanKhau->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('d/m/Y') : '—' }})" disabled>
+                    <input type="text" class="form-control" value="{{ $record->nhanKhau?->ho_ten ?? 'Không xác định' }} - CCCD: {{ $record->nhanKhau?->cccd_cmnd ?? 'Chưa có' }} (Sinh ngày: {{ $record->nhanKhau?->ngay_sinh ? $record->nhanKhau->ngay_sinh->format('d/m/Y') : '—' }})" disabled>
                     <input type="hidden" name="nhan_khau_id" value="{{ $record->nhan_khau_id }}">
                 @else
                     <select id="nhan_khau_id" name="nhan_khau_id" class="form-select @error('nhan_khau_id') is-invalid @enderror" required>
