@@ -7,6 +7,7 @@ use App\Http\Controllers\BienDongHoKhauController;
 use App\Http\Controllers\BieuDoController;
 use App\Http\Controllers\DanQuanHoatDongController;
 use App\Http\Controllers\DanQuanTuVeController;
+use App\Http\Controllers\AnNinhTratTuController;
 use App\Http\Controllers\DoanhNghiepController;
 use App\Http\Controllers\DoiTuongChinhSachController;
 use App\Http\Controllers\DotTroCapController;
@@ -102,17 +103,17 @@ $modules = [
         'color' => 'warning',
         'view' => 'modules.nghia-vu-an-ninh',
         'description' => 'Quản lý nghĩa vụ quân sự, dân quân tự vệ, danh sách rà soát và nhóm hồ sơ an ninh trật tự.',
-        'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve', 'dan_quan_hoat_dong'],
+        'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve', 'dan_quan_hoat_dong', 'an_ninh_trat_tu'],
         'features' => [
             'Lọc danh sách nam công dân trong độ tuổi nghĩa vụ quân sự.',
             'Theo dõi trạng thái: đủ điều kiện, tạm hoãn, trúng tuyển, nhập ngũ, xuất ngũ.',
             'Quản lý lực lượng dân quân tự vệ và lịch sử hoạt động.',
-            'Chuẩn bị khu vực theo dõi vi phạm hành chính, đối tượng quản lý đặc biệt.',
+            'Theo dõi đối tượng quản lý đặc biệt và vi phạm hành chính tại địa phương.',
         ],
         'rows' => [
             ['Nghĩa vụ quân sự', 'Độ tuổi, sức khỏe, học vấn, trạng thái', 'Theo mùa tuyển quân'],
             ['Dân quân tự vệ', 'Lực lượng nòng cốt, lịch sử hoạt động', 'Theo kế hoạch xã'],
-            ['An ninh trật tự', 'Hồ sơ quản lý đặc biệt', 'Trang khung chờ dữ liệu'],
+            ['An ninh trật tự', 'Đối tượng đặc biệt & vi phạm hành chính', 'Đã tích hợp'],
         ],
     ],
     [
@@ -252,15 +253,40 @@ Route::middleware('auth')->group(function () use ($modules) {
                     return $ho;
                 });
         } elseif ($module === 'nghia-vu-an-ninh') {
+            $viPhamQuery = fn($q) => $q->where('loai_doi_tuong', 'vi_pham_hanh_chinh')
+                ->orWhere('loai_doi_tuong', 'Vi phạm hành chính')
+                ->orWhere('loai_doi_tuong', 'like', '%vi phạm%')
+                ->orWhere('loai_doi_tuong', 'like', '%vi pham%');
+
+            $viPhamCount = DB::table('an_ninh_trat_tu')->where($viPhamQuery)->count();
+            $anNinhCount = DB::table('an_ninh_trat_tu')->count();
+
             $stats = [
                 'nghia_vu_quan_su' => DB::table('nghia_vu_quan_su')->count(),
                 'dan_quan_tu_ve' => DB::table('dan_quan_tu_ve')->count(),
-                'du_dieu_kien' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'du_dieu_kien')->count(),
-                'tam_hoan' => DB::table('nghia_vu_quan_su')->where('trang_thai_nvqs', 'tam_hoan')->count(),
+                'doi_tuong_quan_ly' => $anNinhCount - $viPhamCount,
+                'vi_pham_hanh_chinh' => $viPhamCount,
             ];
 
             $extraData['dsNVQS'] = NghiaVuQuanSu::query()
                 ->with(['nhanKhau.hoKhau'])
+                ->latest()
+                ->limit(10)
+                ->get();
+
+            $extraData['dsDoiTuongQuanLy'] = \App\Models\AnNinhTratTu::query()
+                ->with(['nhanKhau.hoKhau'])
+                ->where(fn($q) => $q->where('loai_doi_tuong', '!=', 'vi_pham_hanh_chinh')
+                    ->where('loai_doi_tuong', 'not like', '%vi phạm%')
+                    ->where('loai_doi_tuong', 'not like', '%vi pham%')
+                )
+                ->latest()
+                ->limit(10)
+                ->get();
+
+            $extraData['dsViPham'] = \App\Models\AnNinhTratTu::query()
+                ->with(['nhanKhau.hoKhau'])
+                ->where($viPhamQuery)
                 ->latest()
                 ->limit(10)
                 ->get();
@@ -323,6 +349,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->except(['index', 'show'])
             ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
             ->names('dan-quan-hoat-dong');
+
+        Route::resource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
+            ->except(['index', 'show'])
+            ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
+            ->names('an-ninh-trat-tu');
 
     });
 
@@ -437,12 +468,22 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->except(['index', 'show'])
                 ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
                 ->names('api.dan-quan-tu-ve');
+
+            Route::apiResource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
+                ->except(['index', 'show'])
+                ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
+                ->names('api.an-ninh-trat-tu');
         });
 
         Route::apiResource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
             ->only(['index', 'show'])
             ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
             ->names('api.dan-quan-tu-ve');
+
+        Route::apiResource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
+            ->only(['index', 'show'])
+            ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
+            ->names('api.an-ninh-trat-tu');
 
         // API cho Kinh tế, Lao động & Việc làm
         Route::middleware('can:manage_lao_dong')->group(function () {
@@ -499,6 +540,11 @@ Route::middleware('auth')->group(function () use ($modules) {
         ->only(['index', 'show'])
         ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
         ->names('dan-quan-hoat-dong');
+
+    Route::resource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
+        ->only(['index', 'show'])
+        ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
+        ->names('an-ninh-trat-tu');
 
     // API phục vụ autocomplete
     Route::get('api/nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])
