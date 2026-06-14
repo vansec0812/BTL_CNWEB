@@ -256,13 +256,14 @@
                             $isNghiaVuActive = request()->routeIs('nghia-vu-quan-su.*');
                             $isDanQuanActive = request()->routeIs('dan-quan-tu-ve.*');
                             $isDanQuanHoatDongActive = request()->routeIs('dan-quan-hoat-dong.*');
-                            $isActive = $isModuleActive || $isNghiaVuActive || $isDanQuanActive || $isDanQuanHoatDongActive;
+                            $isAnNinhTratTuActive = request()->routeIs('an-ninh-trat-tu.*');
+                            $isActive = $isModuleActive || $isNghiaVuActive || $isDanQuanActive || $isDanQuanHoatDongActive || $isAnNinhTratTuActive;
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'nghia-vu-an-ninh'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Quản lý Nghĩa vụ quân sự', 'url' => route('nghia-vu-quan-su.index'), 'icon' => 'bi-person-check', 'active' => $isNghiaVuActive],
                                 ['title' => 'Lực lượng dân quân tự vệ', 'url' => route('dan-quan-tu-ve.index'), 'icon' => 'bi-people-fill', 'active' => $isDanQuanActive],
                                 ['title' => 'Hoạt động dân quân', 'url' => route('dan-quan-hoat-dong.index'), 'icon' => 'bi-calendar-event', 'active' => $isDanQuanHoatDongActive],
-                                ['title' => 'An ninh trật tự', 'disabled' => true, 'icon' => 'bi-shield-exclamation'],
+                                ['title' => 'An ninh trật tự', 'url' => route('an-ninh-trat-tu.index'), 'icon' => 'bi-shield-exclamation', 'active' => $isAnNinhTratTuActive],
                             ];
                         } elseif ($isDatDai) {
                             $isActive = $isModuleActive;

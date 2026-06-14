@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
             DanQuanHoatDongSeeder::class,
             DatDaiTaiSanSeeder::class,
             ThueVaPhiSeeder::class,
+            AnNinhTratTuSeeder::class,
         ]);
     }
 }

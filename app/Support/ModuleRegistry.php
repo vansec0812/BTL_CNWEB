@@ -78,17 +78,17 @@ class ModuleRegistry
                 'color' => 'warning',
                 'view' => 'modules.nghia-vu-an-ninh',
                 'description' => 'Quản lý nghĩa vụ quân sự, dân quân tự vệ, danh sách rà soát và nhóm hồ sơ an ninh trật tự.',
-                'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve', 'dan_quan_hoat_dong'],
+                'tables' => ['nghia_vu_quan_su', 'dan_quan_tu_ve', 'dan_quan_hoat_dong', 'an_ninh_trat_tu'],
                 'features' => [
                     'Lọc danh sách nam công dân trong độ tuổi nghĩa vụ quân sự.',
                     'Theo dõi trạng thái: đủ điều kiện, tạm hoãn, trúng tuyển, nhập ngũ, xuất ngũ.',
                     'Quản lý lực lượng dân quân tự vệ và các đợt tập huấn.',
-                    'Chuẩn bị khu vực theo dõi vi phạm hành chính, đối tượng quản lý đặc biệt.',
+                    'Theo dõi đối tượng quản lý đặc biệt và vi phạm hành chính tại địa phương.',
                 ],
                 'rows' => [
                     ['Nghĩa vụ quân sự', 'Độ tuổi, sức khỏe, học vấn, trạng thái', 'Theo mùa tuyển quân'],
                     ['Dân quân tự vệ', 'Lực lượng nòng cốt, tập huấn, trực ban', 'Theo kế hoạch xã'],
-                    ['An ninh trật tự', 'Hồ sơ quản lý đặc biệt', 'Trang khung chờ dữ liệu'],
+                    ['An ninh trật tự', 'Đối tượng đặc biệt & vi phạm hành chính', 'Đã tích hợp'],
                 ],
             ],
             [

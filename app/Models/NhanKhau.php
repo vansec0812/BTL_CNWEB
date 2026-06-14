@@ -113,6 +113,11 @@ class NhanKhau extends Model
         return $this->hasOne(LaoDong::class, 'nhan_khau_id');
     }
 
+    public function anNinhTratTu(): HasMany
+    {
+        return $this->hasMany(AnNinhTratTu::class, 'nhan_khau_id');
+    }
+
     public function doanhNghiepDaiDien(): HasMany
     {
         return $this->hasMany(DoanhNghiep::class, 'nguoi_dai_dien_nhan_khau_id');
