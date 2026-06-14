@@ -648,6 +648,21 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->names('ket-noi');
     });
 
+    // --- Phân hệ Đất đai, Hạ tầng & Tài sản hộ dân ---
+    Route::middleware('can:manage_dat_dai')->group(function () {
+        Route::resource('dat-dai-ha-tang/dat-dai-tai-san', \App\Http\Controllers\DatDaiTaiSanController::class)
+            ->except(['index', 'show'])
+            ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
+            ->names('dat-dai-tai-san');
+    });
+
+    Route::middleware('can:view_dat_dai')->group(function () {
+        Route::resource('dat-dai-ha-tang/dat-dai-tai-san', \App\Http\Controllers\DatDaiTaiSanController::class)
+            ->only(['index', 'show'])
+            ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
+            ->names('dat-dai-tai-san');
+    });
+
     // --- Phân quyền RBAC ---
     Route::get('/he-thong/phan-quyen', function () {
         $modules = ModuleRegistry::all();

@@ -265,10 +265,10 @@
                                 ['title' => 'An ninh trật tự', 'disabled' => true, 'icon' => 'bi-shield-exclamation'],
                             ];
                         } elseif ($isDatDai) {
-                            $isActive = $isModuleActive;
+                            $isActive = $isModuleActive || request()->routeIs('dat-dai-tai-san.*');
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'dat-dai-ha-tang'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                                ['title' => 'Đất đai & Tài sản', 'disabled' => true, 'icon' => 'bi-map'],
+                                ['title' => 'Đất đai & Tài sản', 'url' => route('dat-dai-tai-san.index'), 'icon' => 'bi-map', 'active' => request()->routeIs('dat-dai-tai-san.*')],
                                 ['title' => 'Hạ tầng địa bàn', 'disabled' => true, 'icon' => 'bi-signpost-split'],
                                 ['title' => 'Thuế & Phí địa phương', 'disabled' => true, 'icon' => 'bi-cash-coin'],
                             ];
