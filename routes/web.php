@@ -654,6 +654,14 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->except(['index', 'show'])
             ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
             ->names('dat-dai-tai-san');
+            
+        Route::post('dat-dai-ha-tang/thue-va-phi/generate', [\App\Http\Controllers\ThueVaPhiDiaPhuongController::class, 'generateThueDat'])
+            ->name('thue-va-phi.generate');
+
+        Route::resource('dat-dai-ha-tang/thue-va-phi', \App\Http\Controllers\ThueVaPhiDiaPhuongController::class)
+            ->except(['index', 'show'])
+            ->parameters(['thue-va-phi' => 'thueVaPhi'])
+            ->names('thue-va-phi');
     });
 
     Route::middleware('can:view_dat_dai')->group(function () {
@@ -661,6 +669,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->only(['index', 'show'])
             ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
             ->names('dat-dai-tai-san');
+            
+        Route::resource('dat-dai-ha-tang/thue-va-phi', \App\Http\Controllers\ThueVaPhiDiaPhuongController::class)
+            ->only(['index', 'show'])
+            ->parameters(['thue-va-phi' => 'thueVaPhi'])
+            ->names('thue-va-phi');
     });
 
     // --- Phân quyền RBAC ---

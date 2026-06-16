@@ -11,7 +11,7 @@ class ThueVaPhiSeeder extends Seeder
     {
         $now = now();
         $records = [];
-        $nam = 2024;
+        $nam = date('Y'); // Lấy năm hiện tại để hiển thị trên UI
 
         // Phí vệ sinh môi trường cho tất cả 10 hộ
         for ($hoId = 1; $hoId <= 10; $hoId++) {

@@ -63,6 +63,11 @@ class HoKhau extends Model
         return $this->hasMany(DatDaiTaiSan::class, 'ho_khau_id');
     }
 
+    public function thueVaPhi(): HasMany
+    {
+        return $this->hasMany(ThueVaPhiDiaPhuong::class, 'ho_khau_id');
+    }
+
     public function phanLoaiLabel(): string
     {
         return self::PHAN_LOAI[$this->phan_loai] ?? 'Không xác định';
