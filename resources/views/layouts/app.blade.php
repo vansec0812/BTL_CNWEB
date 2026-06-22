@@ -266,12 +266,14 @@
                                 ['title' => 'An ninh trật tự', 'url' => route('an-ninh-trat-tu.index'), 'icon' => 'bi-shield-exclamation', 'active' => $isAnNinhTratTuActive],
                             ];
                         } elseif ($isDatDai) {
-                            $isActive = $isModuleActive;
+                            $isDatDaiTaiSanActive = request()->routeIs('dat-dai-tai-san.*');
+                            $isThueActive = request()->routeIs('thue-va-phi.*');
+                            $isActive = $isModuleActive || $isDatDaiTaiSanActive || $isThueActive;
                             $submenu = [
                                 ['title' => 'Tổng quan', 'url' => route('modules.show', 'dat-dai-ha-tang'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                                ['title' => 'Đất đai & Tài sản', 'disabled' => true, 'icon' => 'bi-map'],
+                                ['title' => 'Đất đai & Tài sản', 'url' => route('dat-dai-tai-san.index'), 'icon' => 'bi-map', 'active' => $isDatDaiTaiSanActive],
+                                ['title' => 'Thuế & Phí địa phương', 'url' => route('thue-va-phi.index'), 'icon' => 'bi-cash-coin', 'active' => $isThueActive],
                                 ['title' => 'Hạ tầng địa bàn', 'disabled' => true, 'icon' => 'bi-signpost-split'],
-                                ['title' => 'Thuế & Phí địa phương', 'disabled' => true, 'icon' => 'bi-cash-coin'],
                             ];
                         } elseif ($isHeThong) {
                             $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*') || request()->routeIs('audit-logs.*') || request()->routeIs('he-thong.dashboard-bieu-do');
