@@ -207,7 +207,7 @@
                         $isDatDai = $slug === 'dat-dai-ha-tang';
                         $isHeThong = $slug === 'he-thong-bao-cao';
 
-                        $isModuleActive = request()->routeIs('modules.show') && request()->route('module') === $slug;
+                        $isModuleActive = false;
                         
                         $isActive = false;
                         $submenu = [];
@@ -220,7 +220,6 @@
                             $isActive = $isModuleActive || $isHoKhauActive || $isNhanKhauActive || $isBienDongActive || $isTamTruActive;
                             
                             $submenu = [
-                                ['title' => 'Tổng quan', 'url' => route('modules.show', 'ho-tich-cu-tru'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Danh sách sổ hộ khẩu', 'url' => route('ho-khau.index'), 'icon' => 'bi-journal-text', 'active' => request()->routeIs('ho-khau.index') || request()->routeIs('ho-khau.edit') || request()->routeIs('ho-khau.create')],
                                 ['title' => 'Danh sách nhân khẩu', 'url' => route('nhan-khau.index'), 'icon' => 'bi-people', 'active' => request()->routeIs('nhan-khau.index') || request()->routeIs('nhan-khau.edit') || request()->routeIs('nhan-khau.create')],
                                 ['title' => 'Biến động hộ khẩu', 'url' => route('bien-dong.index'), 'icon' => 'bi-arrow-left-right', 'active' => request()->routeIs('bien-dong.*')],
@@ -233,7 +232,6 @@
                             $isActive = $isModuleActive || $isHoSoActive || $isDoanhNghiepActive || $isKetNoiActive;
                             
                             $submenu = [
-                                ['title' => 'Tổng quan', 'url' => route('modules.show', 'kinh-te-lao-dong'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Hồ sơ lao động', 'url' => route('ho-so.index'), 'icon' => 'bi-person-workspace', 'active' => $isHoSoActive],
                                 ['title' => 'Doanh nghiệp & Hộ kinh doanh', 'url' => route('doanh-nghiep.index'), 'icon' => 'bi-building', 'active' => $isDoanhNghiepActive],
                                 ['title' => 'Kết nối việc làm', 'url' => route('ket-noi.index'), 'icon' => 'bi-link-45deg', 'active' => $isKetNoiActive],
@@ -246,7 +244,6 @@
                             $isActive = $isModuleActive || $isPolicyActive || $isBaoTroActive || $isDotActive || $isYTeActive;
                             
                             $submenu = [
-                                ['title' => 'Tổng quan', 'url' => route('modules.show', 'an-sinh-y-te-giao-duc'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Đối tượng chính sách', 'url' => route('doi-tuong-chinh-sach.index'), 'icon' => 'bi-list-ul', 'active' => request()->routeIs('doi-tuong-chinh-sach.*')],
                                 ['title' => 'Bảo trợ xã hội', 'url' => route('bao-tro-xa-hoi.index'), 'icon' => 'bi-shield', 'active' => request()->routeIs('bao-tro-xa-hoi.*')],
                                 ['title' => 'Đợt trợ cấp & Quỹ từ thiện', 'url' => route('dot-tro-cap.index'), 'icon' => 'bi-gift', 'active' => $isDotActive],
@@ -259,7 +256,6 @@
                             $isAnNinhTratTuActive = request()->routeIs('an-ninh-trat-tu.*');
                             $isActive = $isModuleActive || $isNghiaVuActive || $isDanQuanActive || $isDanQuanHoatDongActive || $isAnNinhTratTuActive;
                             $submenu = [
-                                ['title' => 'Tổng quan', 'url' => route('modules.show', 'nghia-vu-an-ninh'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Quản lý Nghĩa vụ quân sự', 'url' => route('nghia-vu-quan-su.index'), 'icon' => 'bi-person-check', 'active' => $isNghiaVuActive],
                                 ['title' => 'Lực lượng dân quân tự vệ', 'url' => route('dan-quan-tu-ve.index'), 'icon' => 'bi-people-fill', 'active' => $isDanQuanActive],
                                 ['title' => 'Hoạt động dân quân', 'url' => route('dan-quan-hoat-dong.index'), 'icon' => 'bi-calendar-event', 'active' => $isDanQuanHoatDongActive],
@@ -270,16 +266,13 @@
                             $isThueActive = request()->routeIs('thue-va-phi.*');
                             $isActive = $isModuleActive || $isDatDaiTaiSanActive || $isThueActive;
                             $submenu = [
-                                ['title' => 'Tổng quan', 'url' => route('modules.show', 'dat-dai-ha-tang'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
                                 ['title' => 'Đất đai & Tài sản', 'url' => route('dat-dai-tai-san.index'), 'icon' => 'bi-map', 'active' => $isDatDaiTaiSanActive],
                                 ['title' => 'Thuế & Phí địa phương', 'url' => route('thue-va-phi.index'), 'icon' => 'bi-cash-coin', 'active' => $isThueActive],
                                 ['title' => 'Hạ tầng địa bàn', 'disabled' => true, 'icon' => 'bi-signpost-split'],
                             ];
                         } elseif ($isHeThong) {
                             $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*') || request()->routeIs('audit-logs.*') || request()->routeIs('he-thong.dashboard-bieu-do') || request()->routeIs('he-thong.loc-dong');
-                            $submenu = [
-                                ['title' => 'Tổng quan', 'url' => route('modules.show', 'he-thong-bao-cao'), 'icon' => 'bi-speedometer2', 'active' => $isModuleActive],
-                            ];
+                            $submenu = [];
                             if (auth()->user()->can('manage_users')) {
                                 $submenu[] = ['title' => 'Tài khoản cán bộ', 'url' => route('users.index'), 'icon' => 'bi-person-badge', 'active' => request()->routeIs('users.*')];
                             }

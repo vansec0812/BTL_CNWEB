@@ -215,6 +215,21 @@ Route::middleware('auth')->group(function () use ($modules) {
 
         abort_unless($selected, 404);
 
+        $defaultModuleRoutes = [
+            'ho-tich-cu-tru' => 'ho-khau.index',
+            'kinh-te-lao-dong' => 'ho-so.index',
+            'an-sinh-y-te-giao-duc' => 'doi-tuong-chinh-sach.index',
+            'nghia-vu-an-ninh' => 'nghia-vu-quan-su.index',
+            'dat-dai-ha-tang' => 'dat-dai-tai-san.index',
+            'he-thong-bao-cao' => auth()->user()->can('manage_users')
+                ? 'users.index'
+                : (auth()->user()->can('view_audit_logs') ? 'audit-logs.index' : 'he-thong.dashboard-bieu-do'),
+        ];
+
+        if (isset($defaultModuleRoutes[$module])) {
+            return redirect()->route($defaultModuleRoutes[$module]);
+        }
+
         $count = static function (string $table): int {
             try {
                 return DB::table($table)->count();
