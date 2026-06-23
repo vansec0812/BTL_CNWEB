@@ -49,4 +49,35 @@ class CoSoVatChatController extends Controller
             'cong_trinh_xuong_cap' => CoSoVatChat::whereIn('tinh_trang', ['xuong_cap', 'can_sua_chua'])->count(),
         ];
     }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('co-so-vat-chat.create', [
+            'modules' => ModuleRegistry::all(),
+            'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'ten_cong_trinh' => 'required|string|max:255',
+            'phan_loai' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::PHAN_LOAI)),
+            'thon_xom' => 'nullable|string|max:100',
+            'ngay_dua_vao_su_dung' => 'nullable|date',
+            'kinh_phi_xay_dung' => 'nullable|numeric|min:0',
+            'tinh_trang' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::TINH_TRANG)),
+            'ghi_chu' => 'nullable|string',
+        ]);
+
+        CoSoVatChat::create($validated);
+
+        return redirect()->route('co-so-vat-chat.index')->with('success', 'Đã thêm mới công trình thành công.');
+    }
 }
