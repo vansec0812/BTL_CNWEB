@@ -145,7 +145,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Hộ sở hữu</th>
+                        <th>Chủ sở hữu</th>
                         <th>Thông tin thửa đất</th>
                         <th>Loại đất</th>
                         <th>Diện tích</th>
