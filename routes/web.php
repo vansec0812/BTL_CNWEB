@@ -722,6 +722,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->except(['index', 'show'])
             ->parameters(['thue-va-phi' => 'thueVaPhi'])
             ->names('thue-va-phi');
+
+        Route::resource('dat-dai-ha-tang/co-so-vat-chat', \App\Http\Controllers\CoSoVatChatController::class)
+            ->except(['index', 'show'])
+            ->parameters(['co-so-vat-chat' => 'coSoVatChat'])
+            ->names('co-so-vat-chat');
     });
 
     Route::middleware('can:view_dat_dai')->group(function () {
@@ -734,6 +739,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->only(['index', 'show'])
             ->parameters(['thue-va-phi' => 'thueVaPhi'])
             ->names('thue-va-phi');
+
+        Route::resource('dat-dai-ha-tang/co-so-vat-chat', \App\Http\Controllers\CoSoVatChatController::class)
+            ->only(['index', 'show'])
+            ->parameters(['co-so-vat-chat' => 'coSoVatChat'])
+            ->names('co-so-vat-chat');
     });
 
     // --- Phân quyền RBAC ---
