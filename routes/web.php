@@ -19,6 +19,7 @@ use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YTeNhanKhauController;
+use App\Http\Controllers\LocDongController;
 use App\Models\DotTroCap;
 use App\Models\HoKhau;
 use App\Models\LaoDong;
@@ -787,4 +788,7 @@ Route::middleware('auth')->group(function () use ($modules) {
 
     // --- Dashboard & Biểu đồ trực quan ---
     Route::get('he-thong/dashboard-bieu-do', [BieuDoController::class, 'index'])->name('he-thong.dashboard-bieu-do');
+
+    // --- Bộ lọc động ---
+    Route::get('he-thong/loc-dong', [LocDongController::class, 'index'])->name('he-thong.loc-dong');
 });

@@ -93,6 +93,11 @@ class NhanKhau extends Model
         return $this->hasOne(DoiTuongChinhSach::class, 'nhan_khau_id');
     }
 
+    public function baoTroXaHoi(): HasOne
+    {
+        return $this->hasOne(BaoTroXaHoi::class, 'nhan_khau_id');
+    }
+
     public function nghiaVuQuanSu(): HasOne
     {
         return $this->hasOne(NghiaVuQuanSu::class, 'nhan_khau_id');
