@@ -8,16 +8,22 @@
         <h5 class="fw-bold mb-3 text-success border-bottom pb-2">Thông tin sở hữu</h5>
         <div class="row g-3 mb-4">
             <div class="col-md-6">
-                <label for="ho_khau_id" class="form-label">Hộ gia đình sở hữu <span class="text-danger">*</span></label>
-                <select class="form-select @error('ho_khau_id') is-invalid @enderror" id="ho_khau_id" name="ho_khau_id" required>
-                    <option value="">-- Chọn Hộ khẩu --</option>
-                    @foreach($hoKhaus as $ho)
-                        <option value="{{ $ho->id }}" @selected(old('ho_khau_id', $datDaiTaiSan->ho_khau_id ?? '') == $ho->id)>
-                            Hộ: {{ $ho->ma_ho }} - Chủ hộ: {{ $ho->chuHo ? $ho->chuHo->ho_ten : 'Chưa cập nhật' }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('ho_khau_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <label class="form-label">Chủ sở hữu (Nhân khẩu) <span class="text-danger">*</span></label>
+                <div class="input-group mb-1">
+                    <input type="text" class="form-control" id="cccd_kiem_tra" placeholder="Nhập CCCD..." value="{{ isset($datDaiTaiSan) && $datDaiTaiSan->chuSoHuu ? $datDaiTaiSan->chuSoHuu->cccd_cmnd : '' }}">
+                    <button class="btn btn-outline-success" type="button" id="btnCheckCccd">
+                        <i class="bi bi-search"></i> Kiểm tra
+                    </button>
+                </div>
+                <div id="checkResult" class="form-text">
+                    @if(isset($datDaiTaiSan) && $datDaiTaiSan->chuSoHuu)
+                        <span class="text-success fw-bold"><i class="bi bi-check-circle"></i> Đang chọn: {{ $datDaiTaiSan->chuSoHuu->ho_ten }} (NS: {{ \Carbon\Carbon::parse($datDaiTaiSan->chuSoHuu->ngay_sinh)->format('d/m/Y') }})</span>
+                    @else
+                        <span class="text-muted">Vui lòng nhập CCCD và nhấn kiểm tra.</span>
+                    @endif
+                </div>
+                <input type="hidden" id="chu_so_huu_nhan_khau_id" name="chu_so_huu_nhan_khau_id" value="{{ old('chu_so_huu_nhan_khau_id', $datDaiTaiSan->chu_so_huu_nhan_khau_id ?? '') }}" required>
+                @error('chu_so_huu_nhan_khau_id')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6">
                 <label for="thon_xom" class="form-label">Thôn/Xóm (Địa bàn)</label>
@@ -108,3 +114,42 @@
         </button>
     </div>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnCheck = document.getElementById('btnCheckCccd');
+    const inputCccd = document.getElementById('cccd_kiem_tra');
+    const hiddenId = document.getElementById('chu_so_huu_nhan_khau_id');
+    const resultDiv = document.getElementById('checkResult');
+
+    if (btnCheck) {
+        btnCheck.addEventListener('click', function() {
+            const cccd = inputCccd.value.trim();
+            if (!cccd) {
+                resultDiv.innerHTML = '<span class="text-danger"><i class="bi bi-x-circle"></i> Vui lòng nhập CCCD</span>';
+                hiddenId.value = '';
+                return;
+            }
+
+            resultDiv.innerHTML = '<span class="text-info"><i class="bi bi-hourglass-split"></i> Đang kiểm tra...</span>';
+
+            fetch(`{{ route('dat-dai-tai-san.check-cccd') }}?cccd=${cccd}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const ns = new Date(data.data.ngay_sinh).toLocaleDateString('vi-VN');
+                        resultDiv.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle"></i> Hợp lệ: ${data.data.ho_ten} (NS: ${ns})</span>`;
+                        hiddenId.value = data.data.id;
+                    } else {
+                        resultDiv.innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-x-circle"></i> ${data.message}</span>`;
+                        hiddenId.value = '';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Lỗi kết nối.</span>';
+                    hiddenId.value = '';
+                });
+        });
+    }
+});
+</script>

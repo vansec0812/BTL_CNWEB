@@ -13,7 +13,7 @@ class DatDaiTaiSan extends Model
     protected $table = 'dat_dai_tai_san';
 
     protected $fillable = [
-        'ho_khau_id',
+        'chu_so_huu_nhan_khau_id',
         'so_to_ban_do',
         'so_thua_dat',
         'so_gcn_qsdd',
@@ -33,9 +33,9 @@ class DatDaiTaiSan extends Model
         'dien_tich_m2' => 'decimal:2',
     ];
 
-    public function hoKhau()
+    public function chuSoHuu()
     {
-        return $this->belongsTo(HoKhau::class, 'ho_khau_id');
+        return $this->belongsTo(NhanKhau::class, 'chu_so_huu_nhan_khau_id');
     }
 
     public function loaiDatLabel()

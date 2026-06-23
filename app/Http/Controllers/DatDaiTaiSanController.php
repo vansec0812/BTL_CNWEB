@@ -13,7 +13,7 @@ class DatDaiTaiSanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = DatDaiTaiSan::with('hoKhau.chuHo');
+        $query = DatDaiTaiSan::with('chuSoHuu');
 
         if ($request->filled('q')) {
             $q = $request->get('q');
@@ -22,8 +22,9 @@ class DatDaiTaiSanController extends Controller
                          ->orWhere('so_to_ban_do', 'like', "%{$q}%")
                          ->orWhere('so_thua_dat', 'like', "%{$q}%")
                          ->orWhere('vi_tri_mo_ta', 'like', "%{$q}%")
-                         ->orWhereHas('hoKhau.chuHo', function($subQuery) use ($q) {
-                             $subQuery->where('ho_ten', 'like', "%{$q}%");
+                         ->orWhereHas('chuSoHuu', function($subQuery) use ($q) {
+                             $subQuery->where('ho_ten', 'like', "%{$q}%")
+                                      ->orWhere('cccd_cmnd', 'like', "%{$q}%");
                          });
             });
         }
@@ -53,9 +54,7 @@ class DatDaiTaiSanController extends Controller
 
     public function create()
     {
-        $hoKhaus = HoKhau::with('chuHo')->where('trang_thai', 'hoat_dong')->get();
         return view('dat-dai-tai-san.create', [
-            'hoKhaus' => $hoKhaus,
             'modules' => ModuleRegistry::all(),
         ]);
     }
@@ -71,7 +70,7 @@ class DatDaiTaiSanController extends Controller
 
     public function show(DatDaiTaiSan $datDaiTaiSan)
     {
-        $datDaiTaiSan->load('hoKhau.chuHo');
+        $datDaiTaiSan->load('chuSoHuu');
         return view('dat-dai-tai-san.show', [
             'datDaiTaiSan' => $datDaiTaiSan,
             'modules' => ModuleRegistry::all(),
@@ -80,10 +79,8 @@ class DatDaiTaiSanController extends Controller
 
     public function edit(DatDaiTaiSan $datDaiTaiSan)
     {
-        $hoKhaus = HoKhau::with('chuHo')->where('trang_thai', 'hoat_dong')->get();
         return view('dat-dai-tai-san.edit', [
             'datDaiTaiSan' => $datDaiTaiSan,
-            'hoKhaus' => $hoKhaus,
             'modules' => ModuleRegistry::all(),
         ]);
     }
@@ -101,5 +98,56 @@ class DatDaiTaiSanController extends Controller
     {
         $datDaiTaiSan->delete();
         return redirect()->route('dat-dai-tai-san.index')->with('status', 'Xóa thửa đất thành công!');
+    }
+
+    public function checkCccd(Request $request)
+    {
+        $cccd = $request->get('cccd');
+        if (!$cccd) {
+            return response()->json(['success' => false, 'message' => 'Vui lòng nhập CCCD']);
+        }
+
+        $nhanKhau = \App\Models\NhanKhau::where('cccd_cmnd', $cccd)->first();
+        if ($nhanKhau) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $nhanKhau->id,
+                    'ho_ten' => $nhanKhau->ho_ten,
+                    'ngay_sinh' => $nhanKhau->ngay_sinh,
+                ]
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Không tìm thấy cá nhân với CCCD này']);
+    }
+
+    public function chuyenNhuong(Request $request, DatDaiTaiSan $datDaiTaiSan)
+    {
+        $request->validate([
+            'nguoi_mua_id' => 'required|exists:nhan_khau,id',
+            'ngay_chuyen_nhuong' => 'required|date',
+        ]);
+
+        $nguoiMuaId = $request->input('nguoi_mua_id');
+        
+        if ($nguoiMuaId == $datDaiTaiSan->chu_so_huu_nhan_khau_id) {
+            return back()->withErrors(['error' => 'Người mua không thể là chủ sở hữu hiện tại.']);
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $datDaiTaiSan, $nguoiMuaId) {
+            \App\Models\LichSuChuyenNhuongDat::create([
+                'dat_dai_tai_san_id' => $datDaiTaiSan->id,
+                'nguoi_ban_id' => $datDaiTaiSan->chu_so_huu_nhan_khau_id,
+                'nguoi_mua_id' => $nguoiMuaId,
+                'ngay_chuyen_nhuong' => $request->input('ngay_chuyen_nhuong'),
+                'ghi_chu' => 'Chuyển nhượng qua hệ thống',
+            ]);
+
+            $datDaiTaiSan->chu_so_huu_nhan_khau_id = $nguoiMuaId;
+            $datDaiTaiSan->save();
+        });
+
+        return redirect()->route('dat-dai-tai-san.index')->with('status', 'Sang tên thửa đất thành công!');
     }
 }

@@ -157,9 +157,9 @@
                     @forelse ($records as $record)
                         <tr>
                             <td>
-                                @if($record->hoKhau && $record->hoKhau->chuHo)
-                                    <div class="fw-semibold">{{ $record->hoKhau->chuHo->ho_ten }}</div>
-                                    <div class="small text-secondary">Hộ: {{ $record->hoKhau->ma_ho }}</div>
+                                @if($record->chuSoHuu)
+                                    <div class="fw-semibold">{{ $record->chuSoHuu->ho_ten }}</div>
+                                    <div class="small text-secondary">CCCD: {{ $record->chuSoHuu->cccd_cmnd ?? 'Chưa cập nhật' }}</div>
                                 @else
                                     <span class="text-muted small">Chưa xác định</span>
                                 @endif
@@ -190,6 +190,11 @@
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
                                     @can('manage_dat_dai')
+                                    @if($record->trang_thai === 'dang_su_dung')
+                                        <button class="btn btn-sm btn-outline-primary btn-transfer" title="Sang tên đổi chủ" data-id="{{ $record->id }}" data-owner="{{ $record->chuSoHuu->ho_ten ?? '' }}" data-gcn="{{ $record->so_gcn_qsdd ?? '' }}">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('dat-dai-tai-san.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </a>
@@ -222,4 +227,118 @@
         </div>
     @endif
 </div>
+
+<!-- Modal Sang tên -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="" id="transferForm">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="transferModalLabel">Sang tên đổi chủ - <span id="transferGcn" class="text-primary"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Chủ sở hữu hiện tại (Người bán)</label>
+                        <input type="text" class="form-control" id="transferOldOwner" readonly>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label text-success fw-bold">Chủ sở hữu mới (Người mua) <span class="text-danger">*</span></label>
+                        <div class="input-group mb-1">
+                            <input type="text" class="form-control" id="cccd_kiem_tra" placeholder="Nhập CCCD người mua...">
+                            <button class="btn btn-outline-success" type="button" id="btnCheckCccd">
+                                <i class="bi bi-search"></i> Kiểm tra
+                            </button>
+                        </div>
+                        <div id="checkResult" class="form-text text-muted">Vui lòng nhập CCCD và nhấn kiểm tra.</div>
+                        <input type="hidden" id="nguoi_mua_id" name="nguoi_mua_id" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày chuyển nhượng <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="ngay_chuyen_nhuong" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-success" id="btnSubmitTransfer" disabled>Xác nhận Sang tên</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý mở Modal
+    const transferBtns = document.querySelectorAll('.btn-transfer');
+    const transferModal = new bootstrap.Modal(document.getElementById('transferModal'));
+    const transferForm = document.getElementById('transferForm');
+    const transferGcn = document.getElementById('transferGcn');
+    const transferOldOwner = document.getElementById('transferOldOwner');
+
+    transferBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const owner = this.getAttribute('data-owner');
+            const gcn = this.getAttribute('data-gcn');
+
+            transferForm.action = `/dat-dai-ha-tang/dat-dai-tai-san/${id}/chuyen-nhuong`;
+            transferGcn.textContent = gcn || 'Chưa cấp GCN';
+            transferOldOwner.value = owner;
+
+            // Reset form
+            document.getElementById('cccd_kiem_tra').value = '';
+            document.getElementById('checkResult').innerHTML = '<span class="text-muted">Vui lòng nhập CCCD và nhấn kiểm tra.</span>';
+            document.getElementById('nguoi_mua_id').value = '';
+            document.getElementById('btnSubmitTransfer').disabled = true;
+
+            transferModal.show();
+        });
+    });
+
+    // Xử lý Check CCCD
+    const btnCheck = document.getElementById('btnCheckCccd');
+    const inputCccd = document.getElementById('cccd_kiem_tra');
+    const hiddenId = document.getElementById('nguoi_mua_id');
+    const resultDiv = document.getElementById('checkResult');
+    const btnSubmit = document.getElementById('btnSubmitTransfer');
+
+    if (btnCheck) {
+        btnCheck.addEventListener('click', function() {
+            const cccd = inputCccd.value.trim();
+            if (!cccd) {
+                resultDiv.innerHTML = '<span class="text-danger"><i class="bi bi-x-circle"></i> Vui lòng nhập CCCD</span>';
+                hiddenId.value = '';
+                btnSubmit.disabled = true;
+                return;
+            }
+
+            resultDiv.innerHTML = '<span class="text-info"><i class="bi bi-hourglass-split"></i> Đang kiểm tra...</span>';
+            btnSubmit.disabled = true;
+
+            fetch(`{{ route('dat-dai-tai-san.check-cccd') }}?cccd=${cccd}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const ns = new Date(data.data.ngay_sinh).toLocaleDateString('vi-VN');
+                        resultDiv.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle"></i> Hợp lệ: ${data.data.ho_ten} (NS: ${ns})</span>`;
+                        hiddenId.value = data.data.id;
+                        btnSubmit.disabled = false;
+                    } else {
+                        resultDiv.innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-x-circle"></i> ${data.message}</span>`;
+                        hiddenId.value = '';
+                        btnSubmit.disabled = true;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Lỗi kết nối.</span>';
+                    hiddenId.value = '';
+                    btnSubmit.disabled = true;
+                });
+        });
+    }
+});
+</script>
 @endsection

@@ -36,6 +36,21 @@
                 </select>
                 @error('loai_khoan_thu')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
+            <div class="col-md-12 mt-3" id="datDaiWrapper" style="display: none;">
+                <label for="dat_dai_tai_san_id" class="form-label text-success">Liên kết với Mảnh đất (Chỉ dành cho Thuế đất)</label>
+                <select class="form-select @error('dat_dai_tai_san_id') is-invalid @enderror" id="dat_dai_tai_san_id" name="dat_dai_tai_san_id">
+                    <option value="">-- Chọn Thửa đất --</option>
+                    @php
+                        $datDais = \App\Models\DatDaiTaiSan::with('chuSoHuu')->get();
+                    @endphp
+                    @foreach($datDais as $dat)
+                        <option value="{{ $dat->id }}" @selected(old('dat_dai_tai_san_id', $thueVaPhi->dat_dai_tai_san_id ?? '') == $dat->id)>
+                            GCN: {{ $dat->so_gcn_qsdd ?? 'Chưa có' }} - Tờ BĐ: {{ $dat->so_to_ban_do }} - Thửa: {{ $dat->so_thua_dat }} (Chủ: {{ $dat->chuSoHuu->ho_ten ?? 'Không rõ' }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('dat_dai_tai_san_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
         </div>
 
         <h5 class="fw-bold mb-3 text-success border-bottom pb-2">Thu tiền</h5>
@@ -77,3 +92,23 @@
         </button>
     </div>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loaiKhoanThu = document.getElementById('loai_khoan_thu');
+    const datDaiWrapper = document.getElementById('datDaiWrapper');
+
+    function toggleDatDai() {
+        if (loaiKhoanThu.value === 'thue_dat_phi_nong_nghiep' || loaiKhoanThu.value === 'thue_dat_nong_nghiep') {
+            datDaiWrapper.style.display = 'block';
+        } else {
+            datDaiWrapper.style.display = 'none';
+        }
+    }
+
+    if (loaiKhoanThu) {
+        toggleDatDai(); // Initial check
+        loaiKhoanThu.addEventListener('change', toggleDatDai);
+    }
+});
+</script>
