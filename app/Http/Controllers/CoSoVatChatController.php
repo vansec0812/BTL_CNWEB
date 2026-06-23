@@ -80,4 +80,45 @@ class CoSoVatChatController extends Controller
 
         return redirect()->route('co-so-vat-chat.index')->with('success', 'Đã thêm mới công trình thành công.');
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(CoSoVatChat $coSoVatChat)
+    {
+        return view('co-so-vat-chat.edit', [
+            'modules' => ModuleRegistry::all(),
+            'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
+            'record' => $coSoVatChat,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, CoSoVatChat $coSoVatChat)
+    {
+        $validated = $request->validate([
+            'ten_cong_trinh' => 'required|string|max:255',
+            'phan_loai' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::PHAN_LOAI)),
+            'thon_xom' => 'nullable|string|max:100',
+            'ngay_dua_vao_su_dung' => 'nullable|date',
+            'kinh_phi_xay_dung' => 'nullable|numeric|min:0',
+            'tinh_trang' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::TINH_TRANG)),
+            'ghi_chu' => 'nullable|string',
+        ]);
+
+        $coSoVatChat->update($validated);
+
+        return redirect()->route('co-so-vat-chat.index')->with('success', 'Đã cập nhật công trình thành công.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(CoSoVatChat $coSoVatChat)
+    {
+        $coSoVatChat->delete();
+        return redirect()->route('co-so-vat-chat.index')->with('success', 'Đã xóa công trình thành công.');
+    }
 }
