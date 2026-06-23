@@ -7,6 +7,8 @@ use App\Models\YTeNhanKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\StoreYTeNhanKhauRequest;
+use App\Http\Requests\UpdateYTeNhanKhauRequest;
 
 class YTeNhanKhauController extends Controller
 {
@@ -64,9 +66,9 @@ class YTeNhanKhauController extends Controller
         return view('an-sinh.y-te-nhan-khau.create', $formData);
     }
 
-    public function store(Request $request)
+    public function store(StoreYTeNhanKhauRequest $request)
     {
-        $data = $this->validated($request);
+        $data = $request->validated();
         $data['hoan_thanh_tiem_chung_mo_rong'] = $request->boolean('hoan_thanh_tiem_chung_mo_rong');
 
         // Nếu loại BHYT là 'khong_co' thì xóa thông tin thẻ
@@ -122,9 +124,9 @@ class YTeNhanKhauController extends Controller
         return view('an-sinh.y-te-nhan-khau.edit', $formData);
     }
 
-    public function update(Request $request, YTeNhanKhau $yTeNhanKhau)
+    public function update(UpdateYTeNhanKhauRequest $request, YTeNhanKhau $yTeNhanKhau)
     {
-        $data = $this->validated($request, $yTeNhanKhau);
+        $data = $request->validated();
         $data['hoan_thanh_tiem_chung_mo_rong'] = $request->boolean('hoan_thanh_tiem_chung_mo_rong');
 
         if ($data['loai_bhyt'] === 'khong_co') {
@@ -165,28 +167,7 @@ class YTeNhanKhauController extends Controller
             ->with('status', 'Đã xoá hồ sơ y tế.');
     }
 
-    private function validated(Request $request, ?YTeNhanKhau $record = null): array
-    {
-        $currentNhanKhauId = $record?->nhan_khau_id;
 
-        return $request->validate([
-            'nhan_khau_id' => [
-                'required',
-                'integer',
-                Rule::exists('nhan_khau', 'id')->whereNull('deleted_at'),
-                // Mỗi nhân khẩu chỉ có 1 hồ sơ y tế (unique trừ chính nó khi update)
-                Rule::unique('y_te_nhan_khau', 'nhan_khau_id')->ignore($record?->id),
-            ],
-            'so_the_bhyt'                   => ['nullable', 'string', 'max:50'],
-            'loai_bhyt'                     => ['required', Rule::in(array_keys(YTeNhanKhau::LOAI_BHYT))],
-            'ngay_cap_the_bhyt'             => ['nullable', 'date'],
-            'ngay_het_han_the_bhyt'         => ['nullable', 'date', 'after_or_equal:ngay_cap_the_bhyt'],
-            'noi_dang_ky_kham_chua_benh'    => ['nullable', 'string', 'max:255'],
-            'hoan_thanh_tiem_chung_mo_rong' => ['boolean'],
-            'lich_su_tiem_chung'            => ['nullable', 'json'],
-            'ghi_chu_suc_khoe'              => ['nullable', 'string'],
-        ]);
-    }
 
     private function formData(?YTeNhanKhau $record = null): array
     {

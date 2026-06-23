@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBienDongHoKhauRequest;
+use App\Http\Requests\UpdateBienDongHoKhauRequest;
 use App\Models\BienDongHoKhau;
 use App\Models\HoKhau;
 use App\Models\NhanKhau;
@@ -162,15 +163,9 @@ class BienDongHoKhauController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BienDongHoKhau $bienDong)
+    public function update(UpdateBienDongHoKhauRequest $request, BienDongHoKhau $bienDong)
     {
-        $validated = $request->validate([
-            'ngay_bien_dong' => 'required|date',
-            'so_quyet_dinh' => 'nullable|string|max:100',
-            'ly_do' => 'nullable|string|max:500',
-            'dia_chi_chuyen_den' => 'nullable|string|max:500',
-            'ghi_chu' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $bienDong->update($validated);
 

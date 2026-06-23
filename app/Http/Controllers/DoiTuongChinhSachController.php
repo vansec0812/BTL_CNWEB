@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\DoiTuongChinhSach;
 use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
+use App\Http\Requests\StoreDoiTuongChinhSachRequest;
+use App\Http\Requests\UpdateDoiTuongChinhSachRequest;
 
 class DoiTuongChinhSachController extends Controller
 {
@@ -66,9 +70,9 @@ class DoiTuongChinhSachController extends Controller
         return view('an-sinh.doi-tuong-chinh-sach.create', $formData);
     }
 
-    public function store(Request $request)
+    public function store(StoreDoiTuongChinhSachRequest $request)
     {
-        $record = DoiTuongChinhSach::create($this->validated($request));
+        $record = DoiTuongChinhSach::create($request->validated());
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -113,9 +117,9 @@ class DoiTuongChinhSachController extends Controller
         return view('an-sinh.doi-tuong-chinh-sach.edit', $formData);
     }
 
-    public function update(Request $request, DoiTuongChinhSach $doiTuongChinhSach)
+    public function update(UpdateDoiTuongChinhSachRequest $request, DoiTuongChinhSach $doiTuongChinhSach)
     {
-        $doiTuongChinhSach->update($this->validated($request, $doiTuongChinhSach));
+        $doiTuongChinhSach->update($request->validated());
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -144,36 +148,6 @@ class DoiTuongChinhSachController extends Controller
         return redirect()
             ->route('doi-tuong-chinh-sach.index')
             ->with('status', 'Đã lưu hồ sơ vào trạng thái đã xoá.');
-    }
-
-    private function validated(Request $request, ?DoiTuongChinhSach $record = null): array
-    {
-        $currentNhanKhauId = $record?->nhan_khau_id;
-
-        return $request->validate([
-            'nhan_khau_id' => [
-                'required',
-                'integer',
-                Rule::exists('nhan_khau', 'id')->where(function ($query) use ($currentNhanKhauId): void {
-                    $query->where(function ($query): void {
-                        $query->whereNull('deleted_at')
-                            ->where('trang_thai', '!=', 'da_mat');
-                    });
-
-                    if ($currentNhanKhauId) {
-                        $query->orWhere('id', $currentNhanKhauId);
-                    }
-                }),
-            ],
-            'loai_chinh_sach' => ['required', Rule::in(array_keys(DoiTuongChinhSach::LOAI_CHINH_SACH))],
-            'so_quyet_dinh_cong_nhan' => ['nullable', 'string', 'max:100'],
-            'ngay_cong_nhan' => ['nullable', 'date'],
-            'co_quan_cap' => ['nullable', 'string', 'max:255'],
-            'ty_le_thuong_tat' => ['nullable', 'numeric', 'between:0,100'],
-            'muc_tro_cap_hang_thang' => ['nullable', 'integer', 'min:0'],
-            'trang_thai' => ['required', Rule::in(array_keys(DoiTuongChinhSach::TRANG_THAI))],
-            'ghi_chu' => ['nullable', 'string'],
-        ]);
     }
 
     private function formData(?DoiTuongChinhSach $record = null): array

@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<form method="POST" action="{{ route('bien-dong.update', $record) }}">
+<form method="POST" action="{{ route('bien-dong.update', $record) }}" novalidate>
     @csrf
     @method('PUT')
 

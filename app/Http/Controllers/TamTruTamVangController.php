@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTamTruTamVangRequest;
+use App\Http\Requests\UpdateTamTruTamVangRequest;
 use App\Models\NhanKhau;
 use App\Models\TamTruTamVang;
 use App\Services\TamTruTamVangService;
@@ -122,17 +123,9 @@ class TamTruTamVangController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TamTruTamVang $tamTruTamVang)
+    public function update(UpdateTamTruTamVangRequest $request, TamTruTamVang $tamTruTamVang)
     {
-        $validated = $request->validate([
-            'ngay_bat_dau' => 'required|date',
-            'ngay_ket_thuc' => 'nullable|date|after_or_equal:ngay_bat_dau',
-            'dia_chi_cu_tru_thuc_te' => 'nullable|string|max:500',
-            'dia_chi_vang_mat' => 'nullable|string|max:500',
-            'ly_do' => 'nullable|string|max:500',
-            'trang_thai' => 'required|in:dang_hieu_luc,da_het_han,da_huy',
-            'ghi_chu' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $this->tamTruService->updateDeclaration($tamTruTamVang, $validated);
 

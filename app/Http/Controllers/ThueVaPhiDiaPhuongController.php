@@ -7,6 +7,8 @@ use App\Models\ThueVaPhiDiaPhuong;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreThueVaPhiDiaPhuongRequest;
+use App\Http\Requests\UpdateThueVaPhiDiaPhuongRequest;
 
 class ThueVaPhiDiaPhuongController extends Controller
 {
@@ -62,17 +64,9 @@ class ThueVaPhiDiaPhuongController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreThueVaPhiDiaPhuongRequest $request)
     {
-        $validated = $request->validate([
-            'ho_khau_id' => 'required|exists:ho_khau,id',
-            'nam' => 'required|integer|min:2000|max:2100',
-            'loai_khoan_thu' => 'required|in:thue_dat_phi_nong_nghiep,phi_ve_sinh_moi_truong,quy_khuyen_hoc,phi_xay_dung_nong_thon_moi,phi_an_ninh_trat_tu,khac',
-            'so_tien_phai_nop' => 'required|numeric|min:0',
-            'so_tien_da_nop' => 'required|numeric|min:0',
-            'han_nop' => 'nullable|date',
-            'ghi_chu' => 'nullable|string|max:500',
-        ]);
+        $validated = $request->validated();
 
         $validated['trang_thai_thanh_toan'] = $this->determineStatus($validated['so_tien_phai_nop'], $validated['so_tien_da_nop']);
         
@@ -96,16 +90,9 @@ class ThueVaPhiDiaPhuongController extends Controller
         ]);
     }
 
-    public function update(Request $request, ThueVaPhiDiaPhuong $thueVaPhi)
+    public function update(UpdateThueVaPhiDiaPhuongRequest $request, ThueVaPhiDiaPhuong $thueVaPhi)
     {
-        $validated = $request->validate([
-            'nam' => 'required|integer|min:2000|max:2100',
-            'loai_khoan_thu' => 'required|in:thue_dat_phi_nong_nghiep,phi_ve_sinh_moi_truong,quy_khuyen_hoc,phi_xay_dung_nong_thon_moi,phi_an_ninh_trat_tu,khac',
-            'so_tien_phai_nop' => 'required|numeric|min:0',
-            'so_tien_da_nop' => 'required|numeric|min:0',
-            'han_nop' => 'nullable|date',
-            'ghi_chu' => 'nullable|string|max:500',
-        ]);
+        $validated = $request->validated();
 
         $validated['trang_thai_thanh_toan'] = $this->determineStatus($validated['so_tien_phai_nop'], $validated['so_tien_da_nop']);
 

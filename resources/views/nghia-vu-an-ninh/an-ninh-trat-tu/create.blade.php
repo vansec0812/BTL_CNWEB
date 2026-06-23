@@ -23,7 +23,7 @@
         </h5>
     </div>
     <div class="card-body p-4 pt-2">
-        <form action="{{ route('an-ninh-trat-tu.store') }}" method="POST">
+        <form action="{{ route('an-ninh-trat-tu.store') }}" method="POST" novalidate>
             @include('nghia-vu-an-ninh.an-ninh-trat-tu._form')
             
             <div class="d-flex justify-content-between pt-4 mt-4 border-top">

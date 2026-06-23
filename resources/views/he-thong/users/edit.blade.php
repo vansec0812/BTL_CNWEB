@@ -26,7 +26,7 @@
         <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-pencil-square me-1 text-primary"></i>Chỉnh sửa thông tin cán bộ: {{ $user->name }}</h5>
     </div>
     <div class="card-body p-4">
-        <form action="{{ route('users.update', $user->id) }}" method="POST">
+        <form action="{{ route('users.update', $user->id) }}" method="POST" novalidate>
             @csrf
             @method('PUT')
 

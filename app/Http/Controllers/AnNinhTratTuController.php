@@ -7,6 +7,8 @@ use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\StoreAnNinhTratTuRequest;
+use App\Http\Requests\UpdateAnNinhTratTuRequest;
 
 class AnNinhTratTuController extends Controller
 {
@@ -65,9 +67,9 @@ class AnNinhTratTuController extends Controller
         return view('nghia-vu-an-ninh.an-ninh-trat-tu.create', $formData);
     }
 
-    public function store(Request $request)
+    public function store(StoreAnNinhTratTuRequest $request)
     {
-        $data = $this->validated($request);
+        $data = $request->validated();
 
         $record = AnNinhTratTu::create($data);
 
@@ -115,9 +117,9 @@ class AnNinhTratTuController extends Controller
         return view('nghia-vu-an-ninh.an-ninh-trat-tu.edit', $formData);
     }
 
-    public function update(Request $request, AnNinhTratTu $anNinhTratTu)
+    public function update(UpdateAnNinhTratTuRequest $request, AnNinhTratTu $anNinhTratTu)
     {
-        $data = $this->validated($request, $anNinhTratTu);
+        $data = $request->validated();
 
         $anNinhTratTu->update($data);
 
@@ -148,40 +150,6 @@ class AnNinhTratTuController extends Controller
         return redirect()
             ->route('an-ninh-trat-tu.index')
             ->with('status', 'Xóa hồ sơ an ninh trật tự thành công.');
-    }
-
-    private function validated(Request $request, ?AnNinhTratTu $record = null): array
-    {
-        return $request->validate([
-            'nhan_khau_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('nhan_khau', 'id')->whereNull('deleted_at'),
-            ],
-            'ho_ten' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-            'cccd' => [
-                'nullable',
-                'string',
-                'max:20',
-            ],
-            'dia_chi' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-            'nhom_doi_tuong' => ['required', Rule::in(['vi_pham_hanh_chinh', 'quan_ly_dac_biet'])],
-            'loai_doi_tuong' => ['required', 'string', 'max:100'],
-            'co_quan_giai_quyet' => ['required', 'string', 'max:255'],
-            'ngay_ghi_nhan' => ['required', 'date'],
-            'noi_dung' => ['required', 'string'],
-            'hinh_thuc_xu_ly' => ['nullable', 'string', 'max:255'],
-            'so_tien_phat' => ['nullable', 'numeric', 'min:0'],
-            'trang_thai' => ['required', Rule::in(array_keys(AnNinhTratTu::TRANG_THAI))],
-        ]);
     }
 
     private function formData(?AnNinhTratTu $record = null): array

@@ -23,7 +23,7 @@
                 <h5 class="mb-0 fw-bold text-success"><i class="bi bi-pencil-square me-1"></i>Cập nhật thông tin thành viên</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('dan-quan-tu-ve.update', $record->id) }}" method="POST">
+                <form action="{{ route('dan-quan-tu-ve.update', $record->id) }}" method="POST" novalidate>
                     @csrf
                     @method('PUT')
                     
