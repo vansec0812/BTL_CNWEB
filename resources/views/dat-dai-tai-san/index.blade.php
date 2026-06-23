@@ -190,14 +190,14 @@
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
                                     @can('manage_dat_dai')
-                                    <a href="{{ route('dat-dai-tai-san.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
-                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    <a href="{{ route('dat-dai-tai-san.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('dat-dai-tai-san.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa thửa đất này?">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-action-delete d-inline-flex align-items-center gap-1" type="submit" title="Xóa">
-                                            <i class="bi bi-trash"></i> Xóa
+                                        <button class="btn btn-sm btn-action-delete" type="submit" title="Xóa">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                     @endcan
