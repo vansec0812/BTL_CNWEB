@@ -14,6 +14,7 @@ class ThueVaPhiDiaPhuong extends Model
 
     protected $fillable = [
         'ho_khau_id',
+        'dat_dai_tai_san_id',
         'nam',
         'loai_khoan_thu',
         'so_tien_phai_nop',
@@ -59,6 +60,11 @@ class ThueVaPhiDiaPhuong extends Model
     public function hoKhau(): BelongsTo
     {
         return $this->belongsTo(HoKhau::class, 'ho_khau_id');
+    }
+
+    public function datDaiTaiSan(): BelongsTo
+    {
+        return $this->belongsTo(DatDaiTaiSan::class, 'dat_dai_tai_san_id');
     }
 
     public function nguoiThu(): BelongsTo

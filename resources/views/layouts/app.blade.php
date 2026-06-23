@@ -330,11 +330,12 @@
                         } elseif ($isDatDai) {
                             $isDatDaiTaiSanActive = request()->routeIs('dat-dai-tai-san.*');
                             $isThueActive = request()->routeIs('thue-va-phi.*');
-                            $isActive = $isModuleActive || $isDatDaiTaiSanActive || $isThueActive;
+                            $isCoSoVatChatActive = request()->routeIs('co-so-vat-chat.*');
+                            $isActive = $isModuleActive || $isDatDaiTaiSanActive || $isThueActive || $isCoSoVatChatActive;
                             $submenu = [
                                 ['title' => 'Đất đai & Tài sản', 'url' => route('dat-dai-tai-san.index'), 'icon' => 'bi-map', 'active' => $isDatDaiTaiSanActive],
                                 ['title' => 'Thuế & Phí địa phương', 'url' => route('thue-va-phi.index'), 'icon' => 'bi-cash-coin', 'active' => $isThueActive],
-                                ['title' => 'Hạ tầng địa bàn', 'disabled' => true, 'icon' => 'bi-signpost-split'],
+                                ['title' => 'Cơ sở vật chất', 'url' => route('co-so-vat-chat.index'), 'icon' => 'bi-building', 'active' => $isCoSoVatChatActive],
                             ];
                         } elseif ($isHeThong) {
                             $isActive = $isModuleActive || request()->routeIs('he-thong.rbac') || request()->routeIs('users.*') || request()->routeIs('audit-logs.*') || request()->routeIs('he-thong.dashboard-bieu-do') || request()->routeIs('he-thong.loc-dong');

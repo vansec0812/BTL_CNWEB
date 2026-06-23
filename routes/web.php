@@ -710,6 +710,12 @@ Route::middleware('auth')->group(function () use ($modules) {
 
     // --- Phân hệ Đất đai, Hạ tầng & Tài sản hộ dân ---
     Route::middleware('can:manage_dat_dai')->group(function () {
+        Route::get('dat-dai-ha-tang/dat-dai-tai-san/check-cccd', [\App\Http\Controllers\DatDaiTaiSanController::class, 'checkCccd'])
+            ->name('dat-dai-tai-san.check-cccd');
+            
+        Route::post('dat-dai-ha-tang/dat-dai-tai-san/{datDaiTaiSan}/chuyen-nhuong', [\App\Http\Controllers\DatDaiTaiSanController::class, 'chuyenNhuong'])
+            ->name('dat-dai-tai-san.chuyen-nhuong');
+
         Route::resource('dat-dai-ha-tang/dat-dai-tai-san', \App\Http\Controllers\DatDaiTaiSanController::class)
             ->except(['index', 'show'])
             ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
@@ -722,6 +728,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->except(['index', 'show'])
             ->parameters(['thue-va-phi' => 'thueVaPhi'])
             ->names('thue-va-phi');
+
+        Route::resource('dat-dai-ha-tang/co-so-vat-chat', \App\Http\Controllers\CoSoVatChatController::class)
+            ->except(['index', 'show'])
+            ->parameters(['co-so-vat-chat' => 'coSoVatChat'])
+            ->names('co-so-vat-chat');
     });
 
     Route::middleware('can:view_dat_dai')->group(function () {
@@ -734,6 +745,11 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->only(['index', 'show'])
             ->parameters(['thue-va-phi' => 'thueVaPhi'])
             ->names('thue-va-phi');
+
+        Route::resource('dat-dai-ha-tang/co-so-vat-chat', \App\Http\Controllers\CoSoVatChatController::class)
+            ->only(['index', 'show'])
+            ->parameters(['co-so-vat-chat' => 'coSoVatChat'])
+            ->names('co-so-vat-chat');
     });
 
     // --- Phân quyền RBAC ---

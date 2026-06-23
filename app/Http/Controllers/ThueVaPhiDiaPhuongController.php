@@ -119,41 +119,39 @@ class ThueVaPhiDiaPhuongController extends Controller
         $giaDat = 2000000; // 2,000,000 VND/m2 theo Quy định UBND TP Hà Nội áp dụng cho vùng ven/xã (Giá giả định mẫu)
         $thueSuat = 0.0003; // 0.03%
 
-        $hoKhaus = HoKhau::with(['datDaiTaiSan' => function($q) {
-            $q->where('loai_dat', 'dat_tho_cu'); // Chỉ thu đất thổ cư phi nông nghiệp
-        }])->get();
+        $datDais = \App\Models\DatDaiTaiSan::with('chuSoHuu')->where('loai_dat', 'dat_tho_cu')->get();
 
         $count = 0;
 
         DB::beginTransaction();
         try {
-            foreach ($hoKhaus as $ho) {
-                $tongDienTich = $ho->datDaiTaiSan->sum('dien_tich_m2');
-                
-                if ($tongDienTich > 0) {
-                    $soTienPhaiNop = round($tongDienTich * $giaDat * $thueSuat);
-                    
-                    $thue = ThueVaPhiDiaPhuong::firstOrNew([
-                        'ho_khau_id' => $ho->id,
-                        'nam' => $nam,
-                        'loai_khoan_thu' => 'thue_dat_phi_nong_nghiep',
-                    ]);
+            foreach ($datDais as $dat) {
+                $hoKhauId = $dat->chuSoHuu->ho_khau_id ?? null;
+                if (!$hoKhauId || $dat->dien_tich_m2 <= 0) continue;
 
-                    $thue->so_tien_phai_nop = $soTienPhaiNop;
-                    // Không ghi đè số tiền đã nộp nếu người dân đã đóng
-                    if (!$thue->exists) {
-                        $thue->so_tien_da_nop = 0;
-                        $thue->trang_thai_thanh_toan = 'chua_nop';
-                    } else {
-                        $thue->trang_thai_thanh_toan = $this->determineStatus($soTienPhaiNop, $thue->so_tien_da_nop);
-                    }
-                    $thue->ghi_chu = "Thuế sinh tự động. Diện tích: {$tongDienTich} m2. Đơn giá: " . number_format($giaDat) . " đ/m2. Mức thuế: 0.03%";
-                    $thue->save();
-                    $count++;
+                $soTienPhaiNop = round($dat->dien_tich_m2 * $giaDat * $thueSuat);
+                
+                $thue = ThueVaPhiDiaPhuong::firstOrNew([
+                    'ho_khau_id' => $hoKhauId,
+                    'dat_dai_tai_san_id' => $dat->id,
+                    'nam' => $nam,
+                    'loai_khoan_thu' => 'thue_dat_phi_nong_nghiep',
+                ]);
+
+                $thue->so_tien_phai_nop = $soTienPhaiNop;
+                // Không ghi đè số tiền đã nộp nếu người dân đã đóng
+                if (!$thue->exists) {
+                    $thue->so_tien_da_nop = 0;
+                    $thue->trang_thai_thanh_toan = 'chua_nop';
+                } else {
+                    $thue->trang_thai_thanh_toan = $this->determineStatus($soTienPhaiNop, $thue->so_tien_da_nop);
                 }
+                $thue->ghi_chu = "Thuế thửa đất (GCN: {$dat->so_gcn_qsdd}). Diện tích: {$dat->dien_tich_m2} m2. Đơn giá: " . number_format($giaDat) . " đ/m2. Thuế: 0.03%";
+                $thue->save();
+                $count++;
             }
             DB::commit();
-            return redirect()->route('thue-va-phi.index')->with('status', "Đã quét và tính thuế đất tự động cho {$count} hộ gia đình năm {$nam}!");
+            return redirect()->route('thue-va-phi.index')->with('status', "Đã quét và lập {$count} hóa đơn thuế đất tự động năm {$nam}!");
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Có lỗi xảy ra khi tính thuế: ' . $e->getMessage()]);

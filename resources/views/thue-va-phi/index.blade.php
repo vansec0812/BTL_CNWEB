@@ -23,7 +23,7 @@
     </div>
     <div class="d-flex gap-2">
         @can('manage_dat_dai')
-        <form method="POST" action="{{ route('thue-va-phi.generate') }}" data-confirm="Bạn có muốn tự động quét và tính Thuế sử dụng đất phi nông nghiệp cho tất cả hộ dân năm nay không?">
+        <form method="POST" action="{{ route('thue-va-phi.generate') }}" data-confirm="Bạn có muốn tự động quét và tính Thuế sử dụng đất phi nông nghiệp cho tất cả hộ dân năm nay không?" data-confirm-title="Xác nhận tính thuế" data-confirm-button="Bắt đầu quét" data-confirm-type="warning">
             @csrf
             <button class="btn btn-warning" type="submit">
                 <i class="bi bi-magic me-1"></i> Tính Thuế Đất Tự Động
