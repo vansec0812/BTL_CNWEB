@@ -4,60 +4,6 @@
 @section('page_title', 'Lực lượng Dân quân tự vệ')
 
 @section('content')
-<style>
-    /* Nút quay lại (Back arrow button) */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        color: #6c757d;
-        background-color: #ffffff;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    .btn-back:hover {
-        color: var(--admin-green);
-        background-color: var(--admin-green-soft);
-        border-color: rgba(15, 81, 50, 0.2);
-        transform: translateX(-2px);
-    }
-
-    /* Style cho các nút hành động (Edit/Delete) */
-    .btn-action-view {
-        background-color: rgba(108, 117, 125, 0.08);
-        color: #6c757d;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-view:hover {
-        background-color: #6c757d;
-        color: #ffffff;
-    }
-    .btn-action-edit {
-        background-color: rgba(13, 110, 253, 0.08);
-        color: #0d6efd;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-edit:hover {
-        background-color: #0d6efd;
-        color: #ffffff;
-    }
-    .btn-action-delete {
-        background-color: rgba(220, 53, 69, 0.08);
-        color: #dc3545;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-delete:hover {
-        background-color: #dc3545;
-        color: #ffffff;
-    }
-</style>
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -128,24 +74,29 @@
     <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc tìm kiếm</div>
     <div class="card-body">
         <form action="{{ route('dan-quan-tu-ve.index') }}" method="GET" class="row g-3">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="q" class="form-label">Tìm kiếm</label>
-                <input type="search" name="q" id="q" class="form-control" placeholder="Tên, CCCD, chức vụ, tổ đội..." value="{{ $filters['q'] ?? '' }}">
+                <input type="search" name="q" id="q" class="form-control" placeholder="Tên, CCCD, tổ/đội dân quân..." value="{{ $filters['q'] ?? '' }}">
+            </div>
+            <div class="col-md-3">
+                <label for="chuc_vu" class="form-label">Chức vụ</label>
+                <select name="chuc_vu" id="chuc_vu" class="form-select">
+                    <option value="">Tất cả chức vụ</option>
+                    @foreach($chucVuList as $chucVu)
+                        <option value="{{ $chucVu }}" @selected(($filters['chuc_vu'] ?? '') === $chucVu)>{{ $chucVu }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-3">
                 <label for="trang_thai" class="form-label">Trạng thái</label>
                 <select name="trang_thai" id="trang_thai" class="form-select">
-                    <option value="">Tất cả</option>
+                    <option value="">Tất cả trạng thái</option>
                     @foreach($trangThai as $k => $v)
                         <option value="{{ $k }}" @selected(($filters['trang_thai'] ?? '') === $k)>{{ $v }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3">
-                <label for="don_vi" class="form-label">Tổ/Đội dân quân</label>
-                <input type="text" name="don_vi" id="don_vi" class="form-control" placeholder="Nhập tên tổ/đội..." value="{{ $filters['don_vi'] ?? '' }}">
-            </div>
-            <div class="col-md-2 d-flex align-items-end gap-2">
+            <div class="col-md-3 d-flex align-items-end gap-2">
                 <button type="submit" class="btn btn-success w-100">Lọc</button>
                 <a href="{{ route('dan-quan-tu-ve.index') }}" class="btn btn-outline-secondary">Xoá</a>
             </div>
@@ -194,9 +145,9 @@
                         </td>
                         <td class="text-end pe-3">
                             <div class="d-flex justify-content-end gap-1">
-                                <a href="{{ route('dan-quan-tu-ve.show', $row->id) }}" class="btn btn-sm btn-action-view" title="Chi tiết"><i class="bi bi-eye"></i></a>
+                                <a href="{{ route('dan-quan-tu-ve.show', $row->id) }}" class="btn btn-sm btn-action-view" title="Xem"><i class="bi bi-eye"></i></a>
                                 @can('manage_nghia_vu')
-                                <a href="{{ route('dan-quan-tu-ve.edit', $row->id) }}" class="btn btn-sm btn-action-edit" title="Chỉnh sửa"><i class="bi bi-pencil"></i></a>
+                                <a href="{{ route('dan-quan-tu-ve.edit', $row->id) }}" class="btn btn-sm btn-action-edit" title="Sửa"><i class="bi bi-pencil"></i></a>
                                 <form method="POST" action="{{ route('dan-quan-tu-ve.destroy', $row->id) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xoá thành viên {{ $row->nhanKhau->ho_ten ?? '' }} khỏi lực lượng dân quân tự vệ?">
                                     @csrf
                                     @method('DELETE')

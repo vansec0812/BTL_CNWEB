@@ -50,19 +50,20 @@
 @endif
 
 {{-- Bộ lọc --}}
-<div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
-    <div class="card-body p-3">
-        <form action="{{ route('users.index') }}" method="GET" class="row g-2">
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc tìm kiếm</div>
+    <div class="card-body">
+        <form action="{{ route('users.index') }}" method="GET" class="row g-3">
             <div class="col-md-5">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text bg-light border-end-0 text-secondary" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" name="q" class="form-control bg-light border-start-0 ps-0" placeholder="Tìm theo tên, email, CCCD hoặc chức vụ..." value="{{ request('q') }}" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
+                <label for="q" class="form-label">Tìm kiếm</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-secondary"><i class="bi bi-search"></i></span>
+                    <input type="search" name="q" id="q" class="form-control border-start-0" placeholder="Tìm theo tên, email, CCCD hoặc chức vụ..." value="{{ request('q') }}">
                 </div>
             </div>
             <div class="col-md-2">
-                <select name="role" class="form-select form-select-sm bg-light" style="border-radius: 8px;">
+                <label for="role" class="form-label">Vai trò</label>
+                <select name="role" id="role" class="form-select">
                     <option value="">— Vai trò —</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->name }}" {{ request('role') === $role->name ? 'selected' : '' }}>
@@ -72,28 +73,34 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <select name="trang_thai" class="form-select form-select-sm bg-light" style="border-radius: 8px;">
+                <label for="trang_thai" class="form-label">Trạng thái</label>
+                <select name="trang_thai" id="trang_thai" class="form-select">
                     <option value="">— Trạng thái —</option>
                     <option value="active" {{ request('trang_thai') === 'active' ? 'selected' : '' }}>Hoạt động</option>
                     <option value="inactive" {{ request('trang_thai') === 'inactive' ? 'selected' : '' }}>Đã khóa</option>
                 </select>
             </div>
-            <div class="col-md-3 d-flex gap-2">
-                <button type="submit" class="btn btn-sm btn-dark flex-grow-1" style="border-radius: 8px;">Lọc dữ liệu</button>
-                <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-secondary flex-grow-1" style="border-radius: 8px;">Đặt lại</a>
+            <div class="col-md-3 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-success w-100">Lọc</button>
+                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">Đặt lại</a>
             </div>
         </form>
     </div>
 </div>
 
 {{-- Bảng hiển thị --}}
-<div class="card shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-table me-1"></i>Danh sách cán bộ</span>
+        <span class="badge text-bg-light">{{ $users->total() }} cán bộ</span>
+    </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4 py-3" style="width: 250px;">Cán bộ</th>
+                        <th class="ps-4 py-3" style="width: 60px;">STT</th>
+                        <th class="py-3" style="width: 250px;">Cán bộ</th>
                         <th class="py-3">Chức danh / Số điện thoại</th>
                         <th class="py-3 text-center" style="width: 180px;">Vai trò</th>
                         <th class="py-3 text-center" style="width: 150px;">Trạng thái</th>
@@ -108,7 +115,8 @@
                             $roleColor = $roleColors[$userRole] ?? 'secondary';
                         @endphp
                         <tr>
-                            <td class="ps-4 py-3">
+                            <td class="ps-4 py-3 text-secondary">{{ $loop->iteration + ($users->firstItem() - 1) }}</td>
+                            <td class="py-3">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center text-success fw-bold" style="width: 40px; height: 40px; font-size: 1rem;">
                                         {{ substr($user->name, 0, 1) }}
@@ -170,7 +178,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                 Không tìm thấy tài khoản cán bộ nào phù hợp.
                             </td>

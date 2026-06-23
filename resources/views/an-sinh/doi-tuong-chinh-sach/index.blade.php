@@ -4,60 +4,6 @@
 @section('page_title', 'Quản lý Diện chính sách')
 
 @section('content')
-<style>
-    /* Nút quay lại (Back arrow button) */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        color: #6c757d;
-        background-color: #ffffff;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    .btn-back:hover {
-        color: var(--admin-green);
-        background-color: var(--admin-green-soft);
-        border-color: rgba(15, 81, 50, 0.2);
-        transform: translateX(-2px);
-    }
-
-    /* Style cho các nút hành động (Edit/Delete) */
-    .btn-action-view {
-        background-color: rgba(108, 117, 125, 0.08);
-        color: #6c757d;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-view:hover {
-        background-color: #6c757d;
-        color: #ffffff;
-    }
-    .btn-action-edit {
-        background-color: rgba(13, 110, 253, 0.08);
-        color: #0d6efd;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-edit:hover {
-        background-color: #0d6efd;
-        color: #ffffff;
-    }
-    .btn-action-delete {
-        background-color: rgba(220, 53, 69, 0.08);
-        color: #dc3545;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-delete:hover {
-        background-color: #dc3545;
-        color: #ffffff;
-    }
-</style>
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -104,9 +50,9 @@
     <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc hồ sơ</div>
     <div class="card-body">
         <form method="GET" action="{{ route('doi-tuong-chinh-sach.index') }}" class="row g-3">
-            <div class="col-lg-4">
-                <label for="q" class="form-label">Tìm theo họ tên, CCCD hoặc số quyết định</label>
-                <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Ví dụ: Võ Thị Cúc">
+            <div class="col-lg-3">
+                <label for="q" class="form-label">Tìm kiếm</label>
+                <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Tìm theo họ tên, CCCD hoặc số quyết định...">
             </div>
             <div class="col-lg-3">
                 <label for="loai_chinh_sach" class="form-label">Loại chính sách</label>
@@ -126,7 +72,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-2 d-flex align-items-end gap-2">
+            <div class="col-lg-3 d-flex align-items-end gap-2">
                 <button class="btn btn-success w-100" type="submit">Lọc</button>
                 <a class="btn btn-outline-secondary" href="{{ route('doi-tuong-chinh-sach.index') }}">Xóa</a>
             </div>
@@ -144,6 +90,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 50px;">STT</th>
                         <th>Nhân khẩu</th>
                         <th>Loại chính sách</th>
                         <th>Quyết định</th>
@@ -155,6 +102,7 @@
                 <tbody>
                     @forelse ($records as $record)
                         <tr>
+                            <td>{{ $loop->iteration + ($records->firstItem() - 1) }}</td>
                             <td>
                                 <div class="fw-semibold">{{ $record->nhanKhau->ho_ten }}</div>
                                 <div class="small text-secondary">CCCD: {{ $record->nhanKhau->cccd_cmnd ?? 'Chưa cập nhật' }}</div>
@@ -168,18 +116,18 @@
                             <td><span class="badge text-bg-{{ $record->trang_thai === 'dang_huong_che_do' ? 'success' : ($record->trang_thai === 'ngung_huong' ? 'warning' : 'secondary') }}">{{ $record->trangThaiLabel() }}</span></td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('doi-tuong-chinh-sach.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Xem">
-                                        <i class="bi bi-eye"></i> Xem
+                                    <a href="{{ route('doi-tuong-chinh-sach.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
+                                        <i class="bi bi-eye"></i>
                                     </a>
                                     @can('manage_an_sinh')
-                                    <a href="{{ route('doi-tuong-chinh-sach.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
-                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    <a href="{{ route('doi-tuong-chinh-sach.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('doi-tuong-chinh-sach.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hồ sơ này?">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-action-delete d-inline-flex align-items-center gap-1" type="submit" title="Xóa">
-                                            <i class="bi bi-trash"></i> Xóa
+                                        <button class="btn btn-sm btn-action-delete" type="submit" title="Xóa">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                     @endcan
@@ -188,7 +136,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
+                            <td colspan="7" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                 Chưa có hồ sơ diện chính sách phù hợp.
                             </td>

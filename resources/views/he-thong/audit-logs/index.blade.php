@@ -18,10 +18,11 @@
 
 {{-- Bộ lọc tìm kiếm --}}
 <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc tìm kiếm</div>
     <div class="card-body">
         <form method="GET" action="{{ route('audit-logs.index') }}" class="row g-3">
             <div class="col-md-3">
-                <label for="search" class="form-label small fw-semibold text-secondary">Từ khóa tìm kiếm</label>
+                <label for="search" class="form-label">Từ khóa tìm kiếm</label>
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
                     <input type="text" id="search" name="search" class="form-control border-start-0" placeholder="Mô tả, IP, cán bộ..." value="{{ request('search') }}">
@@ -29,7 +30,7 @@
             </div>
 
             <div class="col-md-2">
-                <label for="user_id" class="form-label small fw-semibold text-secondary">Cán bộ thực hiện</label>
+                <label for="user_id" class="form-label">Cán bộ thực hiện</label>
                 <select id="user_id" name="user_id" class="form-select">
                     <option value="">-- Tất cả --</option>
                     @foreach ($users as $u)
@@ -39,7 +40,7 @@
             </div>
 
             <div class="col-md-2">
-                <label for="action" class="form-label small fw-semibold text-secondary">Hành động</label>
+                <label for="action" class="form-label">Hành động</label>
                 <select id="action" name="action" class="form-select">
                     <option value="">-- Tất cả --</option>
                     @foreach ($actions as $key => $label)
@@ -49,7 +50,7 @@
             </div>
 
             <div class="col-md-2">
-                <label for="module" class="form-label small fw-semibold text-secondary">Phân hệ / Module</label>
+                <label for="module" class="form-label">Phân hệ / Module</label>
                 <select id="module" name="module" class="form-select">
                     <option value="">-- Tất cả --</option>
                     @foreach ($logModules as $m)
@@ -59,7 +60,7 @@
             </div>
 
             <div class="col-md-3">
-                <label class="form-label small fw-semibold text-secondary">Khoảng thời gian</label>
+                <label class="form-label">Khoảng thời gian</label>
                 <div class="input-group">
                     <input type="date" name="from_date" class="form-control" value="{{ request('from_date') }}">
                     <span class="input-group-text bg-light text-secondary">-</span>
@@ -67,28 +68,28 @@
                 </div>
             </div>
 
-            <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+            <div class="col-12 d-flex justify-content-end gap-2 mt-1">
                 @if(request()->anyFilled(['search', 'user_id', 'action', 'module', 'from_date', 'to_date']))
-                    <a href="{{ route('audit-logs.index') }}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-1">
-                        <i class="bi bi-x-circle"></i> Xóa bộ lọc
-                    </a>
+                    <a href="{{ route('audit-logs.index') }}" class="btn btn-outline-secondary"><i class="bi bi-x-circle me-1"></i>Xóa bộ lọc</a>
                 @endif
-                <button type="submit" class="btn btn-success d-inline-flex align-items-center gap-1">
-                    <i class="bi bi-funnel"></i> Lọc nhật ký
-                </button>
+                <button type="submit" class="btn btn-success"><i class="bi bi-funnel me-1"></i>Lọc nhật ký</button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- Bảng Nhật ký --}}
 <div class="card shadow-sm border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-table me-1"></i>Danh sách nhật ký hệ thống</span>
+        <span class="badge text-bg-light">{{ $logs->total() }} bản ghi</span>
+    </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4" style="width: 15%">Thời điểm</th>
+                        <th class="ps-4" style="width: 60px;">STT</th>
+                        <th style="width: 15%">Thời điểm</th>
                         <th style="width: 15%">Cán bộ thực hiện</th>
                         <th style="width: 12%">Địa chỉ IP</th>
                         <th style="width: 12%">Hành động</th>
@@ -100,7 +101,8 @@
                 <tbody>
                     @forelse ($logs as $log)
                         <tr>
-                            <td class="ps-4">
+                            <td class="ps-4 text-secondary">{{ $loop->iteration + ($logs->firstItem() - 1) }}</td>
+                            <td>
                                 <div class="fw-semibold text-dark">{{ $log->created_at->format('H:i:s') }}</div>
                                 <small class="text-secondary">{{ $log->created_at->format('d/m/Y') }}</small>
                             </td>
@@ -145,13 +147,13 @@
                             </td>
                             <td class="text-end pe-4">
                                 <a href="{{ route('audit-logs.show', $log) }}" class="btn btn-sm btn-outline-success" title="Xem chi tiết thay đổi">
-                                    <i class="bi bi-eye"></i> Xem
+                                    <i class="bi bi-eye"></i>
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center py-5 text-secondary">
+                            <td colspan="8" class="text-center py-5 text-secondary">
                                 <i class="bi bi-clock-history display-4 d-block mb-3 opacity-25"></i>
                                 Không tìm thấy ghi chép nhật ký hệ thống nào phù hợp.
                             </td>

@@ -14,7 +14,7 @@ class DanQuanHoatDongService
     {
         $query = DanQuanHoatDong::query()->with(['danQuanTuVe.nhanKhau']);
 
-        // Tìm kiếm theo tên hoạt động hoặc tên/CCCD của dân quân tự vệ
+        // Tìm kiếm theo tên hoạt động, tên/CCCD hoặc đơn vị của dân quân tự vệ
         if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
@@ -22,6 +22,9 @@ class DanQuanHoatDongService
                     ->orWhereHas('danQuanTuVe.nhanKhau', function ($sub) use ($search) {
                         $sub->where('ho_ten', 'like', '%'.$search.'%')
                             ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
+                    })
+                    ->orWhereHas('danQuanTuVe', function ($sub) use ($search) {
+                        $sub->where('don_vi', 'like', '%'.$search.'%');
                     });
             });
         }
@@ -34,13 +37,6 @@ class DanQuanHoatDongService
         // Lọc theo trạng thái
         if (! empty($filters['trang_thai'])) {
             $query->where('trang_thai', $filters['trang_thai']);
-        }
-
-        // Lọc theo đơn vị của dân quân tự vệ
-        if (! empty($filters['don_vi'])) {
-            $query->whereHas('danQuanTuVe', function ($q) use ($filters) {
-                $q->where('don_vi', 'like', '%'.$filters['don_vi'].'%');
-            });
         }
 
         return $query->orderBy('id', 'asc')->paginate($perPage)->withQueryString();

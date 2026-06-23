@@ -16,12 +16,15 @@ class LaoDongService
     {
         $query = LaoDong::query()->with(['nhanKhau.hoKhau']);
 
-        // Tìm kiếm theo tên hoặc CCCD của nhân khẩu
+        // Tìm kiếm theo tên, CCCD hoặc thôn xóm của nhân khẩu
         if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->whereHas('nhanKhau', function ($q) use ($search) {
                 $q->where('ho_ten', 'like', '%'.$search.'%')
-                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
+                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%')
+                    ->orWhereHas('hoKhau', function ($qh) use ($search) {
+                        $qh->where('thon_xom', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -48,13 +51,6 @@ class LaoDongService
         // Lọc làm việc ngoài tỉnh
         if (isset($filters['lam_viec_ngoai_tinh']) && $filters['lam_viec_ngoai_tinh'] !== '') {
             $query->where('lam_viec_ngoai_tinh', (bool) $filters['lam_viec_ngoai_tinh']);
-        }
-
-        // Lọc theo thôn xóm của hộ khẩu
-        if (! empty($filters['thon_xom'])) {
-            $query->whereHas('nhanKhau.hoKhau', function ($q) use ($filters) {
-                $q->where('thon_xom', 'like', '%'.$filters['thon_xom'].'%');
-            });
         }
 
         return $query->orderBy('id', 'desc')->paginate($perPage);

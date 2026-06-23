@@ -179,6 +179,72 @@
             opacity: 0.85;
             transform: scale(1.02);
         }
+
+        /* ── Nút quay lại (dùng chung toàn ứng dụng) ── */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: #6c757d;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            color: var(--admin-green);
+            background-color: var(--admin-green-soft);
+            border-color: rgba(15, 81, 50, 0.2);
+            transform: translateX(-2px);
+        }
+
+        /* ── Nút hành động bảng (icon-only, dùng chung toàn ứng dụng) ── */
+        .btn-action-view,
+        .btn-action-edit,
+        .btn-action-delete {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        .btn-action-view {
+            background-color: rgba(108, 117, 125, 0.08);
+            color: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+        .btn-action-view:hover {
+            background-color: #6c757d;
+            color: #ffffff;
+            border-color: #6c757d;
+        }
+        .btn-action-edit {
+            background-color: rgba(13, 110, 253, 0.08);
+            color: #0d6efd;
+            border: 1px solid rgba(13, 110, 253, 0.3);
+        }
+        .btn-action-edit:hover {
+            background-color: #0d6efd;
+            color: #ffffff;
+            border-color: #0d6efd;
+        }
+        .btn-action-delete {
+            background-color: rgba(220, 53, 69, 0.08);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        .btn-action-delete:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+            border-color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -285,8 +351,6 @@
                                 ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
                                 ['title' => 'Dashboard & Biểu đồ', 'url' => route('he-thong.dashboard-bieu-do'), 'icon' => 'bi-graph-up', 'active' => request()->routeIs('he-thong.dashboard-bieu-do')],
                                 ['title' => 'Bộ lọc động & Tìm kiếm', 'url' => route('he-thong.loc-dong'), 'icon' => 'bi-funnel', 'active' => request()->routeIs('he-thong.loc-dong')],
-                                ['title' => 'Xuất báo cáo Excel', 'disabled' => true, 'icon' => 'bi-file-earmark-excel'],
-                                ['title' => 'Xuất báo cáo PDF', 'disabled' => true, 'icon' => 'bi-file-earmark-pdf'],
                                 ['title' => 'Cấu hình hệ thống', 'disabled' => true, 'icon' => 'bi-gear'],
                             ]);
                         }

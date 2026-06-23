@@ -15,7 +15,7 @@
         <p class="text-secondary mb-0">Theo dõi thẻ BHYT, tình trạng tiêm chủng mở rộng và ghi chú sức khỏe của từng nhân khẩu.</p>
     </div>
     @can('manage_an_sinh')
-    <a href="{{ route('y-te-nhan-khau.create') }}" class="btn btn-info text-white">
+    <a href="{{ route('y-te-nhan-khau.create') }}" class="btn btn-success">
         <i class="bi bi-plus-lg me-1"></i> Thêm hồ sơ y tế
     </a>
     @endcan
@@ -45,10 +45,10 @@
     <div class="card-body">
         <form method="GET" action="{{ route('y-te-nhan-khau.index') }}" class="row g-3">
             <div class="col-lg-3">
-                <label for="q" class="form-label">Tìm theo tên/CCCD/số thẻ BHYT</label>
-                <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Ví dụ: Nguyễn Văn A">
+                <label for="q" class="form-label">Tìm kiếm</label>
+                <input type="search" id="q" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Tìm theo tên, CCCD hoặc số thẻ BHYT...">
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <label for="loai_bhyt" class="form-label">Loại BHYT</label>
                 <select id="loai_bhyt" name="loai_bhyt" class="form-select">
                     <option value="">Tất cả</option>
@@ -72,8 +72,8 @@
                     <option value="1" @selected(($filters['het_han'] ?? '') === '1')>Thẻ đã hết hạn</option>
                 </select>
             </div>
-            <div class="col-lg-2 d-flex align-items-end gap-2">
-                <button class="btn btn-info text-white w-100" type="submit">Lọc</button>
+            <div class="col-lg-3 d-flex align-items-end gap-2">
+                <button class="btn btn-success w-100" type="submit">Lọc</button>
                 <a class="btn btn-outline-secondary" href="{{ route('y-te-nhan-khau.index') }}">Xóa</a>
             </div>
         </form>
@@ -90,6 +90,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 50px;">STT</th>
                         <th>Nhân khẩu</th>
                         <th>Số thẻ BHYT</th>
                         <th>Loại BHYT</th>
@@ -101,6 +102,7 @@
                 <tbody>
                     @forelse ($records as $record)
                         <tr>
+                            <td>{{ $loop->iteration + ($records->firstItem() - 1) }}</td>
                             <td>
                                 <div class="fw-semibold">{{ $record->nhanKhau?->ho_ten ?? '—' }}</div>
                                 <div class="small text-secondary">CCCD: {{ $record->nhanKhau?->cccd_cmnd ?? 'Chưa cập nhật' }}</div>
@@ -129,13 +131,13 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('y-te-nhan-khau.show', $record) }}" class="btn btn-sm btn-outline-secondary" title="Xem"><i class="bi bi-eye"></i> Xem</a>
+                                    <a href="{{ route('y-te-nhan-khau.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem"><i class="bi bi-eye"></i></a>
                                     @can('manage_an_sinh')
-                                    <a href="{{ route('y-te-nhan-khau.edit', $record) }}" class="btn btn-sm btn-outline-primary" title="Sửa"><i class="bi bi-pencil-square"></i> Sửa</a>
+                                    <a href="{{ route('y-te-nhan-khau.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa"><i class="bi bi-pencil"></i></a>
                                     <form method="POST" action="{{ route('y-te-nhan-khau.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hồ sơ y tế này?">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-outline-danger" type="submit" title="Xóa"><i class="bi bi-trash"></i> Xóa</button>
+                                        <button class="btn btn-sm btn-outline-danger" type="submit" title="Xóa"><i class="bi bi-trash"></i></button>
                                     </form>
                                     @endcan
                                 </div>
@@ -143,7 +145,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
+                            <td colspan="7" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                 Chưa có hồ sơ y tế nào phù hợp.
                             </td>
