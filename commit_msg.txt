@@ -1,4 +1,0 @@
-Fix: Tùy chỉnh Modal xác nhận tính thuế và Ignore PIPELINE.md
-
-- Cập nhật UI: Thêm custom data attributes (data-confirm-title, data-confirm-button, data-confirm-type) vào form Tính thuế tự động để hiển thị Modal Xác nhận phù hợp nghiệp vụ (cảnh báo vàng) thay vì dùng chung Modal Xác nhận Xóa mặc định.
-- Cập nhật .gitignore: Bổ sung cấu hình bỏ qua file tài liệu PIPELINE.md để không commit file báo cáo cá nhân lên repository chung.
