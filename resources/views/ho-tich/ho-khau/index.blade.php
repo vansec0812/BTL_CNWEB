@@ -169,7 +169,7 @@
                             </td>
                             <td>
                                 <div>{{ $record->dia_chi_thuong_tru }}</div>
-                                <div class="small text-secondary">Thôn/Xóm: {{ $record->thon_xom ?? '—' }}</div>
+                                <div class="small text-secondary">Thôn: {{ $record->thon_xom ?? '—' }}</div>
                             </td>
                             <td>
                                 <span class="badge text-bg-light">{{ $record->so_thanh_vien }} người</span>
