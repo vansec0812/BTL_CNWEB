@@ -16,7 +16,7 @@
     <p class="text-secondary mb-0">Thêm mới công dân vào lực lượng dân quân tự vệ nòng cốt của địa phương.</p>
 </div>
 
-<form action="{{ route('dan-quan-tu-ve.store') }}" method="POST" id="militiaForm">
+<form action="{{ route('dan-quan-tu-ve.store') }}" method="POST" id="militiaForm" novalidate>
     @csrf
 
     <div class="row g-3 align-items-stretch">

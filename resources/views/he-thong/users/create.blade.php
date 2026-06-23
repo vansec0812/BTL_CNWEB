@@ -26,7 +26,7 @@
         <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-person-plus me-1 text-success"></i>Tạo tài khoản cán bộ mới</h5>
     </div>
     <div class="card-body p-4">
-        <form action="{{ route('users.store') }}" method="POST">
+        <form action="{{ route('users.store') }}" method="POST" novalidate>
             @csrf
 
             <div class="row g-3">

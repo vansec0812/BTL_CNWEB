@@ -1,21 +1,10 @@
-<form method="POST" action="{{ $action }}" class="card shadow-sm border-0">
+<form method="POST" action="{{ $action }}" class="card shadow-sm border-0" novalidate>
     @csrf
     @if ($method !== 'POST')
         @method($method)
     @endif
 
     <div class="card-body">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <div class="fw-semibold mb-1">Vui lòng kiểm tra lại thông tin.</div>
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="row g-3">
             {{-- Nhân khẩu --}}
             <div class="col-lg-6">

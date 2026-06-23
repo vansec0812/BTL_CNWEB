@@ -23,7 +23,7 @@
         </h5>
     </div>
     <div class="card-body p-4 pt-2">
-        <form action="{{ route('an-ninh-trat-tu.update', $record) }}" method="POST">
+        <form action="{{ route('an-ninh-trat-tu.update', $record) }}" method="POST" novalidate>
             @method('PUT')
             @include('nghia-vu-an-ninh.an-ninh-trat-tu._form')
             

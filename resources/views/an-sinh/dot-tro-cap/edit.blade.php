@@ -45,18 +45,7 @@
     <h2 class="fw-bold mb-0">Sửa đợt trợ cấp: {{ $record->ten_dot }}</h2>
 </div>
 
-@if ($errors->any())
-    <div class="alert alert-danger border-0 shadow-sm mb-4">
-        <p class="fw-semibold mb-1">Có lỗi xảy ra, vui lòng kiểm tra lại:</p>
-        <ul class="mb-0 small">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-<form method="POST" action="{{ route('dot-tro-cap.update', $record) }}">
+<form method="POST" action="{{ route('dot-tro-cap.update', $record) }}" novalidate>
     @csrf
     @method('PUT')
     
