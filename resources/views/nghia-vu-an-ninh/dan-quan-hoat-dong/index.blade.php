@@ -214,12 +214,8 @@
         </div>
     </div>
     @if ($records->hasPages())
-        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-            <span class="small text-secondary">Trang {{ $records->currentPage() }} / {{ $records->lastPage() }}</span>
-            <div class="btn-group btn-group-sm">
-                <a class="btn btn-outline-secondary {{ $records->onFirstPage() ? 'disabled' : '' }}" href="{{ $records->previousPageUrl() ?? '#' }}">Trước</a>
-                <a class="btn btn-outline-secondary {{ $records->hasMorePages() ? '' : 'disabled' }}" href="{{ $records->nextPageUrl() ?? '#' }}">Sau</a>
-            </div>
+        <div class="card-footer bg-white border-top py-3">
+            {{ $records->links() }}
         </div>
     @endif
 </div>

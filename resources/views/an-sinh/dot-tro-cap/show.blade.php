@@ -330,12 +330,8 @@
                     </div>
                 </div>
                 @if ($recipients->hasPages())
-                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                        <span class="small text-secondary">Trang {{ $recipients->currentPage() }} / {{ $recipients->lastPage() }}</span>
-                        <div class="btn-group btn-group-sm">
-                            <a class="btn btn-outline-secondary {{ $recipients->onFirstPage() ? 'disabled' : '' }}" href="{{ $recipients->previousPageUrl() ?? '#' }}">Trước</a>
-                            <a class="btn btn-outline-secondary {{ $recipients->hasMorePages() ? '' : 'disabled' }}" href="{{ $recipients->nextPageUrl() ?? '#' }}">Sau</a>
-                        </div>
+                    <div class="card-footer bg-white border-top py-3">
+                        {{ $recipients->links() }}
                     </div>
                 @endif
             </div>
