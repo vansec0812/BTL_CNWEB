@@ -1,25 +1,23 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container-fluid py-4">
-    <div class="mb-4">
-        <h4 class="fw-bold text-primary mb-1">Cập nhật Công trình</h4>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent p-0 m-0">
-                <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('co-so-vat-chat.index') }}" class="text-decoration-none">Cơ sở vật chất</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Cập nhật</li>
-            </ol>
-        </nav>
-    </div>
+@section('title', 'Cập nhật công trình')
+@section('page_title', 'Cập nhật công trình')
 
-    <div class="row">
-        <div class="col-12">
-            @include('co-so-vat-chat._form', [
-                'action' => route('co-so-vat-chat.update', $record),
-                'method' => 'PUT'
-            ])
-        </div>
+@section('content')
+<div class="mb-4">
+    <div class="small text-secondary mb-1">
+        <a href="{{ route('modules.show', 'dat-dai-ha-tang') }}" class="text-decoration-none">Đất đai, Hạ tầng & Tài sản hộ dân</a>
+        <span class="mx-1">/</span>
+        <a href="{{ route('co-so-vat-chat.index') }}" class="text-decoration-none">Cơ sở vật chất</a>
+        <span class="mx-1">/</span>
+        Cập nhật công trình
     </div>
+    <h2 class="fw-bold mb-1">Cập nhật công trình</h2>
+    <p class="text-secondary mb-0">Chỉnh sửa thông tin cho công trình {{ $record->ten_cong_trinh }}.</p>
 </div>
+
+@include('co-so-vat-chat._form', [
+    'action' => route('co-so-vat-chat.update', $record),
+    'method' => 'PUT'
+])
 @endsection
