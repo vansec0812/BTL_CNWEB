@@ -7,7 +7,7 @@
     <section class="page-hero rounded-4 p-4 p-lg-5 mb-4 text-white shadow-sm">
         <div class="row align-items-center g-4">
             <div class="col-lg-8">
-                <p class="text-uppercase small fw-semibold opacity-75 mb-2">{{ $selected['owner'] }}</p>
+                <p class="text-uppercase small fw-semibold opacity-75 mb-2">Phân hệ nghiệp vụ</p>
                 <h1 class="display-6 fw-bold mb-3">{{ $selected['title'] }}</h1>
                 <p class="lead mb-0">{{ $selected['description'] }}</p>
             </div>
