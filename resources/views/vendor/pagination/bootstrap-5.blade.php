@@ -36,6 +36,11 @@
                     trong tổng số
                     <span class="fw-semibold">{{ $paginator->total() }}</span>
                     kết quả
+                    &nbsp;|&nbsp;
+                    Trang
+                    <span class="fw-semibold">{{ $paginator->currentPage() }}</span>
+                    /
+                    <span class="fw-semibold">{{ $paginator->lastPage() }}</span>
                 </p>
             </div>
 
@@ -53,23 +58,20 @@
                     @endif
 
                     {{-- Pagination Elements --}}
-                    @foreach ($elements as $element)
-                        {{-- "Three Dots" Separator --}}
-                        @if (is_string($element))
-                            <li class="page-item disabled" aria-disabled="true"><span class="page-link">{{ $element }}</span></li>
-                        @endif
+                    @php
+                        $currentPage = $paginator->currentPage();
+                        $lastPage = $paginator->lastPage();
+                        $startPage = max(1, $currentPage - 1);
+                        $endPage = min($lastPage, $currentPage + 1);
+                    @endphp
 
-                        {{-- Array Of Links --}}
-                        @if (is_array($element))
-                            @foreach ($element as $page => $url)
-                                @if ($page == $paginator->currentPage())
-                                    <li class="page-item active" aria-current="page"><span class="page-link">{{ $page }}</span></li>
-                                @else
-                                    <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
-                                @endif
-                            @endforeach
+                    @for ($page = $startPage; $page <= $endPage; $page++)
+                        @if ($page == $currentPage)
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ $page }}</span></li>
+                        @else
+                            <li class="page-item"><a class="page-link" href="{{ $paginator->url($page) }}">{{ $page }}</a></li>
                         @endif
-                    @endforeach
+                    @endfor
 
                     {{-- Next Page Link --}}
                     @if ($paginator->hasMorePages())
