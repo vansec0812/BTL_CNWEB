@@ -10,8 +10,7 @@
         'tu_phap' => 'Cán bộ Tư pháp (Hộ tịch & Cư trú)',
         'lao_dong' => 'Cán bộ Lao động (Kinh tế, Lao động, An sinh)',
         'dia_chinh' => 'Cán bộ Địa chính (Đất đai & Hạ tầng)',
-        'quan_su' => 'Cán bộ Quân sự (Nghĩa vụ quân sự)',
-        'truong_thon' => 'Trưởng thôn/xóm',
+        'quan_su' => 'Cán bộ Quân sự (Nghĩa vụ & An ninh quốc phòng)',
     ];
 
     $roleColors = [
@@ -20,7 +19,6 @@
         'lao_dong' => 'primary',
         'dia_chinh' => 'info',
         'quan_su' => 'warning',
-        'truong_thon' => 'secondary',
     ];
 
     $userRole = $user->roles->first()?->name;

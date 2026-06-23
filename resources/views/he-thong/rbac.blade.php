@@ -16,8 +16,8 @@
         'manage_lao_dong' => 'Thay đổi / Sửa đổi lao động & Việc làm',
         'view_an_sinh' => 'Xem danh sách & Đối tượng chính sách',
         'manage_an_sinh' => 'Thay đổi / Quản lý trợ cấp an sinh',
-        'view_nghia_vu' => 'Xem hồ sơ nghĩa vụ quân sự',
-        'manage_nghia_vu' => 'Thay đổi / Quản lý tuyển quân & Dân quân',
+        'view_nghia_vu' => 'Xem Nghĩa vụ & An ninh quốc phòng',
+        'manage_nghia_vu' => 'Thay đổi / Quản lý Nghĩa vụ & An ninh quốc phòng',
         'view_dat_dai' => 'Xem hồ sơ thửa đất & Thuế phí',
         'manage_dat_dai' => 'Thay đổi / Quản lý đất đai & Thuế phí',
     ];
@@ -28,7 +28,6 @@
         'lao_dong' => 'Cán bộ Lao động',
         'dia_chinh' => 'Cán bộ Địa chính',
         'quan_su' => 'Cán bộ Quân sự',
-        'truong_thon' => 'Trưởng thôn/xóm',
     ];
 
     $roleColors = [
@@ -37,7 +36,6 @@
         'lao_dong' => 'primary',
         'dia_chinh' => 'info',
         'quan_su' => 'warning',
-        'truong_thon' => 'secondary',
     ];
 
     $isAdmin = auth()->user()->hasRole('admin');

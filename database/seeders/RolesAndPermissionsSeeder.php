@@ -37,7 +37,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_an_sinh',
             'manage_an_sinh',
 
-            // Phân hệ Nghĩa vụ quân sự
+            // Phân hệ Nghĩa vụ & An ninh quốc phòng
             'view_nghia_vu',
             'manage_nghia_vu',
 
@@ -89,26 +89,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_dat_dai', 'manage_dat_dai',
         ]);
 
-        // Cán bộ Quân sự
+        // Cán bộ Quân sự (Nghĩa vụ & An ninh quốc phòng)
         $quanSu = Role::findOrCreate('quan_su', 'web');
         $quanSu->syncPermissions([
-            'view_ho_khau',
-            'view_nhan_khau',
-            'view_lao_dong',
-            'view_an_sinh',
             'view_nghia_vu', 'manage_nghia_vu',
-            'view_dat_dai',
-        ]);
-
-        // Trưởng thôn
-        $truongThon = Role::findOrCreate('truong_thon', 'web');
-        $truongThon->syncPermissions([
-            'view_ho_khau',
-            'view_nhan_khau',
-            'view_lao_dong',
-            'view_an_sinh',
-            'view_nghia_vu',
-            'view_dat_dai',
         ]);
 
         // 3. Gán Role cho tài khoản trong UserSeeder
@@ -132,9 +116,9 @@ class RolesAndPermissionsSeeder extends Seeder
             $userDiaChinh->assignRole('dia_chinh');
         }
 
-        $userTruongThon = User::where('email', 'truongthon1@ubnd-xa.vn')->first();
-        if ($userTruongThon) {
-            $userTruongThon->assignRole('truong_thon');
+        $userQuanSu = User::where('email', 'quansu@ubnd-xa.vn')->first();
+        if ($userQuanSu) {
+            $userQuanSu->assignRole('quan_su');
         }
 
         $this->command->info('✅ Đã khởi tạo vai trò và phân quyền thành công.');

@@ -11,7 +11,6 @@
         'lao_dong' => 'Cán bộ Lao động',
         'dia_chinh' => 'Cán bộ Địa chính',
         'quan_su' => 'Cán bộ Quân sự',
-        'truong_thon' => 'Trưởng thôn/xóm',
     ];
 
     $roleColors = [
@@ -20,7 +19,6 @@
         'lao_dong' => 'primary',
         'dia_chinh' => 'info',
         'quan_su' => 'warning',
-        'truong_thon' => 'secondary',
     ];
 @endphp
 
