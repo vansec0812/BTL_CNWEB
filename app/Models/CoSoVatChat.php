@@ -39,6 +39,17 @@ class CoSoVatChat extends Model
         'ngung_su_dung' => 'Ngưng sử dụng',
     ];
 
+    public const DANH_SACH_THON = [
+        'Thôn Phủ Quốc',
+        'Thôn Ngô Sài',
+        'Thôn Hoa Vôi',
+        'Thôn Du Nghệ',
+        'Thôn Đình Tổ',
+        'Thôn Sơn Trung',
+        'Thôn Ba Nhà',
+        'Thôn Quảng Yên'
+    ];
+
     public function phanLoaiLabel(): string
     {
         return self::PHAN_LOAI[$this->phan_loai] ?? $this->phan_loai;
