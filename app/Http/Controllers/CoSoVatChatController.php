@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CoSoVatChat;
-use App\Models\ModuleRegistry;
+use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 
 class CoSoVatChatController extends Controller
