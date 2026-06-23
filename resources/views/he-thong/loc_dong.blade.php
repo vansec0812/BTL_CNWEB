@@ -54,8 +54,8 @@
             <div class="card-body d-flex align-items-center gap-3">
                 <i class="bi bi-briefcase-fill stat-icon fs-3 text-success"></i>
                 <div>
-                    <p class="text-muted small mb-0">Việc làm (Có việc / Thất nghiệp)</p>
-                    <h5 class="mb-0 fw-bold">{{ $stats['co_viec'] }} <span class="text-muted" style="font-size: 0.8rem">LĐ</span> / {{ $stats['that_nghiep'] }} <span class="text-muted" style="font-size: 0.8rem">TN</span></h5>
+                    <p class="text-muted small mb-0">Việc làm (Có việc / TN / Khác)</p>
+                    <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">{{ $stats['co_viec'] }} <span class="text-muted" style="font-size: 0.75rem">Có việc</span> / {{ $stats['that_nghiep'] }} <span class="text-muted" style="font-size: 0.75rem">TN</span> / {{ $stats['khac_lao_dong'] }} <span class="text-muted" style="font-size: 0.75rem">Khác</span></h6>
                 </div>
             </div>
         </div>
@@ -198,9 +198,9 @@
                                         <label for="trang_thai_lao_dong" class="form-label small text-muted mb-1">Trạng thái lao động</label>
                                         <select id="trang_thai_lao_dong" name="trang_thai_lao_dong" class="form-select form-select-sm">
                                             <option value="">Tất cả</option>
-                                            @foreach(\App\Models\LaoDong::TRANG_THAI_LAO_DONG as $value => $label)
-                                                <option value="{{ $value }}" @selected(request('trang_thai_lao_dong') === $value)>{{ $label }}</option>
-                                            @endforeach
+                                            <option value="co_viec_lam" @selected(request('trang_thai_lao_dong') === 'co_viec_lam')>Có việc làm</option>
+                                            <option value="that_nghiep" @selected(request('trang_thai_lao_dong') === 'that_nghiep')>Thất nghiệp</option>
+                                            <option value="khac" @selected(request('trang_thai_lao_dong') === 'khac')>Khác</option>
                                         </select>
                                     </div>
                                     <div class="col-12">
@@ -425,20 +425,25 @@
                                         @endif
 
                                         {{-- Lao động --}}
-                                        @if($nk->laoDong)
-                                            @php $trangThaiLd = $nk->laoDong->trang_thai_lao_dong; @endphp
-                                            @if($trangThaiLd === 'that_nghiep')
-                                                <span class="badge bg-danger bg-opacity-10 text-danger" style="font-size: 0.75rem;">Thất nghiệp</span>
-                                            @elseif($trangThaiLd === 'co_viec_lam')
-                                                <span class="badge bg-success bg-opacity-10 text-success" style="font-size: 0.75rem;">Có việc làm</span>
-                                            @elseif($trangThaiLd === 'hoc_sinh_sinh_vien')
-                                                <span class="badge bg-info bg-opacity-10 text-info" style="font-size: 0.75rem;">Học sinh/SV</span>
-                                            @endif
+                                         @if($nk->laoDong && $nk->laoDong->trang_thai_lao_dong)
+                                             @php
+                                                 $trangThaiLd = $nk->laoDong->trang_thai_lao_dong;
+                                                 $labelLd = \App\Models\LaoDong::TRANG_THAI_LAO_DONG[$trangThaiLd] ?? $trangThaiLd;
+                                                 $badgeClass = 'bg-secondary text-secondary';
+                                                 if ($trangThaiLd === 'co_viec_lam') {
+                                                     $badgeClass = 'bg-success text-success';
+                                                 } elseif ($trangThaiLd === 'that_nghiep') {
+                                                     $badgeClass = 'bg-danger text-danger';
+                                                 } elseif ($trangThaiLd === 'hoc_sinh_sinh_vien') {
+                                                     $badgeClass = 'bg-info text-info';
+                                                 }
+                                             @endphp
+                                             <span class="badge {{ $badgeClass }} bg-opacity-10" style="font-size: 0.75rem;">{{ $labelLd }}</span>
+                                         @endif
 
-                                            @if($nk->laoDong->xuat_khau_lao_dong)
-                                                <span class="badge bg-primary" style="font-size: 0.75rem;"><i class="bi bi-airplane me-1"></i>XKLD</span>
-                                            @endif
-                                        @endif
+                                         @if($nk->laoDong && $nk->laoDong->xuat_khau_lao_dong)
+                                             <span class="badge bg-primary" style="font-size: 0.75rem;"><i class="bi bi-airplane me-1"></i>XKLD</span>
+                                         @endif
 
                                         {{-- Chính sách --}}
                                         @if($nk->doiTuongChinhSach)

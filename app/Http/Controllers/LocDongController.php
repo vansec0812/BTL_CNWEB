@@ -83,9 +83,20 @@ class LocDongController extends Controller
 
         // 3. Labor & Employment filters
         if ($request->filled('trang_thai_lao_dong')) {
-            $query->whereHas('laoDong', function ($q) use ($request) {
-                $q->where('trang_thai_lao_dong', $request->input('trang_thai_lao_dong'));
-            });
+            $trangThaiLd = $request->input('trang_thai_lao_dong');
+            if ($trangThaiLd === 'khac') {
+                $query->where(function ($q) {
+                    $q->whereDoesntHave('laoDong')
+                      ->orWhereHas('laoDong', function ($sub) {
+                          $sub->whereNotIn('trang_thai_lao_dong', ['co_viec_lam', 'that_nghiep'])
+                              ->orWhereNull('trang_thai_lao_dong');
+                      });
+                });
+            } else {
+                $query->whereHas('laoDong', function ($q) use ($trangThaiLd) {
+                    $q->where('trang_thai_lao_dong', $trangThaiLd);
+                });
+            }
         }
 
         if ($request->filled('loai_hinh_cong_viec')) {
@@ -236,7 +247,7 @@ class LocDongController extends Controller
         $coViec = $allMatches->filter(fn ($nk) => $nk->laoDong?->trang_thai_lao_dong === 'co_viec_lam')->count();
         $thatNghiep = $allMatches->filter(fn ($nk) => $nk->laoDong?->trang_thai_lao_dong === 'that_nghiep')->count();
         $hocSinh = $allMatches->filter(fn ($nk) => $nk->laoDong?->trang_thai_lao_dong === 'hoc_sinh_sinh_vien')->count();
-        $khacLaoDong = $total - $coViec - $thatNghiep - $hocSinh;
+        $khacLaoDong = $total - $coViec - $thatNghiep;
 
         $stats = [
             'total' => $total,
