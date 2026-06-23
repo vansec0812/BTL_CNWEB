@@ -33,14 +33,27 @@
             </div>
 
             <div class="col-lg-6">
-                <label for="thon_xom" class="form-label">Thôn/Xóm/Đội</label>
-                <input id="thon_xom" name="thon_xom" value="{{ old('thon_xom', $record?->thon_xom) }}" class="form-control @error('thon_xom') is-invalid @enderror" @disabled($isReadOnly ?? false) maxlength="100" placeholder="Ví dụ: Thôn 1">
+                <label for="thon_xom" class="form-label">Thôn</label>
+                <select id="thon_xom" name="thon_xom" class="form-select @error('thon_xom') is-invalid @enderror" @disabled($isReadOnly ?? false)>
+                    <option value="">Chọn Thôn</option>
+                    @php
+                        $defaultThon = ['Thôn Phủ Quốc', 'Thôn Ngô Sài', 'Thôn Hoa Vôi', 'Thôn Du Nghệ', 'Thôn Đình Tổ', 'Thôn Sơn Trung', 'Thôn Ba Nhà', 'Thôn Quảng Yên'];
+                        $currentValue = old('thon_xom', $record?->thon_xom);
+                        $options = $defaultThon;
+                        if ($currentValue && !in_array($currentValue, $defaultThon)) {
+                            $options[] = $currentValue;
+                        }
+                    @endphp
+                    @foreach ($options as $option)
+                        <option value="{{ $option }}" @selected((string)$currentValue === (string)$option)>{{ $option }}</option>
+                    @endforeach
+                </select>
                 @error('thon_xom')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
             <div class="col-lg-12">
                 <label for="dia_chi_thuong_tru" class="form-label">Địa chỉ thường trú <span class="text-danger">*</span></label>
-                <input id="dia_chi_thuong_tru" name="dia_chi_thuong_tru" value="{{ old('dia_chi_thuong_tru', $record?->dia_chi_thuong_tru) }}" class="form-control @error('dia_chi_thuong_tru') is-invalid @enderror" @required(!($isReadOnly ?? false)) @disabled($isReadOnly ?? false) maxlength="500" placeholder="Số nhà, đường/phố, thôn/xóm, xã Quốc Oai...">
+                <input id="dia_chi_thuong_tru" name="dia_chi_thuong_tru" value="{{ old('dia_chi_thuong_tru', $record?->dia_chi_thuong_tru) }}" class="form-control @error('dia_chi_thuong_tru') is-invalid @enderror" @required(!($isReadOnly ?? false)) @disabled($isReadOnly ?? false) maxlength="500" placeholder="Số nhà, đường/phố, thôn, xã Quốc Oai...">
                 @error('dia_chi_thuong_tru')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
 
