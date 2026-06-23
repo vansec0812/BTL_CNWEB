@@ -9,235 +9,294 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #0f5132, #198754, #0d6efd);
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --text-dark: #2c3e35;
+            --brand-green: #17683a;
+            --brand-green-2: #2f8f58;
+            --brand-blue: #2d7fa9;
+            --surface: rgba(255, 255, 255, 0.9);
+            --line: rgba(28, 55, 45, 0.12);
+            --text: #22352d;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--primary-gradient);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dark);
-            padding: 20px;
+            margin: 0;
+            font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text);
+            background:
+                linear-gradient(135deg, rgba(23, 104, 58, 0.94), rgba(45, 127, 169, 0.92)),
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 32%);
+            display: grid;
+            place-items: center;
+            padding: 24px;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .login-container {
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        .login-shell {
+            width: min(960px, 100%);
+            display: grid;
+            grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+            background: var(--surface);
+            border: 1px solid rgba(255, 255, 255, 0.48);
+            border-radius: 22px;
+            box-shadow: 0 28px 70px rgba(18, 54, 61, 0.28);
             overflow: hidden;
-            transition: transform 0.3s ease;
+            backdrop-filter: blur(18px);
         }
 
-        .brand-section {
-            background: rgba(15, 81, 50, 0.05);
-            border-right: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 40px;
+        .brand-panel {
+            min-height: 520px;
+            padding: 52px 44px;
+            background: rgba(248, 252, 250, 0.72);
+            border-right: 1px solid var(--line);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+            justify-content: space-between;
+            gap: 36px;
         }
 
         .brand-logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, #0f5132, #198754);
-            color: white;
-            font-size: 2rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(15, 81, 50, 0.2);
+            width: 76px;
+            height: 76px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-2));
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: 2.1rem;
+            font-weight: 800;
+            box-shadow: 0 16px 34px rgba(23, 104, 58, 0.24);
         }
 
-        .form-section {
-            padding: 40px;
+        .brand-title {
+            font-size: clamp(1.6rem, 2vw, 2rem);
+            font-weight: 800;
+            margin: 24px 0 10px;
+        }
+
+        .brand-copy {
+            max-width: 340px;
+            color: #617169;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .brand-meta {
+            display: grid;
+            gap: 12px;
+            color: #4f6259;
+            font-size: 0.92rem;
+        }
+
+        .brand-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-meta i {
+            color: var(--brand-green);
+            font-size: 1rem;
+        }
+
+        .form-panel {
+            padding: 56px 52px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(23, 104, 58, 0.08);
+            color: var(--brand-green);
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: clamp(1.9rem, 3vw, 2.45rem);
+            font-weight: 800;
+            margin: 0 0 10px;
+        }
+
+        .form-subtitle {
+            color: #68776f;
+            margin-bottom: 34px;
+            line-height: 1.6;
+        }
+
+        .form-label {
+            color: #304239;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            border: 1.5px solid var(--line);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.72);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            overflow: hidden;
+        }
+
+        .input-group:focus-within {
+            border-color: rgba(47, 143, 88, 0.9);
+            box-shadow: 0 0 0 4px rgba(47, 143, 88, 0.13);
+            background: #fff;
+        }
+
+        .input-group-text,
+        .form-control {
+            border: 0;
+            background: transparent;
+        }
+
+        .input-group-text {
+            color: #66766e;
+            padding-left: 16px;
+            padding-right: 8px;
         }
 
         .form-control {
-            border-radius: 12px;
-            padding: 12px 18px;
-            border: 1.5px solid rgba(0, 0, 0, 0.1);
-            background: rgba(255, 255, 255, 0.5);
-            transition: all 0.3s ease;
+            min-height: 52px;
+            padding: 12px 16px;
+            color: var(--text);
         }
 
         .form-control:focus {
-            background: white;
-            border-color: #198754;
-            box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.15);
+            box-shadow: none;
+            background: transparent;
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #0f5132, #198754);
-            border: none;
-            border-radius: 12px;
-            padding: 12px;
-            font-weight: 600;
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 16px rgba(15, 81, 50, 0.2);
+            min-height: 54px;
+            border: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-2));
+            color: #fff;
+            font-weight: 800;
+            box-shadow: 0 16px 28px rgba(23, 104, 58, 0.22);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(15, 81, 50, 0.3);
-            background: linear-gradient(135deg, #146c43, #198754);
+        .btn-submit:hover,
+        .btn-submit:focus {
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 20px 34px rgba(23, 104, 58, 0.28);
         }
 
-        .quick-user-card {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 16px;
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .alert {
+            border-radius: 14px;
         }
 
-        .quick-user-card:hover {
-            background: white;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            border-color: #198754;
-        }
+        @media (max-width: 860px) {
+            body {
+                padding: 16px;
+                align-items: start;
+            }
 
-        .role-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 20px;
-        }
+            .login-shell {
+                grid-template-columns: 1fr;
+            }
 
-        .role-admin { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
-        .role-tu_phap { background: rgba(25, 135, 84, 0.1); color: #198754; }
-        .role-lao_dong { background: rgba(253, 126, 20, 0.1); color: #fd7e14; }
-        .role-dia_chinh { background: rgba(108, 117, 125, 0.1); color: #6c757d; }
-        .role-quan_su { background: rgba(255, 193, 7, 0.15); color: #997404; }
+            .brand-panel {
+                min-height: auto;
+                padding: 34px 28px;
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+                gap: 20px;
+            }
+
+            .brand-logo {
+                width: 62px;
+                height: 62px;
+                border-radius: 18px;
+                font-size: 1.7rem;
+            }
+
+            .brand-title {
+                margin-top: 18px;
+            }
+
+            .brand-meta {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 34px 28px;
+            }
+        }
     </style>
 </head>
 <body>
-
-<div class="login-container">
-    <div class="glass-card">
-        <div class="row g-0">
-            <!-- Cột trái: Thương hiệu & Thông tin chung -->
-            <div class="col-lg-5 brand-section">
-                <div class="brand-logo">QO</div>
-                <h4 class="fw-bold mb-1">UBND Xã Quốc Oai</h4>
-                <p class="text-muted small mb-4">Hệ thống thông tin quản lý hộ dân cư & phân hệ chuyên trách</p>
-                
-                <hr class="w-100 my-4 opacity-10">
-                
-                <h6 class="fw-bold mb-3"><i class="bi bi-person-badge me-1"></i>Chọn nhanh tài khoản để test</h6>
-                <div class="d-flex flex-column gap-2 w-100 px-lg-2">
-                    @foreach($users as $user)
-                        @php
-                            $roleName = $user->roles->first()?->name ?? 'can_bo';
-                            $roleLabel = $user->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($user->name);
-                            $password = $roleName === 'admin' ? 'Admin@123456' : 'CanBo@123456';
-                        @endphp
-                        <div class="quick-user-card" onclick="prefill('{{ $user->email }}', '{{ $password }}')">
-                            <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                <i class="bi bi-person-circle fs-5 text-success"></i>
-                            </div>
-                            <div class="text-start flex-grow-1">
-                                <div class="fw-bold small">{{ $user->name }}</div>
-                                <div class="text-muted" style="font-size: 0.75rem;">{{ $user->email }}</div>
-                            </div>
-                            <span class="role-badge role-{{ $roleName }}">
-                                {{ $user->roles->first()?->name === 'admin' ? 'Admin' : ($user->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($user->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($user->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : ($user->roles->first()?->name === 'quan_su' ? 'Quân sự' : 'Cán bộ')))) }}
-                            </span>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            
-            <!-- Cột phải: Form Đăng nhập -->
-            <div class="col-lg-7 form-section d-flex flex-column justify-content-center">
-                <div class="mb-4">
-                    <h3 class="fw-bold">Đăng nhập hệ thống</h3>
-                    <p class="text-secondary">Vui lòng nhập tài khoản cán bộ để tiếp tục thực hiện nghiệp vụ.</p>
-                </div>
-
-                @if($errors->any())
-                    <div class="alert alert-danger border-0 rounded-3 mb-4" style="background: rgba(220, 53, 69, 0.1); color: #dc3545;">
-                        <ul class="mb-0 list-unstyled">
-                            @foreach($errors->all() as $error)
-                                <li><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form action="{{ url('login') }}" method="POST">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold">Địa chỉ Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border: 1.5px solid rgba(0, 0, 0, 0.1); border-right: none;"><i class="bi bi-envelope text-muted"></i></span>
-                            <input type="email" name="email" id="email" class="form-control border-start-0" style="border-radius: 0 12px 12px 0;" placeholder="ten_can_bo@ubnd-xa.vn" value="{{ old('email') }}" required>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label for="password" class="form-label fw-semibold">Mật khẩu</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border: 1.5px solid rgba(0, 0, 0, 0.1); border-right: none;"><i class="bi bi-lock text-muted"></i></span>
-                            <input type="password" name="password" id="password" class="form-control border-start-0" style="border-radius: 0 12px 12px 0;" placeholder="••••••••" required>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-submit w-100 d-flex align-items-center justify-content-center gap-2">
-                        <span>Đăng nhập</span>
-                        <i class="bi bi-arrow-right"></i>
-                    </button>
-                </form>
-            </div>
+<main class="login-shell">
+    <section class="brand-panel" aria-label="Thông tin hệ thống">
+        <div>
+            <div class="brand-logo">QO</div>
+            <h2 class="brand-title">UBND Xã Quốc Oai</h2>
+            <p class="brand-copy">
+                Hệ thống thông tin quản lý hộ dân cư và các phân hệ nghiệp vụ chuyên trách.
+            </p>
         </div>
-    </div>
-</div>
 
-<script>
-    function prefill(email, password) {
-        document.getElementById('email').value = email;
-        document.getElementById('password').value = password;
-        
-        // Add micro-animation effect to inputs
-        const fields = [document.getElementById('email'), document.getElementById('password')];
-        fields.forEach(f => {
-            f.style.transform = 'scale(1.02)';
-            setTimeout(() => f.style.transform = 'none', 150);
-        });
-    }
-</script>
+        <div class="brand-meta">
+            <span><i class="bi bi-shield-check"></i> Truy cập bảo mật theo vai trò cán bộ</span>
+            <span><i class="bi bi-journal-check"></i> Đồng bộ dữ liệu cư trú, an sinh, lao động và quốc phòng</span>
+            <span><i class="bi bi-clock-history"></i> Ghi nhận nhật ký thao tác trong quá trình xử lý</span>
+        </div>
+    </section>
+
+    <section class="form-panel" aria-label="Biểu mẫu đăng nhập">
+        <span class="form-kicker"><i class="bi bi-lock"></i> Cổng đăng nhập nội bộ</span>
+        <h1>Đăng nhập hệ thống</h1>
+        <p class="form-subtitle">
+            Vui lòng sử dụng tài khoản cán bộ đã được cấp để tiếp tục.
+        </p>
+
+        @if($errors->any())
+            <div class="alert alert-danger border-0 mb-4" style="background: rgba(220, 53, 69, 0.1); color: #b02a37;">
+                <ul class="mb-0 list-unstyled">
+                    @foreach($errors->all() as $error)
+                        <li><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ url('login') }}" method="POST">
+            @csrf
+
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Địa chỉ Email</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="ten_can_bo@ubnd-xa.vn" value="{{ old('email') }}" autocomplete="email" required autofocus>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label fw-semibold">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-submit w-100 d-flex align-items-center justify-content-center gap-2">
+                <span>Đăng nhập</span>
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </form>
+    </section>
+</main>
 </body>
 </html>

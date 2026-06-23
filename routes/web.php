@@ -175,7 +175,6 @@ Route::middleware('guest')->group(function () {
 // Routes cho Auth (Đã đăng nhập)
 Route::middleware('auth')->group(function () use ($modules) {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('switch-user', [AuthController::class, 'switchUser'])->name('switch-user');
 
     Route::get('/', function () use ($modules) {
         $count = static function (string $table, int $fallback = 0): int {
@@ -523,7 +522,6 @@ Route::middleware('auth')->group(function () use ($modules) {
 
         // API cho Xác thực (Đã đăng nhập)
         Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
-        Route::post('switch-user', [AuthController::class, 'switchUser'])->name('api.switch-user');
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)

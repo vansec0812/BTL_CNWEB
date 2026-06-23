@@ -362,26 +362,9 @@
                     <div class="collapse navbar-collapse" id="topActions">
                         <div class="ms-auto d-flex align-items-center gap-3 pt-3 pt-lg-0">
                             @php
-                                $allUsersForSwitcher = \App\Models\User::with('roles')->get();
                                 $currentUser = auth()->user();
                             @endphp
                             @if($currentUser)
-                                <form action="{{ route('switch-user') }}" method="POST" class="d-flex align-items-center gap-2">
-                                    @csrf
-                                    <label for="quick_user_select" class="small fw-semibold text-secondary text-nowrap mb-0">
-                                        <i class="bi bi-arrow-left-right text-success me-1"></i>Chuyển vai trò:
-                                    </label>
-                                    <select name="user_id" id="quick_user_select" class="form-select form-select-sm" style="width: auto; max-width: 220px; border-radius: 8px;" onchange="this.form.submit()">
-                                        @foreach($allUsersForSwitcher as $u)
-                                            <option value="{{ $u->id }}" {{ $currentUser->id === $u->id ? 'selected' : '' }}>
-                                                {{ $u->name }} ({{ $u->roles->first()?->name === 'admin' ? 'Admin' : ($u->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($u->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($u->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : ($u->roles->first()?->name === 'quan_su' ? 'Quân sự' : 'Cán bộ')))) }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </form>
-
-                                <div class="vr text-secondary opacity-25 d-none d-lg-block" style="height: 24px;"></div>
-
                                 <a href="{{ route('users.show', $currentUser->id) }}" class="d-flex align-items-center gap-2 text-decoration-none profile-link">
                                     <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center text-success fw-bold" style="width: 34px; height: 34px; font-size: 0.85rem;">
                                         {{ substr($currentUser->name, 0, 1) }}
