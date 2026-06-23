@@ -374,7 +374,7 @@
                                     <select name="user_id" id="quick_user_select" class="form-select form-select-sm" style="width: auto; max-width: 220px; border-radius: 8px;" onchange="this.form.submit()">
                                         @foreach($allUsersForSwitcher as $u)
                                             <option value="{{ $u->id }}" {{ $currentUser->id === $u->id ? 'selected' : '' }}>
-                                                {{ $u->name }} ({{ $u->roles->first()?->name === 'admin' ? 'Admin' : ($u->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($u->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($u->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : ($u->roles->first()?->name === 'quan_su' ? 'Quân sự' : 'Trưởng thôn')))) }})
+                                                {{ $u->name }} ({{ $u->roles->first()?->name === 'admin' ? 'Admin' : ($u->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($u->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($u->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : ($u->roles->first()?->name === 'quan_su' ? 'Quân sự' : 'Cán bộ')))) }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -389,7 +389,7 @@
                                     <div class="text-start">
                                         <span class="d-block fw-bold small text-dark lh-sm">{{ $currentUser->name }}</span>
                                         <span class="badge bg-success bg-opacity-10 text-success fw-semibold" style="font-size: 0.65rem; padding: 2px 6px;">
-                                            {{ $currentUser->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($currentUser->roles->first()?->name === 'tu_phap' ? 'Cán bộ Tư pháp' : ($currentUser->roles->first()?->name === 'lao_dong' ? 'Cán bộ Lao động' : ($currentUser->roles->first()?->name === 'dia_chinh' ? 'Cán bộ Địa chính' : ($currentUser->roles->first()?->name === 'quan_su' ? 'Cán bộ Quân sự' : 'Trưởng thôn')))) }}
+                                            {{ $currentUser->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($currentUser->roles->first()?->name === 'tu_phap' ? 'Cán bộ Tư pháp' : ($currentUser->roles->first()?->name === 'lao_dong' ? 'Cán bộ Lao động' : ($currentUser->roles->first()?->name === 'dia_chinh' ? 'Cán bộ Địa chính' : ($currentUser->roles->first()?->name === 'quan_su' ? 'Cán bộ Quân sự' : 'Cán bộ')))) }}
                                         </span>
                                     </div>
                                 </a>

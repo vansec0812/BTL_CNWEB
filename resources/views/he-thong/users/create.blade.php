@@ -10,8 +10,7 @@
         'tu_phap' => 'Cán bộ Tư pháp (Hộ tịch & Cư trú)',
         'lao_dong' => 'Cán bộ Lao động (Kinh tế, Lao động, An sinh)',
         'dia_chinh' => 'Cán bộ Địa chính (Đất đai & Hạ tầng)',
-        'quan_su' => 'Cán bộ Quân sự (Nghĩa vụ quân sự)',
-        'truong_thon' => 'Trưởng thôn/xóm',
+        'quan_su' => 'Cán bộ Quân sự (Nghĩa vụ & An ninh quốc phòng)',
     ];
 @endphp
 
@@ -108,7 +107,7 @@
 
                 <div class="col-md-6">
                     <label for="chuc_vu" class="form-label small fw-semibold text-secondary">Chức danh hành chính (Chức vụ)</label>
-                    <input type="text" name="chuc_vu" id="chuc_vu" class="form-control form-control-sm" value="{{ old('chuc_vu') }}" placeholder="Ví dụ: Cán bộ địa chính, Trưởng thôn..." style="border-radius: 8px;">
+                    <input type="text" name="chuc_vu" id="chuc_vu" class="form-control form-control-sm" value="{{ old('chuc_vu') }}" placeholder="Ví dụ: Cán bộ địa chính, Cán bộ quân sự..." style="border-radius: 8px;">
                 </div>
 
                 <div class="col-md-6">

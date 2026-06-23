@@ -141,7 +141,7 @@
         .role-tu_phap { background: rgba(25, 135, 84, 0.1); color: #198754; }
         .role-lao_dong { background: rgba(253, 126, 20, 0.1); color: #fd7e14; }
         .role-dia_chinh { background: rgba(108, 117, 125, 0.1); color: #6c757d; }
-        .role-truong_thon { background: rgba(111, 66, 193, 0.1); color: #6f42c1; }
+        .role-quan_su { background: rgba(255, 193, 7, 0.15); color: #997404; }
     </style>
 </head>
 <body>
@@ -161,9 +161,9 @@
                 <div class="d-flex flex-column gap-2 w-100 px-lg-2">
                     @foreach($users as $user)
                         @php
-                            $roleName = $user->roles->first()?->name ?? 'truong_thon';
+                            $roleName = $user->roles->first()?->name ?? 'can_bo';
                             $roleLabel = $user->roles->first()?->name === 'admin' ? 'Quản trị viên' : ($user->name);
-                            $password = $roleName === 'admin' ? 'Admin@123456' : ($roleName === 'truong_thon' ? 'TruongThon@123' : 'CanBo@123456');
+                            $password = $roleName === 'admin' ? 'Admin@123456' : 'CanBo@123456';
                         @endphp
                         <div class="quick-user-card" onclick="prefill('{{ $user->email }}', '{{ $password }}')">
                             <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
@@ -174,7 +174,7 @@
                                 <div class="text-muted" style="font-size: 0.75rem;">{{ $user->email }}</div>
                             </div>
                             <span class="role-badge role-{{ $roleName }}">
-                                {{ $user->roles->first()?->name === 'admin' ? 'Admin' : ($user->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($user->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($user->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : 'Trưởng thôn'))) }}
+                                {{ $user->roles->first()?->name === 'admin' ? 'Admin' : ($user->roles->first()?->name === 'tu_phap' ? 'Tư pháp' : ($user->roles->first()?->name === 'lao_dong' ? 'Lao động' : ($user->roles->first()?->name === 'dia_chinh' ? 'Địa chính' : ($user->roles->first()?->name === 'quan_su' ? 'Quân sự' : 'Cán bộ')))) }}
                             </span>
                         </div>
                     @endforeach
