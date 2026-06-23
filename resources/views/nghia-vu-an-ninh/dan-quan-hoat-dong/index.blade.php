@@ -98,7 +98,7 @@
         <form method="GET" action="{{ route('dan-quan-hoat-dong.index') }}" class="row g-3">
             <div class="col-lg-3">
                 <label for="search" class="form-label">Tìm kiếm</label>
-                <input type="search" id="search" name="search" value="{{ $filters['search'] ?? '' }}" class="form-control" placeholder="Tên hoạt động, tên/CCCD dân quân...">
+                <input type="search" id="search" name="search" value="{{ $filters['search'] ?? '' }}" class="form-control" placeholder="Tên HĐ, tên/CCCD hoặc đơn vị...">
             </div>
             <div class="col-lg-3">
                 <label for="loai_hoat_dong" class="form-label">Loại hoạt động</label>
@@ -109,7 +109,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-3">
                 <label for="trang_thai" class="form-label">Trạng thái</label>
                 <select id="trang_thai" name="trang_thai" class="form-select">
                     <option value="">Tất cả</option>
@@ -118,11 +118,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-2">
-                <label for="don_vi" class="form-label">Đơn vị</label>
-                <input type="text" id="don_vi" name="don_vi" value="{{ $filters['don_vi'] ?? '' }}" class="form-control" placeholder="Tên đơn vị...">
-            </div>
-            <div class="col-lg-2 d-flex align-items-end gap-2">
+            <div class="col-lg-3 d-flex align-items-end gap-2">
                 <button class="btn btn-success w-100" type="submit">Lọc</button>
                 <a class="btn btn-outline-secondary" href="{{ route('dan-quan-hoat-dong.index') }}">Xoá</a>
             </div>
@@ -183,11 +179,11 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('dan-quan-hoat-dong.show', $record) }}" class="btn btn-sm btn-outline-secondary" title="Chi tiết">
+                                    <a href="{{ route('dan-quan-hoat-dong.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     @can('manage_nghia_vu')
-                                    <a href="{{ route('dan-quan-hoat-dong.edit', $record) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                    <a href="{{ route('dan-quan-hoat-dong.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('dan-quan-hoat-dong.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hoạt động này của dân quân?">

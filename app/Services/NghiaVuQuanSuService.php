@@ -16,12 +16,15 @@ class NghiaVuQuanSuService
     {
         $query = NghiaVuQuanSu::query()->with(['nhanKhau.hoKhau']);
 
-        // Tìm kiếm theo tên hoặc CCCD/CMND của nhân khẩu
+        // Tìm kiếm theo tên, CCCD/CMND hoặc thôn xóm của nhân khẩu
         if (! empty($filters['search'])) {
             $search = $filters['search'];
             $query->whereHas('nhanKhau', function ($q) use ($search) {
                 $q->where('ho_ten', 'like', '%'.$search.'%')
-                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%');
+                    ->orWhere('cccd_cmnd', 'like', '%'.$search.'%')
+                    ->orWhereHas('hoKhau', function ($qh) use ($search) {
+                        $qh->where('thon_xom', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -33,13 +36,6 @@ class NghiaVuQuanSuService
         // Lọc theo năm tuổi tuyển quan
         if (! empty($filters['nam_tuoi_tuyen_quan'])) {
             $query->where('nam_tuoi_tuyen_quan', $filters['nam_tuoi_tuyen_quan']);
-        }
-
-        // Lọc theo thôn xóm của hộ khẩu
-        if (! empty($filters['thon_xom'])) {
-            $query->whereHas('nhanKhau.hoKhau', function ($q) use ($filters) {
-                $q->where('thon_xom', 'like', '%'.$filters['thon_xom'].'%');
-            });
         }
 
         return $query->orderBy('id', 'asc')->paginate($perPage)->withQueryString();

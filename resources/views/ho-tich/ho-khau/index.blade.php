@@ -4,60 +4,6 @@
 @section('page_title', 'Quản lý Sổ hộ khẩu')
 
 @section('content')
-<style>
-    /* Nút quay lại (Back arrow button) */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        color: #6c757d;
-        background-color: #ffffff;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    .btn-back:hover {
-        color: var(--admin-green);
-        background-color: var(--admin-green-soft);
-        border-color: rgba(15, 81, 50, 0.2);
-        transform: translateX(-2px);
-    }
-
-    /* Style cho các nút hành động (Edit/Delete) */
-    .btn-action-view {
-        background-color: rgba(108, 117, 125, 0.08);
-        color: #6c757d;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-view:hover {
-        background-color: #6c757d;
-        color: #ffffff;
-    }
-    .btn-action-edit {
-        background-color: rgba(13, 110, 253, 0.08);
-        color: #0d6efd;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-edit:hover {
-        background-color: #0d6efd;
-        color: #ffffff;
-    }
-    .btn-action-delete {
-        background-color: rgba(220, 53, 69, 0.08);
-        color: #dc3545;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-delete:hover {
-        background-color: #dc3545;
-        color: #ffffff;
-    }
-</style>
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -144,6 +90,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 50px;">STT</th>
                         <th>Mã hộ</th>
                         <th>Số sổ hộ khẩu</th>
                         <th>Chủ hộ</th>
@@ -157,6 +104,7 @@
                 <tbody>
                     @forelse ($records as $record)
                         <tr>
+                            <td>{{ $loop->iteration + ($records->firstItem() - 1) }}</td>
                             <td class="fw-semibold text-success">{{ $record->ma_ho }}</td>
                             <td>{{ $record->so_so_ho_khau }}</td>
                             <td>
@@ -184,18 +132,18 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('ho-khau.show', $record) }}" class="btn btn-sm btn-action-view d-inline-flex align-items-center gap-1" title="Xem">
-                                        <i class="bi bi-eye"></i> Xem
+                                    <a href="{{ route('ho-khau.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
+                                        <i class="bi bi-eye"></i>
                                     </a>
                                     @can('manage_ho_khau')
-                                    <a href="{{ route('ho-khau.edit', $record) }}" class="btn btn-sm btn-action-edit d-inline-flex align-items-center gap-1" title="Sửa">
-                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    <a href="{{ route('ho-khau.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('ho-khau.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa sổ hộ khẩu này?">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-action-delete d-inline-flex align-items-center gap-1" type="submit" title="Xóa">
-                                            <i class="bi bi-trash"></i> Xóa
+                                        <button class="btn btn-sm btn-action-delete" type="submit" title="Xóa">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                     @endcan
@@ -204,7 +152,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted py-5">
+                            <td colspan="9" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                 Chưa có sổ hộ khẩu nào phù hợp.
                             </td>

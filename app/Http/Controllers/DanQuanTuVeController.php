@@ -24,7 +24,7 @@ class DanQuanTuVeController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['q', 'trang_thai', 'don_vi']);
+        $filters = $request->only(['q', 'trang_thai', 'chuc_vu']);
         $perPage = $request->integer('per_page', 10);
 
         $records = $this->danQuanTuVeService->getDanQuanList($filters, $perPage);
@@ -44,6 +44,7 @@ class DanQuanTuVeController extends Controller
             'records' => $records,
             'filters' => $filters,
             'trangThai' => self::TRANG_THAI,
+            'chucVuList' => DanQuanTuVe::CHUC_VU_LIST,
             'stats' => $this->stats(),
         ]);
     }

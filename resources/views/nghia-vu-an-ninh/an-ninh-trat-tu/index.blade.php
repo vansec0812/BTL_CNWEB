@@ -4,28 +4,7 @@
 @section('page_title', 'Quản lý An ninh trật tự')
 
 @section('content')
-<style>
-    /* Nút quay lại (Back arrow button) */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        color: #6c757d;
-        background-color: #ffffff;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    .btn-back:hover {
-        color: var(--admin-green);
-        background-color: var(--admin-green-soft);
-        border-color: rgba(15, 81, 50, 0.2);
-        transform: translateX(-2px);
-    }
-</style>
+
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -92,36 +71,40 @@
 @endif
 
 <div class="card shadow-sm border-0 mb-4">
-    <div class="card-body p-3">
+    <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc tìm kiếm</div>
+    <div class="card-body">
         {{-- Bộ lọc tìm kiếm --}}
-        <form action="{{ route('an-ninh-trat-tu.index') }}" method="GET" class="row g-2">
+        <form action="{{ route('an-ninh-trat-tu.index') }}" method="GET" class="row g-3">
             <div class="col-md-5">
+                <label for="q" class="form-label">Tìm kiếm</label>
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                    <input type="text" name="q" class="form-control border-start-0 ps-0" 
+                    <input type="search" name="q" id="q" class="form-control border-start-0 ps-0"
                            placeholder="Tìm theo họ tên, CCCD, cơ quan giải quyết..." value="{{ $filters['q'] ?? '' }}">
                 </div>
             </div>
             <div class="col-md-3">
-                <select name="loai_doi_tuong" class="form-select" onchange="this.form.submit()">
-                    <option value="">-- Tất cả phân loại --</option>
+                <label for="loai_doi_tuong" class="form-label">Loại đối tượng</label>
+                <select name="loai_doi_tuong" id="loai_doi_tuong" class="form-select">
+                    <option value="">Tất cả phân loại</option>
                     @foreach($loaiDoiTuong as $k => $v)
                         <option value="{{ $k }}" {{ ($filters['loai_doi_tuong'] ?? '') === $k ? 'selected' : '' }}>{{ $v }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-2">
-                <select name="trang_thai" class="form-select" onchange="this.form.submit()">
-                    <option value="">-- Tất cả trạng thái --</option>
+                <label for="trang_thai" class="form-label">Trạng thái</label>
+                <select name="trang_thai" id="trang_thai" class="form-select">
+                    <option value="">Tất cả trạng thái</option>
                     @foreach($trangThai as $k => $v)
                         <option value="{{ $k }}" {{ ($filters['trang_thai'] ?? '') === $k ? 'selected' : '' }}>{{ $v }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-success w-100 fw-semibold">Lọc</button>
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-success w-100">Lọc</button>
                 @if(count($filters) > 0)
-                    <a href="{{ route('an-ninh-trat-tu.index') }}" class="btn btn-light" title="Xóa bộ lọc"><i class="bi bi-x-lg"></i></a>
+                    <a href="{{ route('an-ninh-trat-tu.index') }}" class="btn btn-outline-secondary" title="Xóa bộ lọc">Xóa</a>
                 @endif
             </div>
         </form>
@@ -134,7 +117,7 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th width="60" class="text-center">#</th>
+                        <th width="60" class="text-center">STT</th>
                         <th>Họ tên / Đối tượng</th>
                         <th>Phân loại</th>
                         <th>Cơ quan giải quyết</th>
@@ -203,17 +186,17 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('an-ninh-trat-tu.show', $row) }}" class="btn btn-sm btn-outline-secondary" title="Chi tiết">
+                                    <a href="{{ route('an-ninh-trat-tu.show', $row) }}" class="btn btn-sm btn-action-view" title="Xem">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     @can('manage_nghia_vu')
-                                        <a href="{{ route('an-ninh-trat-tu.edit', $row) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                        <a href="{{ route('an-ninh-trat-tu.edit', $row) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <form action="{{ route('an-ninh-trat-tu.destroy', $row) }}" method="POST" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hồ sơ an ninh trật tự này?">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                            <button type="submit" class="btn btn-sm btn-action-delete" title="Xóa">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>

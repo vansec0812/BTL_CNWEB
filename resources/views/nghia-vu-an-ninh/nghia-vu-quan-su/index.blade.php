@@ -4,60 +4,6 @@
 @section('page_title', 'Quản lý Nghĩa vụ Quân sự')
 
 @section('content')
-<style>
-    /* Nút quay lại (Back arrow button) */
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        color: #6c757d;
-        background-color: #ffffff;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    .btn-back:hover {
-        color: var(--admin-green);
-        background-color: var(--admin-green-soft);
-        border-color: rgba(15, 81, 50, 0.2);
-        transform: translateX(-2px);
-    }
-
-    /* Style cho các nút hành động (Edit/Delete) */
-    .btn-action-view {
-        background-color: rgba(108, 117, 125, 0.08);
-        color: #6c757d;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-view:hover {
-        background-color: #6c757d;
-        color: #ffffff;
-    }
-    .btn-action-edit {
-        background-color: rgba(13, 110, 253, 0.08);
-        color: #0d6efd;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-edit:hover {
-        background-color: #0d6efd;
-        color: #ffffff;
-    }
-    .btn-action-delete {
-        background-color: rgba(220, 53, 69, 0.08);
-        color: #dc3545;
-        border: none;
-        transition: all 0.2s ease;
-    }
-    .btn-action-delete:hover {
-        background-color: #dc3545;
-        color: #ffffff;
-    }
-</style>
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -133,7 +79,7 @@
         <form method="GET" action="{{ route('nghia-vu-quan-su.index') }}" class="row g-3">
             <div class="col-lg-3">
                 <label for="search" class="form-label">Tìm kiếm</label>
-                <input type="search" id="search" name="search" value="{{ $filters['search'] ?? '' }}" class="form-control" placeholder="Tên hoặc CCCD công dân...">
+                <input type="search" id="search" name="search" value="{{ $filters['search'] ?? '' }}" class="form-control" placeholder="Tên, CCCD hoặc địa bàn...">
             </div>
             <div class="col-lg-3">
                 <label for="trang_thai_nvqs" class="form-label">Trạng thái NVQS</label>
@@ -144,15 +90,11 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-3">
                 <label for="nam_tuoi_tuyen_quan" class="form-label">Năm tuyển quân</label>
                 <input type="number" id="nam_tuoi_tuyen_quan" name="nam_tuoi_tuyen_quan" value="{{ $filters['nam_tuoi_tuyen_quan'] ?? '' }}" class="form-control" placeholder="VD: {{ date('Y') }}" min="1900" max="2100">
             </div>
-            <div class="col-lg-2">
-                <label for="thon_xom" class="form-label">Thôn / Xóm</label>
-                <input type="text" id="thon_xom" name="thon_xom" value="{{ $filters['thon_xom'] ?? '' }}" class="form-control" placeholder="Nhập địa bàn...">
-            </div>
-            <div class="col-lg-2 d-flex align-items-end gap-2">
+            <div class="col-lg-3 d-flex align-items-end gap-2">
                 <button class="btn btn-success w-100" type="submit">Lọc</button>
                 <a class="btn btn-outline-secondary" href="{{ route('nghia-vu-quan-su.index') }}">Xoá</a>
             </div>
@@ -225,17 +167,17 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    <a href="{{ route('nghia-vu-quan-su.show', $record) }}" class="btn btn-sm btn-outline-secondary" title="Chi tiết">
+                                    <a href="{{ route('nghia-vu-quan-su.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     @can('manage_nghia_vu')
-                                    <a href="{{ route('nghia-vu-quan-su.edit', $record) }}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                    <a href="{{ route('nghia-vu-quan-su.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form method="POST" action="{{ route('nghia-vu-quan-su.destroy', $record) }}" class="d-inline" data-confirm="Bạn có chắc chắn muốn xóa hồ sơ nghĩa vụ quân sự của công dân này?">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm btn-outline-danger" type="submit" title="Xóa">
+                                        <button class="btn btn-sm btn-action-delete" type="submit" title="Xóa">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>

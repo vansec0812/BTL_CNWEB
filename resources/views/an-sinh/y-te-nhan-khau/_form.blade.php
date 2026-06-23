@@ -119,7 +119,7 @@
     <div class="card-footer bg-white d-flex justify-content-between">
         <a href="{{ route('y-te-nhan-khau.index') }}" class="btn btn-outline-secondary">Quay lại</a>
         @if (!($isReadOnly ?? false))
-            <button class="btn btn-info text-white" type="submit">{{ $submitLabel }}</button>
+            <button class="btn btn-success" type="submit">{{ $submitLabel }}</button>
         @else
             @can('manage_an_sinh')
             <a href="{{ route('y-te-nhan-khau.edit', $record) }}" class="btn btn-primary">Chỉnh sửa thông tin</a>

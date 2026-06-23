@@ -26,7 +26,7 @@ class DanQuanTuVeService
                 });
             })
             ->when($filters['trang_thai'] ?? null, fn ($query, string $value) => $query->where('trang_thai', $value))
-            ->when($filters['don_vi'] ?? null, fn ($query, string $value) => $query->where('don_vi', 'like', "%{$value}%"))
+            ->when($filters['chuc_vu'] ?? null, fn ($query, string $value) => $query->where('chuc_vu', $value))
             ->orderBy('id', 'asc');
 
         return $query->paginate($perPage)->withQueryString();
