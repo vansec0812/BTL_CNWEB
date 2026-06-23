@@ -6,6 +6,8 @@ use App\Models\DatDaiTaiSan;
 use App\Models\HoKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreDatDaiTaiSanRequest;
+use App\Http\Requests\UpdateDatDaiTaiSanRequest;
 
 class DatDaiTaiSanController extends Controller
 {
@@ -58,22 +60,9 @@ class DatDaiTaiSanController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreDatDaiTaiSanRequest $request)
     {
-        $validated = $request->validate([
-            'ho_khau_id' => 'required|exists:ho_khau,id',
-            'so_to_ban_do' => 'nullable|string|max:50',
-            'so_thua_dat' => 'nullable|string|max:50',
-            'so_gcn_qsdd' => 'nullable|string|max:100|unique:dat_dai_tai_san,so_gcn_qsdd',
-            'loai_dat' => 'required|in:dat_tho_cu,dat_nong_nghiep,dat_lam_nghiep,dat_nuoi_trong_thuy_san,dat_kinh_doanh,khac',
-            'dien_tich_m2' => 'required|numeric|min:0.01',
-            'vi_tri_mo_ta' => 'nullable|string|max:500',
-            'thon_xom' => 'nullable|string|max:100',
-            'ngay_cap_gcn' => 'nullable|date',
-            'ngay_het_han_gcn' => 'nullable|date|after_or_equal:ngay_cap_gcn',
-            'trang_thai' => 'required|in:dang_su_dung,cho_thue,bi_tranh_chap,da_chuyen_nhuong,thu_hoi',
-            'ghi_chu' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         DatDaiTaiSan::create($validated);
 
@@ -99,22 +88,9 @@ class DatDaiTaiSanController extends Controller
         ]);
     }
 
-    public function update(Request $request, DatDaiTaiSan $datDaiTaiSan)
+    public function update(UpdateDatDaiTaiSanRequest $request, DatDaiTaiSan $datDaiTaiSan)
     {
-        $validated = $request->validate([
-            'ho_khau_id' => 'required|exists:ho_khau,id',
-            'so_to_ban_do' => 'nullable|string|max:50',
-            'so_thua_dat' => 'nullable|string|max:50',
-            'so_gcn_qsdd' => 'nullable|string|max:100|unique:dat_dai_tai_san,so_gcn_qsdd,' . $datDaiTaiSan->id,
-            'loai_dat' => 'required|in:dat_tho_cu,dat_nong_nghiep,dat_lam_nghiep,dat_nuoi_trong_thuy_san,dat_kinh_doanh,khac',
-            'dien_tich_m2' => 'required|numeric|min:0.01',
-            'vi_tri_mo_ta' => 'nullable|string|max:500',
-            'thon_xom' => 'nullable|string|max:100',
-            'ngay_cap_gcn' => 'nullable|date',
-            'ngay_het_han_gcn' => 'nullable|date|after_or_equal:ngay_cap_gcn',
-            'trang_thai' => 'required|in:dang_su_dung,cho_thue,bi_tranh_chap,da_chuyen_nhuong,thu_hoi',
-            'ghi_chu' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $datDaiTaiSan->update($validated);
 

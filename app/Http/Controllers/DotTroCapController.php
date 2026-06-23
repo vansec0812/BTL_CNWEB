@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use App\Http\Requests\StoreDotTroCapRequest;
+use App\Http\Requests\UpdateDotTroCapRequest;
 
 class DotTroCapController extends Controller
 {
@@ -68,25 +70,9 @@ class DotTroCapController extends Controller
         return view('an-sinh.dot-tro-cap.create', $formData);
     }
 
-    public function store(Request $request)
+    public function store(StoreDotTroCapRequest $request)
     {
-        $validated = $request->validate([
-            'ten_dot' => ['required', 'string', 'max:255'],
-            'mo_ta' => ['nullable', 'string'],
-            'loai_tro_cap' => ['required', Rule::in(array_keys(DotTroCap::LOAI_TRO_CAP))],
-            'gia_tri_quy_doi' => ['nullable', 'integer', 'min:0'],
-            'nguon_kinh_phi' => ['nullable', 'string', 'max:255'],
-            'ngay_bat_dau_cap_phat' => ['required', 'date'],
-            'ngay_ket_thuc_cap_phat' => ['nullable', 'date', 'after_or_equal:ngay_bat_dau_cap_phat'],
-            'trang_thai' => ['required', Rule::in(array_keys(DotTroCap::TRANG_THAI))],
-            'ghi_chu' => ['nullable', 'string'],
-            'loai_bao_tro' => ['nullable', 'array'],
-            'loai_bao_tro.*' => ['string', Rule::in(array_keys(BaoTroXaHoi::LOAI_BAO_TRO))],
-            'loai_chinh_sach' => ['nullable', 'array'],
-            'loai_chinh_sach.*' => ['string', Rule::in(array_keys(DoiTuongChinhSach::LOAI_CHINH_SACH))],
-            'thon_xom' => ['nullable', 'array'],
-            'thon_xom.*' => ['string'],
-        ]);
+        $validated = $request->validated();
 
         $loaiBaoTro = $validated['loai_bao_tro'] ?? [];
         $loaiChinhSach = $validated['loai_chinh_sach'] ?? [];
@@ -228,26 +214,9 @@ class DotTroCapController extends Controller
         return view('an-sinh.dot-tro-cap.edit', $formData);
     }
 
-    public function update(Request $request, DotTroCap $dotTroCap)
+    public function update(UpdateDotTroCapRequest $request, DotTroCap $dotTroCap)
     {
-        $validated = $request->validate([
-            'ten_dot' => ['required', 'string', 'max:255'],
-            'mo_ta' => ['nullable', 'string'],
-            'loai_tro_cap' => ['required', Rule::in(array_keys(DotTroCap::LOAI_TRO_CAP))],
-            'gia_tri_quy_doi' => ['nullable', 'integer', 'min:0'],
-            'nguon_kinh_phi' => ['nullable', 'string', 'max:255'],
-            'ngay_bat_dau_cap_phat' => ['required', 'date'],
-            'ngay_ket_thuc_cap_phat' => ['nullable', 'date', 'after_or_equal:ngay_bat_dau_cap_phat'],
-            'trang_thai' => ['required', Rule::in(array_keys(DotTroCap::TRANG_THAI))],
-            'ghi_chu' => ['nullable', 'string'],
-            'loai_bao_tro' => ['nullable', 'array'],
-            'loai_bao_tro.*' => ['string', Rule::in(array_keys(BaoTroXaHoi::LOAI_BAO_TRO))],
-            'loai_chinh_sach' => ['nullable', 'array'],
-            'loai_chinh_sach.*' => ['string', Rule::in(array_keys(DoiTuongChinhSach::LOAI_CHINH_SACH))],
-            'thon_xom' => ['nullable', 'array'],
-            'thon_xom.*' => ['string'],
-            'refresh_recipients' => ['nullable', 'boolean'],
-        ]);
+        $validated = $request->validated();
 
         $loaiBaoTro = $validated['loai_bao_tro'] ?? [];
         $loaiChinhSach = $validated['loai_chinh_sach'] ?? [];
