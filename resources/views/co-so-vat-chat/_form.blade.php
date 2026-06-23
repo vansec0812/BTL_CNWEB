@@ -30,10 +30,12 @@
 
             <div class="col-md-3">
                 <label for="thon_xom" class="form-label">Thuộc Thôn/Xóm</label>
-                <input type="text" class="form-control @error('thon_xom') is-invalid @enderror" 
-                       id="thon_xom" name="thon_xom" 
-                       value="{{ old('thon_xom', $record->thon_xom ?? '') }}" 
-                       placeholder="VD: Thôn 1">
+                <select class="form-select @error('thon_xom') is-invalid @enderror" id="thon_xom" name="thon_xom">
+                    <option value="">-- Chọn Thôn/Xóm --</option>
+                    @foreach($danhSachThon as $thon)
+                        <option value="{{ $thon }}" @selected(old('thon_xom', $record->thon_xom ?? '') === $thon)>{{ $thon }}</option>
+                    @endforeach
+                </select>
                 @error('thon_xom')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
         </div>

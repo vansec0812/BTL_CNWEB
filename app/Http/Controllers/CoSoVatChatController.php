@@ -55,9 +55,12 @@ class CoSoVatChatController extends Controller
      */
     public function create()
     {
+        $danhSachThon = \App\Models\HoKhau::select('thon_xom')->distinct()->whereNotNull('thon_xom')->pluck('thon_xom');
+        
         return view('co-so-vat-chat.create', [
             'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
+            'danhSachThon' => $danhSachThon,
         ]);
     }
 
@@ -86,10 +89,13 @@ class CoSoVatChatController extends Controller
      */
     public function edit(CoSoVatChat $coSoVatChat)
     {
+        $danhSachThon = \App\Models\HoKhau::select('thon_xom')->distinct()->whereNotNull('thon_xom')->pluck('thon_xom');
+        
         return view('co-so-vat-chat.edit', [
             'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
             'record' => $coSoVatChat,
+            'danhSachThon' => $danhSachThon,
         ]);
     }
 
