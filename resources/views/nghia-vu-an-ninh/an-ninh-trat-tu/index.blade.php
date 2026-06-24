@@ -141,11 +141,6 @@
                                         <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1" style="font-size: 0.7rem;">Vãng lai</span>
                                     @endif
                                 </div>
-                                @if($row->dia_chi)
-                                    <div class="text-muted small text-truncate" style="max-width: 220px;" title="{{ $row->dia_chi }}">
-                                        <i class="bi bi-geo-alt me-1"></i>{{ $row->dia_chi }}
-                                    </div>
-                                @endif
                             </td>
                             <td>
                                 @php

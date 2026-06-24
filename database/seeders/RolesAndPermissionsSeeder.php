@@ -101,7 +101,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $userAdmin->assignRole('admin');
         }
 
-        $userTuPhap = User::where('email', 'tupháp@ubnd-xa.vn')->first();
+        $userTuPhap = User::where('email', 'tuphap@ubnd-xa.vn')->first();
         if ($userTuPhap) {
             $userTuPhap->assignRole('tu_phap');
         }

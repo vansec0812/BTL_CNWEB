@@ -46,7 +46,7 @@
     <div class="col-12 mb-2">
         <div class="card bg-light border-0 shadow-sm">
             <div class="card-body p-3">
-                <label for="nhan_khau_search" class="form-label small fw-bold text-success"><i class="bi bi-search me-1"></i>Tìm nhanh nhân khẩu địa phương (Tự động điền)</label>
+                <label for="nhan_khau_search" class="form-label small fw-bold text-success"><i class="bi bi-search me-1"></i>Tìm nhanh nhân khẩu địa phương</label>
                 <input type="hidden" name="nhan_khau_id" id="nhan_khau_id" value="{{ old('nhan_khau_id', $record->nhan_khau_id ?? '') }}">
                 <input type="text" id="nhan_khau_search" list="nhan_khau_list" class="form-control" 
                        placeholder="Gõ tên hoặc số CCCD để chọn..." autocomplete="off" oninput="onNhanKhauSearchChange()">

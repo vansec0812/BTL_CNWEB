@@ -116,7 +116,6 @@
                     <tr>
                         <th style="width: 50px;" class="ps-3">STT</th>
                         <th>Họ tên</th>
-                        <th>CCCD/CMND</th>
                         <th>Năm sinh</th>
                         <th>Chức vụ</th>
                         <th>Tổ/đội</th>
@@ -129,8 +128,10 @@
                     @forelse($records as $index => $row)
                     <tr>
                         <td class="ps-3">{{ $index + 1 + ($records->currentPage() - 1) * $records->perPage() }}</td>
-                        <td class="fw-semibold">{{ $row->nhanKhau->ho_ten ?? '—' }}</td>
-                        <td>{{ $row->nhanKhau->cccd_cmnd ?? '—' }}</td>
+                        <td>
+                            <div class="fw-semibold text-dark">{{ $row->nhanKhau->ho_ten ?? '—' }}</div>
+                            <div class="small text-secondary">CCCD: {{ $row->nhanKhau->cccd_cmnd ?? 'Chưa cập nhật' }}</div>
+                        </td>
                         <td>{{ $row->nhanKhau?->ngay_sinh ? $row->nhanKhau->ngay_sinh->format('Y') : '—' }}</td>
                         <td>{{ $row->chuc_vu ?? 'Chiến sĩ' }}</td>
                         <td>{{ $row->don_vi ?? '—' }}</td>
@@ -159,7 +160,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center text-muted py-5">
+                        <td colspan="8" class="text-center text-muted py-5">
                             <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
                             Không có kết quả nào phù hợp.
                         </td>
