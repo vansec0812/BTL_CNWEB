@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Hệ thống, Tiện ích & Báo cáo')
-@section('page_title', 'Hệ thống, Tiện ích & Báo cáo')
+@section('title', 'Hệ thống & Tiện ích')
+@section('page_title', 'Hệ thống & Tiện ích')
 
 @section('content')
 {{-- Thống kê nhanh --}}
@@ -75,10 +75,6 @@
                     <li class="list-group-item d-flex align-items-center gap-2">
                         <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-funnel small"></i></span>
                         Bộ lọc động &amp; tìm kiếm
-                    </li>
-                    <li class="list-group-item d-flex align-items-center gap-2">
-                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-circle p-1"><i class="bi bi-gear small"></i></span>
-                        Cấu hình hệ thống
                     </li>
                 </ul>
             </div>

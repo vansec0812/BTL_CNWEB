@@ -22,17 +22,26 @@
     ];
 @endphp
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="fw-bold mb-1">Danh sách cán bộ</h4>
-        <p class="text-muted small mb-0">Quản lý thông tin cá nhân, chức vụ, vai trò và trạng thái hoạt động của các cán bộ xã.</p>
+<div class="mb-4">
+    <div class="small text-secondary mb-1">
+        <a href="{{ route('modules.show', $parentModule['slug']) }}" class="text-decoration-none">{{ $parentModule['title'] }}</a>
+        <span class="mx-1">/</span>
+        Tài khoản cán bộ
     </div>
-    @can('manage_users')
-        <a href="{{ route('users.create') }}" class="btn btn-success d-flex align-items-center gap-1" style="border-radius: 8px;">
-            <i class="bi bi-plus-lg"></i>
-            <span>Thêm cán bộ mới</span>
-        </a>
-    @endcan
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-person-badge me-2"></i>Danh sách cán bộ
+            </h2>
+            <p class="text-secondary mb-0">Quản lý thông tin cá nhân, chức vụ, vai trò và trạng thái hoạt động của các cán bộ xã.</p>
+        </div>
+        @can('manage_users')
+            <a href="{{ route('users.create') }}" class="btn btn-success d-flex align-items-center gap-1" style="border-radius: 8px;">
+                <i class="bi bi-plus-lg"></i>
+                <span>Thêm cán bộ mới</span>
+            </a>
+        @endcan
+    </div>
 </div>
 
 @if (session('status'))

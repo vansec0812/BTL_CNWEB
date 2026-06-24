@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAnNinhTratTuRequest;
+use App\Http\Requests\UpdateAnNinhTratTuRequest;
 use App\Models\AnNinhTratTu;
 use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Requests\StoreAnNinhTratTuRequest;
-use App\Http\Requests\UpdateAnNinhTratTuRequest;
 
 class AnNinhTratTuController extends Controller
 {
@@ -170,6 +169,7 @@ class AnNinhTratTuController extends Controller
             'trangThai' => AnNinhTratTu::TRANG_THAI,
         ];
     }
+
     private function stats(): array
     {
         $tongSo = AnNinhTratTu::count();

@@ -15,6 +15,13 @@
 @endphp
 
 <div class="mb-4">
+    <div class="small text-secondary mb-1">
+        <a href="{{ route('modules.show', $parentModule['slug']) }}" class="text-decoration-none">{{ $parentModule['title'] }}</a>
+        <span class="mx-1">/</span>
+        <a href="{{ route('users.index') }}" class="text-decoration-none">Tài khoản cán bộ</a>
+        <span class="mx-1">/</span>
+        Chỉnh sửa thông tin
+    </div>
     <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1" style="border-radius: 8px;">
         <i class="bi bi-arrow-left"></i> Quay lại danh sách
     </a>

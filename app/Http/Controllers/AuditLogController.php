@@ -64,7 +64,7 @@ class AuditLogController extends Controller
 
         $parentModule = [
             'slug' => 'he-thong-bao-cao',
-            'title' => 'Hệ thống, Tiện ích & Báo cáo',
+            'title' => 'Hệ thống & Tiện ích',
         ];
 
         if ($request->expectsJson() || $request->is('api/*')) {
@@ -91,7 +91,7 @@ class AuditLogController extends Controller
         $modules = ModuleRegistry::all();
         $parentModule = [
             'slug' => 'he-thong-bao-cao',
-            'title' => 'Hệ thống, Tiện ích & Báo cáo',
+            'title' => 'Hệ thống & Tiện ích',
         ];
 
         return view('he-thong.audit-logs.show', compact('auditLog', 'modules', 'parentModule'));

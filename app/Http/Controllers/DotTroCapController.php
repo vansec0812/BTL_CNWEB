@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDotTroCapRequest;
+use App\Http\Requests\UpdateDotTroCapRequest;
 use App\Models\BaoTroXaHoi;
 use App\Models\ChiTietCapPhatTroCap;
 use App\Models\DoiTuongChinhSach;
@@ -9,13 +11,9 @@ use App\Models\DotTroCap;
 use App\Models\HoKhau;
 use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Illuminate\View\View;
-use App\Http\Requests\StoreDotTroCapRequest;
-use App\Http\Requests\UpdateDotTroCapRequest;
 
 class DotTroCapController extends Controller
 {
@@ -331,6 +329,7 @@ class DotTroCapController extends Controller
                     'message' => 'Vui lòng chọn ít nhất một đối tượng để xác nhận.',
                 ], 422);
             }
+
             return back()->withErrors(['error' => 'Vui lòng chọn ít nhất một đối tượng để xác nhận.']);
         }
 
@@ -391,6 +390,7 @@ class DotTroCapController extends Controller
                     'message' => 'Đối tượng này đã có trong danh sách nhận của đợt trợ cấp này.',
                 ], 422);
             }
+
             return back()->withErrors(['error' => 'Đối tượng này đã có trong danh sách nhận của đợt trợ cấp này.']);
         }
 

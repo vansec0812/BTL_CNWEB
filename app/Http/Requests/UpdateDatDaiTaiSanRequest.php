@@ -20,7 +20,7 @@ class UpdateDatDaiTaiSanRequest extends FormRequest
             'ho_khau_id' => 'required|exists:ho_khau,id',
             'so_to_ban_do' => 'nullable|string|max:50',
             'so_thua_dat' => 'nullable|string|max:50',
-            'so_gcn_qsdd' => 'nullable|string|max:100|unique:dat_dai_tai_san,so_gcn_qsdd,' . $id,
+            'so_gcn_qsdd' => 'nullable|string|max:100|unique:dat_dai_tai_san,so_gcn_qsdd,'.$id,
             'loai_dat' => 'required|in:dat_tho_cu,dat_nong_nghiep,dat_lam_nghiep,dat_nuoi_trong_thuy_san,dat_kinh_doanh,khac',
             'dien_tich_m2' => 'required|numeric|min:0.01',
             'vi_tri_mo_ta' => 'nullable|string|max:500',

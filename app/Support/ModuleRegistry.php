@@ -114,7 +114,7 @@ class ModuleRegistry
             ],
             [
                 'slug' => 'he-thong-bao-cao',
-                'title' => 'Hệ thống, Tiện ích & Báo cáo',
+                'title' => 'Hệ thống & Tiện ích',
                 'short' => 'Hệ thống',
                 'owner' => 'Người 1',
                 'color' => 'dark',

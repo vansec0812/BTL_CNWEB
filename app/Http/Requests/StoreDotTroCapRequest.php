@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\DotTroCap;
 use App\Models\BaoTroXaHoi;
 use App\Models\DoiTuongChinhSach;
+use App\Models\DotTroCap;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

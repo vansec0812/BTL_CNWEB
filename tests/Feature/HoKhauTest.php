@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\NhanKhau;
 use App\Models\User;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\Authorize;
@@ -132,5 +133,47 @@ class HoKhauTest extends TestCase
         $response = $this->deleteJson(route('api.ho-khau.destroy', $hoKhauId));
         $response->assertOk();
         $this->assertSoftDeleted('ho_khau', ['id' => $hoKhauId]);
+    }
+
+    public function test_store_creates_hokhau_and_new_chuho(): void
+    {
+        $response = $this->postJson(route('api.ho-khau.store'), [
+            'so_so_ho_khau' => 'HK777777',
+            'ma_ho' => 'MH777777',
+            'dia_chi_thuong_tru' => 'Thôn 4, Xã Quốc Oai',
+            'thon_xom' => 'Thôn 4',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+            'ngay_lap_so' => '2026-06-01',
+
+            'create_new_chu_ho' => 1,
+            'chu_ho_ho_ten' => 'Nguyễn Thị A',
+            'chu_ho_cccd_cmnd' => '123456789012',
+            'chu_ho_ngay_sinh' => '1990-01-01',
+            'chu_ho_gioi_tinh' => 'nu',
+            'chu_ho_dan_toc' => 'Kinh',
+            'chu_ho_ton_giao' => 'Không',
+            'chu_ho_que_quan' => 'Hà Nội',
+            'chu_ho_trinh_do_hoc_van' => 'dai_hoc',
+            'chu_ho_tinh_trang_hon_nhan' => 'doc_than',
+        ]);
+
+        $response->assertCreated();
+
+        $this->assertDatabaseHas('nhan_khau', [
+            'ho_ten' => 'Nguyễn Thị A',
+            'cccd_cmnd' => '123456789012',
+            'gioi_tinh' => 'nu',
+            'la_chu_ho' => true,
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nhanKhau = NhanKhau::where('cccd_cmnd', '123456789012')->first();
+
+        $this->assertDatabaseHas('ho_khau', [
+            'so_so_ho_khau' => 'HK777777',
+            'chu_ho_nhan_khau_id' => $nhanKhau->id,
+            'so_thanh_vien' => 1,
+        ]);
     }
 }

@@ -13,12 +13,12 @@ class YTeNhanKhau extends Model
     protected $auditModule = 'y_te_nhan_khau';
 
     public const LOAI_BHYT = [
-        'bat_buoc'      => 'Bắt buộc (có BHXH)',
-        'tu_nguyen'     => 'Tự nguyện',
-        'ho_ngheo'      => 'Hộ nghèo (Nhà nước hỗ trợ)',
-        'chinh_sach'    => 'Chính sách (người có công)',
+        'bat_buoc' => 'Bắt buộc (có BHXH)',
+        'tu_nguyen' => 'Tự nguyện',
+        'ho_ngheo' => 'Hộ nghèo (Nhà nước hỗ trợ)',
+        'chinh_sach' => 'Chính sách (người có công)',
         'tre_em_duoi_6' => 'Trẻ em dưới 6 tuổi',
-        'khong_co'      => 'Chưa có thẻ BHYT',
+        'khong_co' => 'Chưa có thẻ BHYT',
     ];
 
     protected $table = 'y_te_nhan_khau';
@@ -28,10 +28,10 @@ class YTeNhanKhau extends Model
     protected function casts(): array
     {
         return [
-            'ngay_cap_the_bhyt'       => 'date',
-            'ngay_het_han_the_bhyt'   => 'date',
+            'ngay_cap_the_bhyt' => 'date',
+            'ngay_het_han_the_bhyt' => 'date',
             'hoan_thanh_tiem_chung_mo_rong' => 'boolean',
-            'lich_su_tiem_chung'      => 'array',
+            'lich_su_tiem_chung' => 'array',
         ];
     }
 

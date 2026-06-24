@@ -994,7 +994,6 @@
                                 ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
                                 ['title' => 'Dashboard & Biểu đồ', 'url' => route('he-thong.dashboard-bieu-do'), 'icon' => 'bi-graph-up', 'active' => request()->routeIs('he-thong.dashboard-bieu-do')],
                                 ['title' => 'Bộ lọc động & Tìm kiếm', 'url' => route('he-thong.loc-dong'), 'icon' => 'bi-funnel', 'active' => request()->routeIs('he-thong.loc-dong')],
-                                ['title' => 'Cấu hình hệ thống', 'disabled' => true, 'icon' => 'bi-gear'],
                             ]);
                         }
 

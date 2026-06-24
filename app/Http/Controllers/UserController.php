@@ -43,6 +43,7 @@ class UserController extends Controller
         $users = $query->paginate(10)->withQueryString();
         $roles = Role::all();
         $modules = ModuleRegistry::all();
+        $parentModule = ModuleRegistry::findBySlug('he-thong-bao-cao');
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -53,7 +54,7 @@ class UserController extends Controller
             ], 200);
         }
 
-        return view('he-thong.users.index', compact('users', 'roles', 'modules'));
+        return view('he-thong.users.index', compact('users', 'roles', 'modules', 'parentModule'));
     }
 
     /**
@@ -63,6 +64,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $modules = ModuleRegistry::all();
+        $parentModule = ModuleRegistry::findBySlug('he-thong-bao-cao');
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -74,7 +76,7 @@ class UserController extends Controller
             ], 200);
         }
 
-        return view('he-thong.users.create', compact('roles', 'modules'));
+        return view('he-thong.users.create', compact('roles', 'modules', 'parentModule'));
     }
 
     /**
@@ -120,6 +122,7 @@ class UserController extends Controller
         }
 
         $modules = ModuleRegistry::all();
+        $parentModule = ModuleRegistry::findBySlug('he-thong-bao-cao');
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -129,7 +132,7 @@ class UserController extends Controller
             ], 200);
         }
 
-        return view('he-thong.users.show', compact('user', 'modules'));
+        return view('he-thong.users.show', compact('user', 'modules', 'parentModule'));
     }
 
     /**
@@ -139,6 +142,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $modules = ModuleRegistry::all();
+        $parentModule = ModuleRegistry::findBySlug('he-thong-bao-cao');
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -151,7 +155,7 @@ class UserController extends Controller
             ], 200);
         }
 
-        return view('he-thong.users.edit', compact('user', 'roles', 'modules'));
+        return view('he-thong.users.edit', compact('user', 'roles', 'modules', 'parentModule'));
     }
 
     /**

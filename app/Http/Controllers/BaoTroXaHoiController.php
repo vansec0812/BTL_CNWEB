@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBaoTroXaHoiRequest;
+use App\Http\Requests\UpdateBaoTroXaHoiRequest;
 use App\Models\BaoTroXaHoi;
 use App\Models\HoKhau;
 use App\Models\NhanKhau;
 use App\Support\ModuleRegistry;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
-use App\Http\Requests\StoreBaoTroXaHoiRequest;
-use App\Http\Requests\UpdateBaoTroXaHoiRequest;
 
 class BaoTroXaHoiController extends Controller
 {

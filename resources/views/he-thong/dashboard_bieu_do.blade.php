@@ -40,12 +40,18 @@
 
 <div class="mb-4">
     <div class="small text-secondary mb-1">
-        <a href="{{ route('modules.show', 'he-thong-bao-cao') }}" class="text-decoration-none text-muted">Hệ thống & Báo cáo</a>
+        <a href="{{ route('modules.show', $parentModule['slug']) }}" class="text-decoration-none">{{ $parentModule['title'] }}</a>
         <span class="mx-1">/</span>
-        <span class="text-dark">Dashboard & Biểu đồ</span>
+        Dashboard & Biểu đồ
     </div>
-    <h2 class="fw-bold mb-1">Dashboard & Biểu đồ trực quan</h2>
-    <p class="text-secondary mb-0">Thống kê cơ cấu dân cư, tỷ lệ hộ nghèo và hiện trạng lao động trên địa bàn xã Quốc Oai.</p>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-graph-up me-2"></i>Dashboard & Biểu đồ trực quan
+            </h2>
+            <p class="text-secondary mb-0">Thống kê cơ cấu dân cư, tỷ lệ hộ nghèo và hiện trạng lao động trên địa bàn xã Quốc Oai.</p>
+        </div>
+    </div>
 </div>
 
 <!-- Quick Statistics Row -->

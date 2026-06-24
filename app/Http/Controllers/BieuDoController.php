@@ -166,8 +166,11 @@ class BieuDoController extends Controller
             ], 200);
         }
 
+        $parentModule = ModuleRegistry::findBySlug('he-thong-bao-cao');
+
         return view('he-thong.dashboard_bieu_do', compact(
             'modules',
+            'parentModule',
             'pyramidLabels',
             'pyramidMale',
             'pyramidFemale',

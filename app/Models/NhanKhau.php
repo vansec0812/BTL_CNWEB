@@ -12,6 +12,51 @@ class NhanKhau extends Model
 {
     use AuditableTrait, SoftDeletes;
 
+    protected static function booted()
+    {
+        static::created(function ($nhanKhau) {
+            if ($nhanKhau->ho_khau_id) {
+                $nhanKhau->updateHoKhauMemberCount($nhanKhau->ho_khau_id);
+            }
+        });
+
+        static::updated(function ($nhanKhau) {
+            if ($nhanKhau->wasChanged('ho_khau_id')) {
+                if ($nhanKhau->getOriginal('ho_khau_id')) {
+                    $nhanKhau->updateHoKhauMemberCount($nhanKhau->getOriginal('ho_khau_id'));
+                }
+                if ($nhanKhau->ho_khau_id) {
+                    $nhanKhau->updateHoKhauMemberCount($nhanKhau->ho_khau_id);
+                }
+            }
+            if ($nhanKhau->wasChanged('trang_thai')) {
+                if ($nhanKhau->ho_khau_id) {
+                    $nhanKhau->updateHoKhauMemberCount($nhanKhau->ho_khau_id);
+                }
+            }
+        });
+
+        static::deleted(function ($nhanKhau) {
+            if ($nhanKhau->ho_khau_id) {
+                $nhanKhau->updateHoKhauMemberCount($nhanKhau->ho_khau_id);
+            }
+        });
+
+        static::restored(function ($nhanKhau) {
+            if ($nhanKhau->ho_khau_id) {
+                $nhanKhau->updateHoKhauMemberCount($nhanKhau->ho_khau_id);
+            }
+        });
+    }
+
+    private function updateHoKhauMemberCount($hoKhauId)
+    {
+        $count = static::where('ho_khau_id', $hoKhauId)
+            ->where('trang_thai', 'hoat_dong')
+            ->count();
+        HoKhau::where('id', $hoKhauId)->update(['so_thanh_vien' => $count]);
+    }
+
     protected $auditModule = 'nhan_khau';
 
     public const GIOI_TINH = [

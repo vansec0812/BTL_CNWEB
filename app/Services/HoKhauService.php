@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\HoKhau;
 use App\Models\NhanKhau;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class HoKhauService
 {
@@ -44,23 +46,63 @@ class HoKhauService
      */
     public function createHoKhau(array $data): HoKhau
     {
-        $hoKhau = HoKhau::create($data);
+        return DB::transaction(function () use ($data) {
+            $createNewChuHo = ! empty($data['create_new_chu_ho']);
 
-        if ($hoKhau->chu_ho_nhan_khau_id) {
-            // Update the selected citizen to be head of household and belong to this household
-            NhanKhau::where('id', $hoKhau->chu_ho_nhan_khau_id)->update([
-                'la_chu_ho' => true,
-                'quan_he_chu_ho' => 'Chủ hộ',
-                'ho_khau_id' => $hoKhau->id,
+            $hoKhauData = Arr::except($data, [
+                'create_new_chu_ho',
+                'chu_ho_ho_ten', 'chu_ho_cccd_cmnd', 'chu_ho_ngay_sinh', 'chu_ho_gioi_tinh',
+                'chu_ho_dan_toc', 'chu_ho_ton_giao', 'chu_ho_que_quan', 'chu_ho_noi_sinh',
+                'chu_ho_trinh_do_hoc_van', 'chu_ho_tinh_trang_hon_nhan',
             ]);
 
-            // Unset other members
-            NhanKhau::where('ho_khau_id', $hoKhau->id)
-                ->where('id', '!=', $hoKhau->chu_ho_nhan_khau_id)
-                ->update(['la_chu_ho' => false, 'quan_he_chu_ho' => 'Thành viên']);
-        }
+            $hoKhau = HoKhau::create($hoKhauData);
 
-        return $hoKhau;
+            if ($createNewChuHo) {
+                // Create the new resident as head of household
+                $nhanKhau = NhanKhau::create([
+                    'ho_khau_id' => $hoKhau->id,
+                    'ho_ten' => $data['chu_ho_ho_ten'],
+                    'cccd_cmnd' => $data['chu_ho_cccd_cmnd'] ?? null,
+                    'ngay_sinh' => $data['chu_ho_ngay_sinh'],
+                    'gioi_tinh' => $data['chu_ho_gioi_tinh'],
+                    'dan_toc' => $data['chu_ho_dan_toc'] ?? 'Kinh',
+                    'ton_giao' => $data['chu_ho_ton_giao'] ?? 'Không',
+                    'que_quan' => $data['chu_ho_que_quan'],
+                    'noi_sinh' => $data['chu_ho_noi_sinh'] ?? null,
+                    'trinh_do_hoc_van' => $data['chu_ho_trinh_do_hoc_van'],
+                    'tinh_trang_hon_nhan' => $data['chu_ho_tinh_trang_hon_nhan'],
+                    'quan_he_chu_ho' => 'Chủ hộ',
+                    'la_chu_ho' => true,
+                    'trang_thai' => 'hoat_dong',
+                ]);
+
+                // Update the household with the new owner's ID
+                $hoKhau->update([
+                    'chu_ho_nhan_khau_id' => $nhanKhau->id,
+                ]);
+            } elseif ($hoKhau->chu_ho_nhan_khau_id) {
+                // Update the selected citizen to be head of household and belong to this household
+                NhanKhau::where('id', $hoKhau->chu_ho_nhan_khau_id)->update([
+                    'la_chu_ho' => true,
+                    'quan_he_chu_ho' => 'Chủ hộ',
+                    'ho_khau_id' => $hoKhau->id,
+                ]);
+
+                // Unset other members
+                NhanKhau::where('ho_khau_id', $hoKhau->id)
+                    ->where('id', '!=', $hoKhau->chu_ho_nhan_khau_id)
+                    ->update(['la_chu_ho' => false, 'quan_he_chu_ho' => 'Thành viên']);
+            }
+
+            // Sync/update so_thanh_vien for safety
+            $count = NhanKhau::where('ho_khau_id', $hoKhau->id)
+                ->where('trang_thai', 'hoat_dong')
+                ->count();
+            $hoKhau->update(['so_thanh_vien' => $count]);
+
+            return $hoKhau;
+        });
     }
 
     /**
@@ -93,6 +135,12 @@ class HoKhauService
                 ]);
             }
         }
+
+        // Sync/update so_thanh_vien
+        $count = NhanKhau::where('ho_khau_id', $hoKhau->id)
+            ->where('trang_thai', 'hoat_dong')
+            ->count();
+        $hoKhau->update(['so_thanh_vien' => $count]);
 
         return $hoKhau;
     }

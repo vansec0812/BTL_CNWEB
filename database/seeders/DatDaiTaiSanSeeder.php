@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\NhanKhau;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +12,7 @@ class DatDaiTaiSanSeeder extends Seeder
     {
         $now = now();
         // Lấy danh sách chủ hộ của mỗi hộ khẩu
-        $chuHos = \App\Models\NhanKhau::where('la_chu_ho', true)->get()->keyBy('ho_khau_id');
+        $chuHos = NhanKhau::where('la_chu_ho', true)->get()->keyBy('ho_khau_id');
 
         // Đảm bảo mỗi record có đủ cùng set fields (kể cả ngay_het_han_gcn = null)
         $records = [

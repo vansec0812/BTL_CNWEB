@@ -69,6 +69,7 @@ class AnNinhTratTu extends Model
         if ($this->so_tien_phat === null) {
             return '—';
         }
-        return number_format($this->so_tien_phat, 0, ',', '.') . ' VNĐ';
+
+        return number_format($this->so_tien_phat, 0, ',', '.').' VNĐ';
     }
 }

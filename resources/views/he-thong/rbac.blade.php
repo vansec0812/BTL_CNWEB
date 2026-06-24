@@ -41,12 +41,28 @@
     $isAdmin = auth()->user()->hasRole('admin');
 @endphp
 
+<div class="mb-4">
+    <div class="small text-secondary mb-1">
+        <a href="{{ route('modules.show', $parentModule['slug']) }}" class="text-decoration-none">{{ $parentModule['title'] }}</a>
+        <span class="mx-1">/</span>
+        Phân quyền (RBAC)
+    </div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-shield-lock me-2"></i>Ma trận phân quyền (RBAC)
+            </h2>
+            <p class="text-secondary mb-0">Thiết lập mối quan hệ giữa các Vai trò (Roles) và Quyền hạn (Permissions) trong hệ thống.</p>
+        </div>
+    </div>
+</div>
+
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-body p-4">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div>
-                <h4 class="fw-bold mb-1">Ma trận phân quyền (RBAC Matrix)</h4>
-                <p class="text-muted small mb-0">Thiết lập mối quan hệ giữa các Vai trò (Roles) và Quyền hạn (Permissions) trong hệ thống.</p>
+                <h5 class="fw-bold mb-1">Trạng thái cấu hình</h5>
+                <p class="text-muted small mb-0">Chỉ Admin mới có quyền thay đổi ma trận phân quyền.</p>
             </div>
             <div>
                 @if($isAdmin)
