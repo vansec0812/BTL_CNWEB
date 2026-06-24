@@ -6,51 +6,44 @@
     <title>Đăng nhập - Hệ thống quản lý hộ dân</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-green: #17683a;
-            --brand-green-2: #2f8f58;
-            --brand-blue: #2d7fa9;
-            --surface: rgba(255, 255, 255, 0.9);
-            --line: rgba(28, 55, 45, 0.12);
-            --text: #22352d;
-        }
-
-        * {
-            box-sizing: border-box;
+            --admin-green: #0f5132;
+            --admin-green-soft: #e9f5ef;
+            --admin-neutral: #667085;
+            --admin-border: #d0d5dd;
+            --admin-bg: #f4f6f3;
+            --admin-danger: #b42318;
+            --admin-danger-soft: #fef3f2;
         }
 
         body {
             min-height: 100vh;
             margin: 0;
-            font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--text);
-            background:
-                linear-gradient(135deg, rgba(23, 104, 58, 0.94), rgba(45, 127, 169, 0.92)),
-                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 32%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #24352d;
+            background: var(--admin-bg);
             display: grid;
             place-items: center;
             padding: 24px;
         }
 
         .login-shell {
-            width: min(960px, 100%);
+            width: min(980px, 100%);
             display: grid;
-            grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
-            background: var(--surface);
-            border: 1px solid rgba(255, 255, 255, 0.48);
-            border-radius: 22px;
-            box-shadow: 0 28px 70px rgba(18, 54, 61, 0.28);
+            grid-template-columns: minmax(280px, .9fr) minmax(320px, 1.1fr);
+            background: #fff;
+            border: 1px solid rgba(15, 81, 50, .12);
+            border-radius: 8px;
+            box-shadow: 0 16px 40px rgba(20, 64, 45, .12);
             overflow: hidden;
-            backdrop-filter: blur(18px);
         }
 
         .brand-panel {
-            min-height: 520px;
-            padding: 52px 44px;
-            background: rgba(248, 252, 250, 0.72);
-            border-right: 1px solid var(--line);
+            min-height: 500px;
+            padding: 44px;
+            background: linear-gradient(135deg, #0f5132, #146c43);
+            color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -58,27 +51,26 @@
         }
 
         .brand-logo {
-            width: 76px;
-            height: 76px;
-            border-radius: 22px;
-            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-2));
-            color: #fff;
+            width: 54px;
+            height: 54px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .28);
             display: grid;
             place-items: center;
-            font-size: 2.1rem;
+            font-size: 1.35rem;
             font-weight: 800;
-            box-shadow: 0 16px 34px rgba(23, 104, 58, 0.24);
         }
 
         .brand-title {
-            font-size: clamp(1.6rem, 2vw, 2rem);
+            font-size: clamp(1.55rem, 2vw, 1.95rem);
             font-weight: 800;
             margin: 24px 0 10px;
         }
 
         .brand-copy {
             max-width: 340px;
-            color: #617169;
+            color: rgba(255, 255, 255, .78);
             line-height: 1.65;
             margin: 0;
         }
@@ -86,7 +78,7 @@
         .brand-meta {
             display: grid;
             gap: 12px;
-            color: #4f6259;
+            color: rgba(255, 255, 255, .84);
             font-size: 0.92rem;
         }
 
@@ -97,12 +89,12 @@
         }
 
         .brand-meta i {
-            color: var(--brand-green);
+            color: #fff;
             font-size: 1rem;
         }
 
         .form-panel {
-            padding: 56px 52px;
+            padding: 48px 52px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -113,24 +105,25 @@
             align-items: center;
             gap: 8px;
             width: fit-content;
-            padding: 7px 12px;
+            padding: 7px 11px;
             border-radius: 999px;
-            background: rgba(23, 104, 58, 0.08);
-            color: var(--brand-green);
+            background: var(--admin-green-soft);
+            color: var(--admin-green);
             font-size: 0.82rem;
             font-weight: 700;
             margin-bottom: 20px;
         }
 
         h1 {
-            font-size: clamp(1.9rem, 3vw, 2.45rem);
+            color: #1f352b;
+            font-size: clamp(1.75rem, 3vw, 2.2rem);
             font-weight: 800;
             margin: 0 0 10px;
         }
 
         .form-subtitle {
-            color: #68776f;
-            margin-bottom: 34px;
+            color: var(--admin-neutral);
+            margin-bottom: 30px;
             line-height: 1.6;
         }
 
@@ -140,17 +133,16 @@
         }
 
         .input-group {
-            border: 1.5px solid var(--line);
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.72);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            border: 1px solid #d7ded9;
+            border-radius: 8px;
+            background: #fff;
+            transition: border-color .2s ease, box-shadow .2s ease;
             overflow: hidden;
         }
 
         .input-group:focus-within {
-            border-color: rgba(47, 143, 88, 0.9);
-            box-shadow: 0 0 0 4px rgba(47, 143, 88, 0.13);
-            background: #fff;
+            border-color: rgba(15, 81, 50, .55);
+            box-shadow: 0 0 0 .2rem rgba(15, 81, 50, .10);
         }
 
         .input-group-text,
@@ -166,9 +158,9 @@
         }
 
         .form-control {
-            min-height: 52px;
+            min-height: 44px;
             padding: 12px 16px;
-            color: var(--text);
+            color: #24352d;
         }
 
         .form-control:focus {
@@ -177,25 +169,24 @@
         }
 
         .btn-submit {
-            min-height: 54px;
-            border: 0;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--brand-green), var(--brand-green-2));
+            min-height: 46px;
+            border: 1px solid var(--admin-green);
+            border-radius: 8px;
+            background: var(--admin-green);
             color: #fff;
-            font-weight: 800;
-            box-shadow: 0 16px 28px rgba(23, 104, 58, 0.22);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: 750;
+            transition: background .2s ease, border-color .2s ease;
         }
 
         .btn-submit:hover,
         .btn-submit:focus {
             color: #fff;
-            transform: translateY(-1px);
-            box-shadow: 0 20px 34px rgba(23, 104, 58, 0.28);
+            background: #0b3f27;
+            border-color: #0b3f27;
         }
 
         .alert {
-            border-radius: 14px;
+            border-radius: 8px;
         }
 
         @media (max-width: 860px) {
@@ -211,16 +202,13 @@
             .brand-panel {
                 min-height: auto;
                 padding: 34px 28px;
-                border-right: 0;
-                border-bottom: 1px solid var(--line);
                 gap: 20px;
             }
 
             .brand-logo {
-                width: 62px;
-                height: 62px;
-                border-radius: 18px;
-                font-size: 1.7rem;
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
             }
 
             .brand-title {
