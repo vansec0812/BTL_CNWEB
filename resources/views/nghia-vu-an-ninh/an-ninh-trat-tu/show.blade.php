@@ -100,13 +100,6 @@
                                 <span class="badge bg-{{ $statusColor }} px-3 py-2 fs-7">{{ $record->trangThaiLabel() }}</span>
                             </td>
                         </tr>
-                        <tr class="border-bottom">
-                            <td class="text-secondary fw-semibold py-3">Lịch sử hệ thống</td>
-                            <td class="py-3 text-muted small">
-                                Ngày tạo: {{ $record->created_at ? $record->created_at->format('d/m/Y H:i') : '—' }}<br>
-                                Cập nhật lần cuối: {{ $record->updated_at ? $record->updated_at->format('d/m/Y H:i') : '—' }}
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -154,8 +147,8 @@
                                 <td class="py-2">{{ $record->nhanKhau->hoKhau->thon_xom ?? '—' }}</td>
                             </tr>
                             <tr>
-                                <td class="text-secondary fw-semibold py-2">Số hộ khẩu</td>
-                                <td class="py-2">{{ $record->nhanKhau->hoKhau->ma_ho_khau ?? '—' }}</td>
+                                <td class="text-secondary fw-semibold py-2">Mã hộ</td>
+                                <td class="py-2">{{ $record->nhanKhau->hoKhau->ma_ho ?? '—' }}</td>
                             </tr>
                         </tbody>
                     </table>
