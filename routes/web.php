@@ -395,25 +395,29 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->names('api.nhan-khau');
         });
 
-        Route::apiResource('ho-tich/ho-khau', HoKhauController::class)
-            ->only(['index', 'show'])
-            ->parameters(['ho-khau' => 'hoKhau'])
-            ->names('api.ho-khau');
+        Route::middleware('can:view_ho_khau')->group(function () {
+            Route::apiResource('ho-tich/ho-khau', HoKhauController::class)
+                ->only(['index', 'show'])
+                ->parameters(['ho-khau' => 'hoKhau'])
+                ->names('api.ho-khau');
 
-        Route::apiResource('ho-tich/nhan-khau', NhanKhauController::class)
-            ->only(['index', 'show'])
-            ->parameters(['nhan-khau' => 'nhanKhau'])
-            ->names('api.nhan-khau');
+            Route::apiResource('ho-tich/bien-dong', BienDongHoKhauController::class)
+                ->only(['index', 'show'])
+                ->parameters(['bien-dong' => 'bienDong'])
+                ->names('api.bien-dong');
 
-        Route::apiResource('ho-tich/bien-dong', BienDongHoKhauController::class)
-            ->only(['index', 'show'])
-            ->parameters(['bien-dong' => 'bienDong'])
-            ->names('api.bien-dong');
+            Route::apiResource('ho-tich/tam-tru', TamTruTamVangController::class)
+                ->only(['index', 'show'])
+                ->parameters(['tam-tru' => 'tamTruTamVang'])
+                ->names('api.tam-tru');
+        });
 
-        Route::apiResource('ho-tich/tam-tru', TamTruTamVangController::class)
-            ->only(['index', 'show'])
-            ->parameters(['tam-tru' => 'tamTruTamVang'])
-            ->names('api.tam-tru');
+        Route::middleware('can:view_nhan_khau')->group(function () {
+            Route::apiResource('ho-tich/nhan-khau', NhanKhauController::class)
+                ->only(['index', 'show'])
+                ->parameters(['nhan-khau' => 'nhanKhau'])
+                ->names('api.nhan-khau');
+        });
 
         // API cho An sinh xã hội
         Route::middleware('can:manage_an_sinh')->group(function () {
@@ -443,25 +447,27 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->names('api.y-te-nhan-khau');
         });
 
-        Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
-            ->only(['index', 'show'])
-            ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
-            ->names('api.doi-tuong-chinh-sach');
+        Route::middleware('can:view_an_sinh')->group(function () {
+            Route::apiResource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+                ->only(['index', 'show'])
+                ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+                ->names('api.doi-tuong-chinh-sach');
 
-        Route::apiResource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
-            ->only(['index', 'show'])
-            ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
-            ->names('api.bao-tro-xa-hoi');
+            Route::apiResource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
+                ->only(['index', 'show'])
+                ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
+                ->names('api.bao-tro-xa-hoi');
 
-        Route::apiResource('an-sinh/dot-tro-cap', DotTroCapController::class)
-            ->only(['index', 'show'])
-            ->parameters(['dot-tro-cap' => 'dotTroCap'])
-            ->names('api.dot-tro-cap');
+            Route::apiResource('an-sinh/dot-tro-cap', DotTroCapController::class)
+                ->only(['index', 'show'])
+                ->parameters(['dot-tro-cap' => 'dotTroCap'])
+                ->names('api.dot-tro-cap');
 
-        Route::apiResource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
-            ->only(['index', 'show'])
-            ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
-            ->names('api.y-te-nhan-khau');
+            Route::apiResource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
+                ->only(['index', 'show'])
+                ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
+                ->names('api.y-te-nhan-khau');
+        });
 
         // API cho Quản lý Cán bộ (Users)
         Route::middleware('can:manage_users')->group(function () {
@@ -487,15 +493,17 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->names('api.an-ninh-trat-tu');
         });
 
-        Route::apiResource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
-            ->only(['index', 'show'])
-            ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
-            ->names('api.dan-quan-tu-ve');
+        Route::middleware('can:view_nghia_vu')->group(function () {
+            Route::apiResource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
+                ->only(['index', 'show'])
+                ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
+                ->names('api.dan-quan-tu-ve');
 
-        Route::apiResource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
-            ->only(['index', 'show'])
-            ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
-            ->names('api.an-ninh-trat-tu');
+            Route::apiResource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
+                ->only(['index', 'show'])
+                ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
+                ->names('api.an-ninh-trat-tu');
+        });
 
         // API cho Kinh tế, Lao động & Việc làm
         Route::middleware('can:manage_lao_dong')->group(function () {
@@ -537,25 +545,27 @@ Route::middleware('auth')->group(function () use ($modules) {
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
-    Route::resource('nghia-vu-an-ninh/nghia-vu-quan-su', NghiaVuQuanSuController::class)
-        ->only(['index', 'show'])
-        ->parameters(['nghia-vu-quan-su' => 'nghiaVuQuanSu'])
-        ->names('nghia-vu-quan-su');
+    Route::middleware('can:view_nghia_vu')->group(function () {
+        Route::resource('nghia-vu-an-ninh/nghia-vu-quan-su', NghiaVuQuanSuController::class)
+            ->only(['index', 'show'])
+            ->parameters(['nghia-vu-quan-su' => 'nghiaVuQuanSu'])
+            ->names('nghia-vu-quan-su');
 
-    Route::resource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
-        ->only(['index', 'show'])
-        ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
-        ->names('dan-quan-tu-ve');
+        Route::resource('nghia-vu-an-ninh/dan-quan-tu-ve', DanQuanTuVeController::class)
+            ->only(['index', 'show'])
+            ->parameters(['dan-quan-tu-ve' => 'danQuanTuVe'])
+            ->names('dan-quan-tu-ve');
 
-    Route::resource('nghia-vu-an-ninh/dan-quan-hoat-dong', DanQuanHoatDongController::class)
-        ->only(['index', 'show'])
-        ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
-        ->names('dan-quan-hoat-dong');
+        Route::resource('nghia-vu-an-ninh/dan-quan-hoat-dong', DanQuanHoatDongController::class)
+            ->only(['index', 'show'])
+            ->parameters(['dan-quan-hoat-dong' => 'danQuanHoatDong'])
+            ->names('dan-quan-hoat-dong');
 
-    Route::resource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
-        ->only(['index', 'show'])
-        ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
-        ->names('an-ninh-trat-tu');
+        Route::resource('nghia-vu-an-ninh/an-ninh-trat-tu', AnNinhTratTuController::class)
+            ->only(['index', 'show'])
+            ->parameters(['an-ninh-trat-tu' => 'anNinhTratTu'])
+            ->names('an-ninh-trat-tu');
+    });
 
     // API phục vụ autocomplete
     Route::get('api/nghia-vu-quan-su/eligible-citizens', [NghiaVuQuanSuController::class, 'eligibleCitizens'])
@@ -592,25 +602,29 @@ Route::middleware('auth')->group(function () use ($modules) {
             ->names('nhan-khau');
     });
 
-    Route::resource('ho-tich/ho-khau', HoKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['ho-khau' => 'hoKhau'])
-        ->names('ho-khau');
+    Route::middleware('can:view_ho_khau')->group(function () {
+        Route::resource('ho-tich/ho-khau', HoKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['ho-khau' => 'hoKhau'])
+            ->names('ho-khau');
 
-    Route::resource('ho-tich/nhan-khau', NhanKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['nhan-khau' => 'nhanKhau'])
-        ->names('nhan-khau');
+        Route::resource('ho-tich/bien-dong', BienDongHoKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['bien-dong' => 'bienDong'])
+            ->names('bien-dong');
 
-    Route::resource('ho-tich/bien-dong', BienDongHoKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['bien-dong' => 'bienDong'])
-        ->names('bien-dong');
+        Route::resource('ho-tich/tam-tru', TamTruTamVangController::class)
+            ->only(['index', 'show'])
+            ->parameters(['tam-tru' => 'tamTruTamVang'])
+            ->names('tam-tru');
+    });
 
-    Route::resource('ho-tich/tam-tru', TamTruTamVangController::class)
-        ->only(['index', 'show'])
-        ->parameters(['tam-tru' => 'tamTruTamVang'])
-        ->names('tam-tru');
+    Route::middleware('can:view_nhan_khau')->group(function () {
+        Route::resource('ho-tich/nhan-khau', NhanKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['nhan-khau' => 'nhanKhau'])
+            ->names('nhan-khau');
+    });
 
     // --- Phân hệ An sinh xã hội (Đối tượng chính sách, Bảo trợ xã hội, Đợt trợ cấp, Y tế) ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động và Admin được làm)
@@ -642,25 +656,27 @@ Route::middleware('auth')->group(function () use ($modules) {
     });
 
     // Đọc danh sách và chi tiết (Tất cả cán bộ được xem chéo)
-    Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
-        ->only(['index', 'show'])
-        ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
-        ->names('doi-tuong-chinh-sach');
+    Route::middleware('can:view_an_sinh')->group(function () {
+        Route::resource('an-sinh/doi-tuong-chinh-sach', DoiTuongChinhSachController::class)
+            ->only(['index', 'show'])
+            ->parameters(['doi-tuong-chinh-sach' => 'doiTuongChinhSach'])
+            ->names('doi-tuong-chinh-sach');
 
-    Route::resource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
-        ->only(['index', 'show'])
-        ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
-        ->names('bao-tro-xa-hoi');
+        Route::resource('an-sinh/bao-tro-xa-hoi', BaoTroXaHoiController::class)
+            ->only(['index', 'show'])
+            ->parameters(['bao-tro-xa-hoi' => 'baoTroXaHoi'])
+            ->names('bao-tro-xa-hoi');
 
-    Route::resource('an-sinh/dot-tro-cap', DotTroCapController::class)
-        ->only(['index', 'show'])
-        ->parameters(['dot-tro-cap' => 'dotTroCap'])
-        ->names('dot-tro-cap');
+        Route::resource('an-sinh/dot-tro-cap', DotTroCapController::class)
+            ->only(['index', 'show'])
+            ->parameters(['dot-tro-cap' => 'dotTroCap'])
+            ->names('dot-tro-cap');
 
-    Route::resource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
-        ->only(['index', 'show'])
-        ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
-        ->names('y-te-nhan-khau');
+        Route::resource('an-sinh/y-te-nhan-khau', YTeNhanKhauController::class)
+            ->only(['index', 'show'])
+            ->parameters(['y-te-nhan-khau' => 'yTeNhanKhau'])
+            ->names('y-te-nhan-khau');
+    });
 
     // --- Phân hệ Kinh tế, Lao động & Việc làm ---
     // Nghiệp vụ thay đổi/thao tác (Chỉ cán bộ Lao động/Admin được làm)
@@ -766,7 +782,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         ];
 
         return view('he-thong.rbac', compact('modules', 'roles', 'permissions', 'groupedPermissions', 'parentModule'));
-    })->name('he-thong.rbac');
+    })->middleware('can:manage_users')->name('he-thong.rbac');
 
     Route::post('/he-thong/phan-quyen/toggle', function (Request $request) {
         if (! auth()->user()->hasRole('admin')) {
@@ -797,7 +813,7 @@ Route::middleware('auth')->group(function () use ($modules) {
             'active' => $active,
             'message' => 'Cập nhật quyền thành công.',
         ]);
-    })->name('he-thong.rbac.toggle');
+    })->middleware('can:manage_users')->name('he-thong.rbac.toggle');
 
     // --- Quản lý Cán bộ ---
     Route::middleware('can:manage_users')->group(function () {

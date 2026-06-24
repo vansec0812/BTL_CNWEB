@@ -5,6 +5,9 @@
 
 @section('content')
 
+@php
+    $canManageDatDai = auth()->user()->can('manage_dat_dai');
+@endphp
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
@@ -22,7 +25,7 @@
         <p class="text-secondary mb-0">Quản lý thuế đất, phí vệ sinh, quỹ khuyến học và các khoản thu khác theo năm.</p>
     </div>
     <div class="d-flex gap-2">
-        @can('manage_dat_dai')
+        @if($canManageDatDai)
         <form method="POST" action="{{ route('thue-va-phi.generate') }}" data-confirm="Bạn có muốn tự động quét và tính Thuế sử dụng đất phi nông nghiệp cho tất cả hộ dân năm nay không?" data-confirm-title="Xác nhận tính thuế" data-confirm-button="Bắt đầu quét" data-confirm-type="warning">
             @csrf
             <button class="btn btn-warning" type="submit">
@@ -32,7 +35,7 @@
         <a href="{{ route('thue-va-phi.create') }}" class="btn btn-success">
             <i class="bi bi-plus-lg me-1"></i> Tạo khoản thu mới
         </a>
-        @endcan
+        @endif
     </div>
 </div>
 
@@ -105,9 +108,9 @@
                 <thead class="table-light">
                     <tr>
                         <th style="width: 50px;">STT</th>
-                        <th>Năm</th>
-                        <th>Loại khoản thu</th>
                         <th>Hộ gia đình</th>
+                        <th>Loại khoản thu</th>
+                        <th>Năm</th>
                         <th class="text-end">Phải nộp</th>
                         <th class="text-end">Đã nộp</th>
                         <th class="text-center">Trạng thái</th>
@@ -118,13 +121,6 @@
                     @forelse ($records as $record)
                         <tr>
                             <td>{{ $loop->iteration + ($records->firstItem() - 1) }}</td>
-                            <td><span class="badge bg-secondary">{{ $record->nam }}</span></td>
-                            <td>
-                                <div class="fw-semibold text-primary">{{ $record->loaiKhoanThuLabel() }}</div>
-                                @if($record->ghi_chu)
-                                    <div class="small text-muted text-truncate" style="max-width: 200px;" title="{{ $record->ghi_chu }}">{{ $record->ghi_chu }}</div>
-                                @endif
-                            </td>
                             <td>
                                 @if($record->hoKhau && $record->hoKhau->chuHo)
                                     <div class="fw-semibold">{{ $record->hoKhau->chuHo->ho_ten }}</div>
@@ -133,6 +129,13 @@
                                     <span class="text-muted small">Chưa xác định</span>
                                 @endif
                             </td>
+                            <td>
+                                <div class="fw-semibold text-primary">{{ $record->loaiKhoanThuLabel() }}</div>
+                                @if($record->ghi_chu)
+                                    <div class="small text-muted text-truncate" style="max-width: 200px;" title="{{ $record->ghi_chu }}">{{ $record->ghi_chu }}</div>
+                                @endif
+                            </td>
+                            <td><span class="badge bg-secondary">{{ $record->nam }}</span></td>
                             <td class="text-end fw-bold">{{ number_format($record->so_tien_phai_nop) }} ₫</td>
                             <td class="text-end fw-bold text-success">{{ number_format($record->so_tien_da_nop) }} ₫</td>
                             <td class="text-center">
@@ -149,7 +152,10 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-1">
-                                    @can('manage_dat_dai')
+                                    <a href="{{ route('thue-va-phi.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @if($canManageDatDai)
                                     <a href="{{ route('thue-va-phi.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </a>
@@ -160,7 +166,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                    @endcan
+                                    @endif
                                 </div>
                             </td>
                         </tr>

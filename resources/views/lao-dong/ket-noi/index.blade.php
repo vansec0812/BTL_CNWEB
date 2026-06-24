@@ -143,6 +143,9 @@
                         </td>
                         <td class="text-end">
                             <div class="d-flex justify-content-end gap-1">
+                                <a href="{{ route('ket-noi.show', $kn->id) }}" class="btn btn-sm btn-action-view" title="Xem">
+                                    <i class="bi bi-eye"></i>
+                                </a>
                                 @can('manage_lao_dong')
                                 <a href="{{ route('ket-noi.edit', $kn->id) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                     <i class="bi bi-pencil"></i>

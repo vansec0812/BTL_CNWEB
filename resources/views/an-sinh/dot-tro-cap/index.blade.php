@@ -31,8 +31,8 @@
     <div class="alert alert-success border-0 shadow-sm">{{ session('status') }}</div>
 @endif
 
-<div class="row g-3 mb-4">
-    <div class="col-md-2.4 col-sm-6 col-lg-3">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-5 g-3 mb-4">
+    <div class="col">
         <div class="card stat-card h-100">
             <div class="card-body">
                 <p class="text-muted small mb-1">Tổng số đợt</p>
@@ -40,7 +40,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2.4 col-sm-6 col-lg-3">
+    <div class="col">
         <div class="card stat-card h-100">
             <div class="card-body">
                 <p class="text-muted small mb-1">Đang thực hiện</p>
@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2.4 col-sm-6 col-lg-2">
+    <div class="col">
         <div class="card stat-card h-100">
             <div class="card-body">
                 <p class="text-muted small mb-1">Đã hoàn thành</p>
@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2.4 col-sm-6 col-lg-2.5">
+    <div class="col">
         <div class="card stat-card h-100">
             <div class="card-body">
                 <p class="text-muted small mb-1">Tổng quỹ cấp phát</p>
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2.4 col-sm-6 col-lg-2.5">
+    <div class="col">
         <div class="card stat-card h-100">
             <div class="card-body">
                 <p class="text-muted small mb-1">Đã trao thực tế</p>

@@ -92,7 +92,12 @@ class RolesAndPermissionsSeeder extends Seeder
         // Cán bộ Quân sự (Nghĩa vụ & An ninh quốc phòng)
         $quanSu = Role::findOrCreate('quan_su', 'web');
         $quanSu->syncPermissions([
+            'view_ho_khau',
+            'view_nhan_khau',
+            'view_lao_dong',
+            'view_an_sinh',
             'view_nghia_vu', 'manage_nghia_vu',
+            'view_dat_dai',
         ]);
 
         // 3. Gán Role cho tài khoản trong UserSeeder
@@ -101,7 +106,9 @@ class RolesAndPermissionsSeeder extends Seeder
             $userAdmin->assignRole('admin');
         }
 
-        $userTuPhap = User::where('email', 'tuphap@ubnd-xa.vn')->first();
+        $userTuPhap = User::where('email', 'tuphap@ubnd-xa.vn')
+            ->orWhere('so_cccd', '001092123457')
+            ->first();
         if ($userTuPhap) {
             $userTuPhap->assignRole('tu_phap');
         }

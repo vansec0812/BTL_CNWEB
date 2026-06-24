@@ -15,6 +15,9 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        User::where('email', 'tupháp@ubnd-xa.vn')
+            ->update(['email' => 'tuphap@ubnd-xa.vn']);
+
         $users = [
             [
                 'name' => 'Admin Hệ thống',
@@ -31,7 +34,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Cán bộ Tư pháp',
-                'email' => 'tupháp@ubnd-xa.vn',
+                'email' => 'tuphap@ubnd-xa.vn',
                 'password' => Hash::make('CanBo@123456'),
                 'so_cccd' => '001092123457',
                 'gioi_tinh' => 'nu',

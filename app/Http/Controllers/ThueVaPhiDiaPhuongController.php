@@ -66,6 +66,16 @@ class ThueVaPhiDiaPhuongController extends Controller
         ]);
     }
 
+    public function show(ThueVaPhiDiaPhuong $thueVaPhi)
+    {
+        $thueVaPhi->load(['hoKhau.chuHo', 'datDaiTaiSan.chuSoHuu', 'nguoiThu']);
+
+        return view('thue-va-phi.show', [
+            'thueVaPhi' => $thueVaPhi,
+            'modules' => ModuleRegistry::all(),
+        ]);
+    }
+
     public function store(StoreThueVaPhiDiaPhuongRequest $request)
     {
         $validated = $request->validated();
