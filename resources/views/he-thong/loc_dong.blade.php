@@ -10,8 +10,14 @@
         <span class="mx-1">/</span>
         Bộ lọc động &amp; Tìm kiếm nâng cao
     </div>
-    <h2 class="fw-bold mb-0">Cơ chế Lọc động dân cư nâng cao</h2>
-    <p class="text-muted small mb-0">Cấu hình các bộ lọc phức tạp liên kết chéo các bảng (Hộ tịch, Lao động, An sinh xã hội, Nghĩa vụ quân sự, Đất đai) để trích xuất dữ liệu.</p>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-funnel me-2"></i>Bộ lọc động &amp; Tìm kiếm nâng cao
+            </h2>
+            <p class="text-secondary mb-0">Cấu hình các bộ lọc phức tạp liên kết chéo các bảng (Hộ tịch, Lao động, An sinh xã hội, Nghĩa vụ quân sự, Đất đai) để trích xuất dữ liệu.</p>
+        </div>
+    </div>
 </div>
 
 {{-- Thống kê nhanh kết quả --}}

@@ -10,10 +10,14 @@
         <span class="mx-1">/</span>
         Nhật ký hệ thống (Audit Log)
     </div>
-    <h2 class="fw-bold mb-0 text-success">
-        <i class="bi bi-clock-history me-2"></i>Nhật ký hệ thống
-    </h2>
-    <p class="text-secondary mb-0">Giám sát hành động của cán bộ, lịch sử thay đổi dữ liệu phục vụ mục đích bảo mật thông tin công dân.</p>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-clock-history me-2"></i>Nhật ký hệ thống
+            </h2>
+            <p class="text-secondary mb-0">Giám sát hành động của cán bộ, lịch sử thay đổi dữ liệu phục vụ mục đích bảo mật thông tin công dân.</p>
+        </div>
+    </div>
 </div>
 
 {{-- Bộ lọc tìm kiếm --}}

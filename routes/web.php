@@ -1,25 +1,29 @@
 <?php
 
+use App\Http\Controllers\AnNinhTratTuController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BaoTroXaHoiController;
 use App\Http\Controllers\BienDongHoKhauController;
 use App\Http\Controllers\BieuDoController;
+use App\Http\Controllers\CoSoVatChatController;
 use App\Http\Controllers\DanQuanHoatDongController;
 use App\Http\Controllers\DanQuanTuVeController;
-use App\Http\Controllers\AnNinhTratTuController;
+use App\Http\Controllers\DatDaiTaiSanController;
 use App\Http\Controllers\DoanhNghiepController;
 use App\Http\Controllers\DoiTuongChinhSachController;
 use App\Http\Controllers\DotTroCapController;
 use App\Http\Controllers\HoKhauController;
 use App\Http\Controllers\KetNoiViecLamController;
 use App\Http\Controllers\LaoDongController;
+use App\Http\Controllers\LocDongController;
 use App\Http\Controllers\NghiaVuQuanSuController;
 use App\Http\Controllers\NhanKhauController;
 use App\Http\Controllers\TamTruTamVangController;
+use App\Http\Controllers\ThueVaPhiDiaPhuongController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YTeNhanKhauController;
-use App\Http\Controllers\LocDongController;
+use App\Models\AnNinhTratTu;
 use App\Models\DotTroCap;
 use App\Models\HoKhau;
 use App\Models\LaoDong;
@@ -140,7 +144,7 @@ $modules = [
     ],
     [
         'slug' => 'he-thong-bao-cao',
-        'title' => 'Hệ thống, Tiện ích & Báo cáo',
+        'title' => 'Hệ thống & Tiện ích',
         'short' => 'Hệ thống',
         'owner' => 'Người 1',
         'color' => 'dark',
@@ -261,7 +265,7 @@ Route::middleware('auth')->group(function () use ($modules) {
                     return $ho;
                 });
         } elseif ($module === 'nghia-vu-an-ninh') {
-            $viPhamQuery = fn($q) => $q->where('loai_doi_tuong', 'vi_pham_hanh_chinh')
+            $viPhamQuery = fn ($q) => $q->where('loai_doi_tuong', 'vi_pham_hanh_chinh')
                 ->orWhere('loai_doi_tuong', 'Vi phạm hành chính')
                 ->orWhere('loai_doi_tuong', 'like', '%vi phạm%')
                 ->orWhere('loai_doi_tuong', 'like', '%vi pham%');
@@ -282,9 +286,9 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->limit(10)
                 ->get();
 
-            $extraData['dsDoiTuongQuanLy'] = \App\Models\AnNinhTratTu::query()
+            $extraData['dsDoiTuongQuanLy'] = AnNinhTratTu::query()
                 ->with(['nhanKhau.hoKhau'])
-                ->where(fn($q) => $q->where('loai_doi_tuong', '!=', 'vi_pham_hanh_chinh')
+                ->where(fn ($q) => $q->where('loai_doi_tuong', '!=', 'vi_pham_hanh_chinh')
                     ->where('loai_doi_tuong', 'not like', '%vi phạm%')
                     ->where('loai_doi_tuong', 'not like', '%vi pham%')
                 )
@@ -292,7 +296,7 @@ Route::middleware('auth')->group(function () use ($modules) {
                 ->limit(10)
                 ->get();
 
-            $extraData['dsViPham'] = \App\Models\AnNinhTratTu::query()
+            $extraData['dsViPham'] = AnNinhTratTu::query()
                 ->with(['nhanKhau.hoKhau'])
                 ->where($viPhamQuery)
                 ->latest()
@@ -703,43 +707,43 @@ Route::middleware('auth')->group(function () use ($modules) {
 
     // --- Phân hệ Đất đai, Hạ tầng & Tài sản hộ dân ---
     Route::middleware('can:manage_dat_dai')->group(function () {
-        Route::get('dat-dai-ha-tang/dat-dai-tai-san/check-cccd', [\App\Http\Controllers\DatDaiTaiSanController::class, 'checkCccd'])
+        Route::get('dat-dai-ha-tang/dat-dai-tai-san/check-cccd', [DatDaiTaiSanController::class, 'checkCccd'])
             ->name('dat-dai-tai-san.check-cccd');
-            
-        Route::post('dat-dai-ha-tang/dat-dai-tai-san/{datDaiTaiSan}/chuyen-nhuong', [\App\Http\Controllers\DatDaiTaiSanController::class, 'chuyenNhuong'])
+
+        Route::post('dat-dai-ha-tang/dat-dai-tai-san/{datDaiTaiSan}/chuyen-nhuong', [DatDaiTaiSanController::class, 'chuyenNhuong'])
             ->name('dat-dai-tai-san.chuyen-nhuong');
 
-        Route::resource('dat-dai-ha-tang/dat-dai-tai-san', \App\Http\Controllers\DatDaiTaiSanController::class)
+        Route::resource('dat-dai-ha-tang/dat-dai-tai-san', DatDaiTaiSanController::class)
             ->except(['index', 'show'])
             ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
             ->names('dat-dai-tai-san');
-            
-        Route::post('dat-dai-ha-tang/thue-va-phi/generate', [\App\Http\Controllers\ThueVaPhiDiaPhuongController::class, 'generateThueDat'])
+
+        Route::post('dat-dai-ha-tang/thue-va-phi/generate', [ThueVaPhiDiaPhuongController::class, 'generateThueDat'])
             ->name('thue-va-phi.generate');
 
-        Route::resource('dat-dai-ha-tang/thue-va-phi', \App\Http\Controllers\ThueVaPhiDiaPhuongController::class)
+        Route::resource('dat-dai-ha-tang/thue-va-phi', ThueVaPhiDiaPhuongController::class)
             ->except(['index', 'show'])
             ->parameters(['thue-va-phi' => 'thueVaPhi'])
             ->names('thue-va-phi');
 
-        Route::resource('dat-dai-ha-tang/co-so-vat-chat', \App\Http\Controllers\CoSoVatChatController::class)
+        Route::resource('dat-dai-ha-tang/co-so-vat-chat', CoSoVatChatController::class)
             ->except(['index', 'show'])
             ->parameters(['co-so-vat-chat' => 'coSoVatChat'])
             ->names('co-so-vat-chat');
     });
 
     Route::middleware('can:view_dat_dai')->group(function () {
-        Route::resource('dat-dai-ha-tang/dat-dai-tai-san', \App\Http\Controllers\DatDaiTaiSanController::class)
+        Route::resource('dat-dai-ha-tang/dat-dai-tai-san', DatDaiTaiSanController::class)
             ->only(['index', 'show'])
             ->parameters(['dat-dai-tai-san' => 'datDaiTaiSan'])
             ->names('dat-dai-tai-san');
-            
-        Route::resource('dat-dai-ha-tang/thue-va-phi', \App\Http\Controllers\ThueVaPhiDiaPhuongController::class)
+
+        Route::resource('dat-dai-ha-tang/thue-va-phi', ThueVaPhiDiaPhuongController::class)
             ->only(['index', 'show'])
             ->parameters(['thue-va-phi' => 'thueVaPhi'])
             ->names('thue-va-phi');
 
-        Route::resource('dat-dai-ha-tang/co-so-vat-chat', \App\Http\Controllers\CoSoVatChatController::class)
+        Route::resource('dat-dai-ha-tang/co-so-vat-chat', CoSoVatChatController::class)
             ->only(['index', 'show'])
             ->parameters(['co-so-vat-chat' => 'coSoVatChat'])
             ->names('co-so-vat-chat');
@@ -750,6 +754,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         $modules = ModuleRegistry::all();
         $roles = Role::all();
         $permissions = Permission::all();
+        $parentModule = ModuleRegistry::findBySlug('he-thong-bao-cao');
 
         $groupedPermissions = [
             'Hệ thống & Người dùng' => $permissions->filter(fn ($p) => in_array($p->name, ['manage_users', 'view_audit_logs'])),
@@ -760,7 +765,7 @@ Route::middleware('auth')->group(function () use ($modules) {
             'Đất đai & Thuế phí' => $permissions->filter(fn ($p) => str_contains($p->name, 'dat_dai')),
         ];
 
-        return view('he-thong.rbac', compact('modules', 'roles', 'permissions', 'groupedPermissions'));
+        return view('he-thong.rbac', compact('modules', 'roles', 'permissions', 'groupedPermissions', 'parentModule'));
     })->name('he-thong.rbac');
 
     Route::post('/he-thong/phan-quyen/toggle', function (Request $request) {
