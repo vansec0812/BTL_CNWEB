@@ -1,10 +1,19 @@
-<form method="POST" action="{{ $action }}" class="card shadow-sm border-0" novalidate>
+<form method="POST" action="{{ $action }}" class="card shadow-sm border-0 labor-profile-form" novalidate>
     @csrf
     @if ($method !== 'POST')
         @method($method)
     @endif
 
-    <div class="card-body">
+    <div class="card-header bg-white py-3 px-4">
+        <div class="d-flex align-items-center gap-2">
+            <span class="form-section-title mb-0">
+                <i class="bi bi-person-workspace"></i>
+                Thông tin hồ sơ
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body p-4">
         <div class="row g-3">
             {{-- Nhân khẩu --}}
             <div class="col-lg-6">
@@ -68,25 +77,30 @@
             </div>
 
             {{-- Switches: Làm việc xa, xuất khẩu --}}
-            <div class="col-md-6 border-top pt-3">
+            <div class="col-md-6">
+                <div class="choice-panel">
                 <div class="form-check form-switch py-1">
                     <input type="hidden" name="lam_viec_ngoai_tinh" value="0">
                     <input type="checkbox" class="form-check-input" id="lam_viec_ngoai_tinh" name="lam_viec_ngoai_tinh" value="1" @checked(old('lam_viec_ngoai_tinh', $record?->lam_viec_ngoai_tinh ?? false))>
                     <label class="form-check-label fw-semibold" for="lam_viec_ngoai_tinh">Đang làm việc ngoài tỉnh (trong nước)</label>
                 </div>
+                </div>
             </div>
 
-            <div class="col-md-6 border-top pt-3">
+            <div class="col-md-6">
+                <div class="choice-panel">
                 <div class="form-check form-switch py-1">
                     <input type="hidden" name="xuat_khau_lao_dong" value="0">
                     <input type="checkbox" class="form-check-input" id="xuat_khau_lao_dong" name="xuat_khau_lao_dong" value="1" @checked(old('xuat_khau_lao_dong', $record?->xuat_khau_lao_dong ?? false))>
                     <label class="form-check-label fw-semibold" for="xuat_khau_lao_dong">Đang xuất khẩu lao động (nước ngoài)</label>
                 </div>
+                </div>
             </div>
 
             {{-- Thông tin làm việc ngoài tỉnh --}}
-            <div class="col-12 out-province-section border-top pt-3" style="display: none;">
-                <h6 class="text-primary fw-bold mb-3"><i class="bi bi-geo-alt me-1"></i>Thông tin làm việc ngoài tỉnh</h6>
+            <div class="col-12 out-province-section" style="display: none;">
+                <div class="form-section">
+                <h6 class="form-section-title"><i class="bi bi-geo-alt"></i>Thông tin làm việc ngoài tỉnh</h6>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="tinh_thanh_lam_viec" class="form-label">Tỉnh/Thành phố đang làm việc</label>
@@ -94,11 +108,13 @@
                         @error('tinh_thanh_lam_viec')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
+                </div>
             </div>
 
             {{-- Thông tin xuất khẩu lao động --}}
-            <div class="col-12 export-section border-top pt-3" style="display: none;">
-                <h6 class="text-warning fw-bold mb-3"><i class="bi bi-airplane me-1"></i>Thông tin xuất khẩu lao động</h6>
+            <div class="col-12 export-section" style="display: none;">
+                <div class="form-section">
+                <h6 class="form-section-title"><i class="bi bi-airplane"></i>Thông tin xuất khẩu lao động</h6>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <label for="quoc_gia_lam_viec" class="form-label">Quốc gia đang làm việc</label>
@@ -121,22 +137,27 @@
                         @error('ngay_het_hop_dong_nuoc_ngoai')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
+                </div>
             </div>
 
             {{-- Lý do thay đổi (Chỉ hiển thị khi cập nhật) --}}
             @if (isset($record))
-            <div class="col-12 border-top pt-3">
+            <div class="col-12">
+                <div class="form-section">
                 <label for="ly_do_thay_doi" class="form-label fw-semibold text-danger">Lý do cập nhật hồ sơ (Lưu vào lịch sử công việc)</label>
                 <input type="text" id="ly_do_thay_doi" name="ly_do_thay_doi" value="{{ old('ly_do_thay_doi') }}" class="form-control @error('ly_do_thay_doi') is-invalid @enderror" placeholder="Ví dụ: Thay đổi công việc từ nông dân sang công nhân may, đi XKLD...">
                 @error('ly_do_thay_doi')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
             </div>
             @endif
 
             {{-- Ghi chú --}}
-            <div class="col-12 border-top pt-3">
+            <div class="col-12">
+                <div class="form-section">
                 <label for="ghi_chu" class="form-label fw-semibold">Ghi chú</label>
                 <textarea id="ghi_chu" name="ghi_chu" rows="3" class="form-control @error('ghi_chu') is-invalid @enderror">{{ old('ghi_chu', $record?->ghi_chu) }}</textarea>
                 @error('ghi_chu')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
             </div>
         </div>
     </div>

@@ -140,15 +140,6 @@
                         <div class="fw-bold text-dark fs-6">{{ $user->dia_chi ?? 'Chưa cập nhật' }}</div>
                     </div>
 
-                    <div class="col-md-6 border-top pt-3">
-                        <div class="small text-secondary mb-1">Ngày đăng ký hệ thống</div>
-                        <div class="text-muted small">{{ $user->created_at->format('d/m/Y H:i') }}</div>
-                    </div>
-
-                    <div class="col-md-6 border-top pt-3">
-                        <div class="small text-secondary mb-1">Lần cập nhật cuối</div>
-                        <div class="text-muted small">{{ $user->updated_at->format('d/m/Y H:i') }}</div>
-                    </div>
                 </div>
             </div>
         </div>
