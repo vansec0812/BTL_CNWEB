@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('dat_dai_tai_san', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('ho_khau_id')->comment('FK → ho_khau.id (hộ sở hữu đất)');
-            $table->foreign('ho_khau_id')->references('id')->on('ho_khau')->onDelete('restrict');
+            $table->unsignedBigInteger('chu_so_huu_nhan_khau_id')->comment('FK → nhan_khau.id (chủ sở hữu cá nhân)');
+            $table->foreign('chu_so_huu_nhan_khau_id')->references('id')->on('nhan_khau')->onDelete('restrict');
 
             // Thông tin thửa đất (theo Giấy chứng nhận QSDĐ)
             $table->string('so_to_ban_do', 50)->nullable()->comment('Số tờ bản đồ địa chính');

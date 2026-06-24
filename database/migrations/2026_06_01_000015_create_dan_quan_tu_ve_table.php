@@ -27,8 +27,8 @@ return new class extends Migration
             $table->date('ngay_ket_thuc')->nullable()->comment('Ngày kết thúc nhiệm kỳ (null = đang phục vụ)');
 
             $table->enum('trang_thai', ['dang_phuc_vu', 'da_hoan_thanh', 'da_roi'])
-                  ->default('dang_phuc_vu')
-                  ->comment('Trạng thái tham gia dân quân tự vệ');
+                ->default('dang_phuc_vu')
+                ->comment('Trạng thái tham gia dân quân tự vệ');
 
             $table->text('ghi_chu')->nullable();
             $table->timestamps();

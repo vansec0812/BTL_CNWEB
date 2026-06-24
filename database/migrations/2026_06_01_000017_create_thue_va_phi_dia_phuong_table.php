@@ -20,6 +20,9 @@ return new class extends Migration
             $table->unsignedBigInteger('ho_khau_id')->comment('FK → ho_khau.id');
             $table->foreign('ho_khau_id')->references('id')->on('ho_khau')->onDelete('restrict');
 
+            $table->unsignedBigInteger('dat_dai_tai_san_id')->nullable()->comment('FK → dat_dai_tai_san.id (nếu là thuế đất)');
+            $table->foreign('dat_dai_tai_san_id')->references('id')->on('dat_dai_tai_san')->onDelete('set null');
+
             $table->integer('nam')->comment('Năm áp dụng khoản thu');
 
             $table->enum('loai_khoan_thu', [
@@ -35,8 +38,8 @@ return new class extends Migration
             $table->decimal('so_tien_da_nop', 15, 0)->default(0)->comment('Số tiền đã nộp');
 
             $table->enum('trang_thai_thanh_toan', ['chua_nop', 'nop_mot_phan', 'da_nop_du'])
-                  ->default('chua_nop')
-                  ->comment('Trạng thái thanh toán');
+                ->default('chua_nop')
+                ->comment('Trạng thái thanh toán');
 
             $table->date('han_nop')->nullable()->comment('Hạn nộp');
             $table->date('ngay_nop_thuc_te')->nullable()->comment('Ngày nộp thực tế');

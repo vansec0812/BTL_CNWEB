@@ -54,7 +54,7 @@ return new class extends Migration
             // Năm đăng ký khám
             $table->integer('nam_dang_ky_kham_nvqs')->nullable()->comment('Năm đăng ký khám NVQS gần nhất');
             $table->enum('ket_qua_kham_suc_khoe', [
-                'chua_kham', 'loai_1', 'loai_2', 'loai_3', 'loai_4', 'loai_5', 'khong_du_suc_khoe'
+                'chua_kham', 'loai_1', 'loai_2', 'loai_3', 'loai_4', 'loai_5', 'khong_du_suc_khoe',
             ])->default('chua_kham')->comment('Kết quả khám sức khỏe NVQS');
 
             $table->text('ghi_chu')->nullable();

@@ -6,19 +6,10 @@
 @section('content')
     <section class="page-hero rounded-4 p-4 p-lg-5 mb-4 text-white shadow-sm">
         <div class="row align-items-center g-4">
-            <div class="col-lg-8">
+            <div class="col-lg-10">
                 <p class="text-uppercase small fw-semibold opacity-75 mb-2">Hệ thống quản lý hành chính cấp xã</p>
                 <h1 class="display-6 fw-bold mb-3">Quản lý thông tin hộ dân cư trên địa bàn xã</h1>
                 <p class="lead mb-0">Theo dõi hộ khẩu, nhân khẩu, lao động, an sinh, nghĩa vụ, đất đai và báo cáo điều hành trong một giao diện thống nhất.</p>
-            </div>
-            <div class="col-lg-4">
-                <div class="bg-white bg-opacity-10 border border-light border-opacity-25 rounded-4 p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-semibold">Trạng thái dữ liệu</span>
-                        <span class="badge text-bg-light">Đang vận hành</span>
-                    </div>
-                    <p class="small mb-0 opacity-75">Các số liệu bên dưới tự đọc từ bảng dữ liệu nếu đã migrate/seed, đồng thời có giá trị dự phòng để trang luôn hiển thị ổn định.</p>
-                </div>
             </div>
         </div>
     </section>
@@ -42,50 +33,23 @@
         @endforeach
     </section>
 
-    <section class="row g-4 mb-4">
-        <div class="col-xl-8">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-0 pt-4 px-4">
-                    <h2 class="h5 mb-1">Các phân hệ nghiệp vụ</h2>
-                    <p class="text-secondary mb-0">Tạo sẵn theo các cụm module trong OUTLINE.md để từng thành viên tiếp tục phát triển CRUD.</p>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row row-cols-1 row-cols-md-2 g-3">
-                        @foreach ($modules as $module)
-                            <div class="col">
-                                <a class="card module-card h-100 text-decoration-none border" href="{{ route('modules.show', $module['slug']) }}">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                                            <h3 class="h6 text-dark mb-0">{{ $module['title'] }}</h3>
-                                            <span class="badge text-bg-{{ $module['color'] }}">{{ $module['owner'] }}</span>
-                                        </div>
-                                        <p class="small text-secondary mb-3">{{ $module['description'] }}</p>
-                                        <span class="btn btn-outline-success btn-sm">Mở phân hệ</span>
-                                    </div>
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+    <section class="mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h2 class="h5 mb-1">Các phân hệ nghiệp vụ</h2>
+                <p class="text-secondary mb-0">Truy cập nhanh các nhóm nghiệp vụ quản lý hành chính cấp xã.</p>
             </div>
-        </div>
-
-        <div class="col-xl-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-0 pt-4 px-4">
-                    <h2 class="h5 mb-1">Việc cần xử lý</h2>
-                    <p class="text-secondary mb-0">Danh sách mẫu cho màn hình điều hành.</p>
-                </div>
-                <div class="list-group list-group-flush">
-                    @foreach ($tasks as $task)
-                        <div class="list-group-item px-4 py-3">
-                            <div class="d-flex justify-content-between gap-3">
-                                <div>
-                                    <div class="fw-semibold">{{ $task['title'] }}</div>
-                                    <small class="text-secondary">{{ $task['meta'] }}</small>
+            <div class="card-body p-4">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xxl-3 g-3">
+                    @foreach ($modules as $module)
+                        <div class="col">
+                            <a class="card module-card h-100 text-decoration-none border" href="{{ route('modules.show', $module['slug']) }}">
+                                <div class="card-body">
+                                    <h3 class="h6 text-dark mb-3">{{ $module['title'] }}</h3>
+                                    <p class="small text-secondary mb-3">{{ $module['description'] }}</p>
+                                    <span class="btn btn-outline-success btn-sm">Mở phân hệ</span>
                                 </div>
-                                <span class="badge text-bg-success align-self-start">{{ $task['priority'] }}</span>
-                            </div>
+                            </a>
                         </div>
                     @endforeach
                 </div>

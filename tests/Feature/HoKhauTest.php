@@ -1,0 +1,179 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\NhanKhau;
+use App\Models\User;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Auth\Middleware\Authorize;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
+
+class HoKhauTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->withoutMiddleware([
+            Authenticate::class,
+            Authorize::class,
+        ]);
+    }
+
+    public function test_index_page_renders_hokhau_records(): void
+    {
+        $hoKhauId = DB::table('ho_khau')->insertGetId([
+            'so_so_ho_khau' => 'HK123456',
+            'ma_ho' => 'MH123456',
+            'dia_chi_thuong_tru' => 'Thôn 1, Xã Quốc Oai',
+            'thon_xom' => 'Thôn 1',
+            'phan_loai' => 'thuong_tru',
+            'so_thanh_vien' => 3,
+            'trang_thai' => 'hoat_dong',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->getJson(route('api.ho-khau.index'));
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonFragment(['so_so_ho_khau' => 'HK123456']);
+    }
+
+    public function test_store_creates_hokhau_record(): void
+    {
+        $response = $this->postJson(route('api.ho-khau.store'), [
+            'so_so_ho_khau' => 'HK999999',
+            'ma_ho' => 'MH999999',
+            'dia_chi_thuong_tru' => 'Thôn 2, Xã Quốc Oai',
+            'thon_xom' => 'Thôn 2',
+            'phan_loai' => 'tam_tru',
+            'so_thanh_vien' => 4,
+            'trang_thai' => 'hoat_dong',
+            'ngay_lap_so' => '2026-06-01',
+        ]);
+
+        $response->assertCreated();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Đã tạo sổ hộ khẩu mới thành công.',
+        ]);
+
+        $this->assertDatabaseHas('ho_khau', [
+            'so_so_ho_khau' => 'HK999999',
+            'ma_ho' => 'MH999999',
+            'dia_chi_thuong_tru' => 'Thôn 2, Xã Quốc Oai',
+            'phan_loai' => 'tam_tru',
+        ]);
+    }
+
+    public function test_store_validation_errors(): void
+    {
+        $response = $this->postJson(route('api.ho-khau.store'), []);
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['so_so_ho_khau', 'ma_ho', 'dia_chi_thuong_tru', 'phan_loai', 'trang_thai']);
+    }
+
+    public function test_update_updates_hokhau_record(): void
+    {
+        $hoKhauId = DB::table('ho_khau')->insertGetId([
+            'so_so_ho_khau' => 'HK888888',
+            'ma_ho' => 'MH888888',
+            'dia_chi_thuong_tru' => 'Thôn 1, Xã Quốc Oai',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->putJson(route('api.ho-khau.update', $hoKhauId), [
+            'so_so_ho_khau' => 'HK888888-EDITED',
+            'ma_ho' => 'MH888888',
+            'dia_chi_thuong_tru' => 'Thôn 3, Xã Quốc Oai',
+            'thon_xom' => 'Thôn 3',
+            'phan_loai' => 'tam_vang',
+            'so_thanh_vien' => 2,
+            'trang_thai' => 'da_giai_the',
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Cập nhật sổ hộ khẩu thành công.',
+        ]);
+
+        $this->assertDatabaseHas('ho_khau', [
+            'id' => $hoKhauId,
+            'so_so_ho_khau' => 'HK888888-EDITED',
+            'dia_chi_thuong_tru' => 'Thôn 3, Xã Quốc Oai',
+            'phan_loai' => 'tam_vang',
+            'trang_thai' => 'da_giai_the',
+        ]);
+    }
+
+    public function test_destroy_deletes_hokhau_record(): void
+    {
+        $hoKhauId = DB::table('ho_khau')->insertGetId([
+            'so_so_ho_khau' => 'HK555555',
+            'ma_ho' => 'MH555555',
+            'dia_chi_thuong_tru' => 'Thôn 1, Xã Quốc Oai',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->deleteJson(route('api.ho-khau.destroy', $hoKhauId));
+        $response->assertOk();
+        $this->assertSoftDeleted('ho_khau', ['id' => $hoKhauId]);
+    }
+
+    public function test_store_creates_hokhau_and_new_chuho(): void
+    {
+        $response = $this->postJson(route('api.ho-khau.store'), [
+            'so_so_ho_khau' => 'HK777777',
+            'ma_ho' => 'MH777777',
+            'dia_chi_thuong_tru' => 'Thôn 4, Xã Quốc Oai',
+            'thon_xom' => 'Thôn 4',
+            'phan_loai' => 'thuong_tru',
+            'trang_thai' => 'hoat_dong',
+            'ngay_lap_so' => '2026-06-01',
+
+            'create_new_chu_ho' => 1,
+            'chu_ho_ho_ten' => 'Nguyễn Thị A',
+            'chu_ho_cccd_cmnd' => '123456789012',
+            'chu_ho_ngay_sinh' => '1990-01-01',
+            'chu_ho_gioi_tinh' => 'nu',
+            'chu_ho_dan_toc' => 'Kinh',
+            'chu_ho_ton_giao' => 'Không',
+            'chu_ho_que_quan' => 'Hà Nội',
+            'chu_ho_trinh_do_hoc_van' => 'dai_hoc',
+            'chu_ho_tinh_trang_hon_nhan' => 'doc_than',
+        ]);
+
+        $response->assertCreated();
+
+        $this->assertDatabaseHas('nhan_khau', [
+            'ho_ten' => 'Nguyễn Thị A',
+            'cccd_cmnd' => '123456789012',
+            'gioi_tinh' => 'nu',
+            'la_chu_ho' => true,
+            'trang_thai' => 'hoat_dong',
+        ]);
+
+        $nhanKhau = NhanKhau::where('cccd_cmnd', '123456789012')->first();
+
+        $this->assertDatabaseHas('ho_khau', [
+            'so_so_ho_khau' => 'HK777777',
+            'chu_ho_nhan_khau_id' => $nhanKhau->id,
+            'so_thanh_vien' => 1,
+        ]);
+    }
+}
