@@ -987,11 +987,11 @@
                             }
                             if (auth()->user()->can('view_audit_logs')) {
                                 $submenu[] = ['title' => 'Nhật ký hệ thống (Audit)', 'url' => route('audit-logs.index'), 'icon' => 'bi-clock-history', 'active' => request()->routeIs('audit-logs.*')];
-                            } else {
-                                $submenu[] = ['title' => 'Nhật ký hệ thống (Audit)', 'disabled' => true, 'icon' => 'bi-clock-history'];
+                            }
+                            if (auth()->user()->can('manage_users')) {
+                                $submenu[] = ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')];
                             }
                             $submenu = array_merge($submenu, [
-                                ['title' => 'Phân quyền (RBAC)', 'url' => route('he-thong.rbac'), 'icon' => 'bi-shield-lock', 'active' => request()->routeIs('he-thong.rbac')],
                                 ['title' => 'Dashboard & Biểu đồ', 'url' => route('he-thong.dashboard-bieu-do'), 'icon' => 'bi-graph-up', 'active' => request()->routeIs('he-thong.dashboard-bieu-do')],
                                 ['title' => 'Bộ lọc động & Tìm kiếm', 'url' => route('he-thong.loc-dong'), 'icon' => 'bi-funnel', 'active' => request()->routeIs('he-thong.loc-dong')],
                             ]);

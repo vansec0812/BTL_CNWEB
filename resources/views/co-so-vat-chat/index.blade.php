@@ -112,7 +112,7 @@
                             <td><span class="badge bg-secondary">{{ $record->phanLoaiLabel() }}</span></td>
                             <td>{{ $record->thon_xom ?? '--' }}</td>
                             <td class="text-end">{{ $record->ngay_dua_vao_su_dung ? $record->ngay_dua_vao_su_dung->format('d/m/Y') : '--' }}</td>
-                            <td class="text-end fw-bold">{{ $record->kinh_phi_xay_dung ? number_format($record->kinh_phi_xay_dung) . ' ₫' : '--' }}</td>
+                            <td class="text-end fw-bold">{{ $record->kinh_phi_xay_dung ? number_format($record->kinh_phi_xay_dung) : '--' }}</td>
                             <td class="text-center">
                                 @php
                                     $color = match($record->tinh_trang) {
@@ -128,6 +128,9 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="d-flex justify-content-end gap-1">
+                                    <a href="{{ route('co-so-vat-chat.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
                                     @can('manage_dat_dai')
                                     <a href="{{ route('co-so-vat-chat.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                         <i class="bi bi-pencil"></i>

@@ -195,6 +195,11 @@
                                             <i class="bi bi-arrow-left-right"></i>
                                         </button>
                                     @endif
+                                    @endcan
+                                    <a href="{{ route('dat-dai-tai-san.show', $record) }}" class="btn btn-sm btn-action-view" title="Xem">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @can('manage_dat_dai')
                                     <a href="{{ route('dat-dai-tai-san.edit', $record) }}" class="btn btn-sm btn-action-edit" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </a>

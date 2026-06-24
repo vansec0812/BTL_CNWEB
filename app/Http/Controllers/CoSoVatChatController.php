@@ -65,6 +65,18 @@ class CoSoVatChatController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(CoSoVatChat $coSoVatChat)
+    {
+        return view('co-so-vat-chat.show', [
+            'modules' => ModuleRegistry::all(),
+            'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
+            'record' => $coSoVatChat,
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
