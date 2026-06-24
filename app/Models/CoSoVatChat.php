@@ -47,7 +47,7 @@ class CoSoVatChat extends Model
         'Thôn Đình Tổ',
         'Thôn Sơn Trung',
         'Thôn Ba Nhà',
-        'Thôn Quảng Yên'
+        'Thôn Quảng Yên',
     ];
 
     public function phanLoaiLabel(): string

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DatDaiTaiSan;
-use App\Models\HoKhau;
-use App\Support\ModuleRegistry;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreDatDaiTaiSanRequest;
 use App\Http\Requests\UpdateDatDaiTaiSanRequest;
+use App\Models\DatDaiTaiSan;
+use App\Models\LichSuChuyenNhuongDat;
+use App\Models\NhanKhau;
+use App\Support\ModuleRegistry;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DatDaiTaiSanController extends Controller
 {
@@ -17,15 +19,15 @@ class DatDaiTaiSanController extends Controller
 
         if ($request->filled('q')) {
             $q = $request->get('q');
-            $query->where(function($qBuilder) use ($q) {
+            $query->where(function ($qBuilder) use ($q) {
                 $qBuilder->where('so_gcn_qsdd', 'like', "%{$q}%")
-                         ->orWhere('so_to_ban_do', 'like', "%{$q}%")
-                         ->orWhere('so_thua_dat', 'like', "%{$q}%")
-                         ->orWhere('vi_tri_mo_ta', 'like', "%{$q}%")
-                         ->orWhereHas('chuSoHuu', function($subQuery) use ($q) {
-                             $subQuery->where('ho_ten', 'like', "%{$q}%")
-                                      ->orWhere('cccd_cmnd', 'like', "%{$q}%");
-                         });
+                    ->orWhere('so_to_ban_do', 'like', "%{$q}%")
+                    ->orWhere('so_thua_dat', 'like', "%{$q}%")
+                    ->orWhere('vi_tri_mo_ta', 'like', "%{$q}%")
+                    ->orWhereHas('chuSoHuu', function ($subQuery) use ($q) {
+                        $subQuery->where('ho_ten', 'like', "%{$q}%")
+                            ->orWhere('cccd_cmnd', 'like', "%{$q}%");
+                    });
             });
         }
 
@@ -71,6 +73,7 @@ class DatDaiTaiSanController extends Controller
     public function show(DatDaiTaiSan $datDaiTaiSan)
     {
         $datDaiTaiSan->load('chuSoHuu');
+
         return view('dat-dai-tai-san.show', [
             'datDaiTaiSan' => $datDaiTaiSan,
             'modules' => ModuleRegistry::all(),
@@ -97,17 +100,18 @@ class DatDaiTaiSanController extends Controller
     public function destroy(DatDaiTaiSan $datDaiTaiSan)
     {
         $datDaiTaiSan->delete();
+
         return redirect()->route('dat-dai-tai-san.index')->with('status', 'Xóa thửa đất thành công!');
     }
 
     public function checkCccd(Request $request)
     {
         $cccd = $request->get('cccd');
-        if (!$cccd) {
+        if (! $cccd) {
             return response()->json(['success' => false, 'message' => 'Vui lòng nhập CCCD']);
         }
 
-        $nhanKhau = \App\Models\NhanKhau::where('cccd_cmnd', $cccd)->first();
+        $nhanKhau = NhanKhau::where('cccd_cmnd', $cccd)->first();
         if ($nhanKhau) {
             return response()->json([
                 'success' => true,
@@ -115,7 +119,7 @@ class DatDaiTaiSanController extends Controller
                     'id' => $nhanKhau->id,
                     'ho_ten' => $nhanKhau->ho_ten,
                     'ngay_sinh' => $nhanKhau->ngay_sinh,
-                ]
+                ],
             ]);
         }
 
@@ -130,13 +134,13 @@ class DatDaiTaiSanController extends Controller
         ]);
 
         $nguoiMuaId = $request->input('nguoi_mua_id');
-        
+
         if ($nguoiMuaId == $datDaiTaiSan->chu_so_huu_nhan_khau_id) {
             return back()->withErrors(['error' => 'Người mua không thể là chủ sở hữu hiện tại.']);
         }
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $datDaiTaiSan, $nguoiMuaId) {
-            \App\Models\LichSuChuyenNhuongDat::create([
+        DB::transaction(function () use ($request, $datDaiTaiSan, $nguoiMuaId) {
+            LichSuChuyenNhuongDat::create([
                 'dat_dai_tai_san_id' => $datDaiTaiSan->id,
                 'nguoi_ban_id' => $datDaiTaiSan->chu_so_huu_nhan_khau_id,
                 'nguoi_mua_id' => $nguoiMuaId,

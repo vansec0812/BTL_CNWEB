@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreYTeNhanKhauRequest;
+use App\Http\Requests\UpdateYTeNhanKhauRequest;
 use App\Models\NhanKhau;
 use App\Models\YTeNhanKhau;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Requests\StoreYTeNhanKhauRequest;
-use App\Http\Requests\UpdateYTeNhanKhauRequest;
 
 class YTeNhanKhauController extends Controller
 {
@@ -36,18 +35,18 @@ class YTeNhanKhauController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Lấy danh sách hồ sơ y tế thành công.',
-                'data'    => $records,
-                'stats'   => $this->stats(),
+                'data' => $records,
+                'stats' => $this->stats(),
             ], 200);
         }
 
         return view('an-sinh.y-te-nhan-khau.index', [
-            'modules'      => ModuleRegistry::all(),
+            'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('an-sinh-y-te-giao-duc'),
-            'records'      => $records,
-            'filters'      => $filters,
-            'loaiBhyt'     => YTeNhanKhau::LOAI_BHYT,
-            'stats'        => $this->stats(),
+            'records' => $records,
+            'filters' => $filters,
+            'loaiBhyt' => YTeNhanKhau::LOAI_BHYT,
+            'stats' => $this->stats(),
         ]);
     }
 
@@ -59,7 +58,7 @@ class YTeNhanKhauController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Lấy dữ liệu form tạo mới thành công.',
-                'data'    => $formData,
+                'data' => $formData,
             ], 200);
         }
 
@@ -73,8 +72,8 @@ class YTeNhanKhauController extends Controller
 
         // Nếu loại BHYT là 'khong_co' thì xóa thông tin thẻ
         if ($data['loai_bhyt'] === 'khong_co') {
-            $data['so_the_bhyt']           = null;
-            $data['ngay_cap_the_bhyt']     = null;
+            $data['so_the_bhyt'] = null;
+            $data['ngay_cap_the_bhyt'] = null;
             $data['ngay_het_han_the_bhyt'] = null;
             $data['noi_dang_ky_kham_chua_benh'] = null;
         }
@@ -85,7 +84,7 @@ class YTeNhanKhauController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Đã tạo hồ sơ y tế cho nhân khẩu.',
-                'data'    => $record->load('nhanKhau'),
+                'data' => $record->load('nhanKhau'),
             ], 201);
         }
 
@@ -102,7 +101,7 @@ class YTeNhanKhauController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Lấy chi tiết hồ sơ y tế thành công.',
-                'data'    => $yTeNhanKhau,
+                'data' => $yTeNhanKhau,
             ], 200);
         }
 
@@ -117,7 +116,7 @@ class YTeNhanKhauController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Lấy dữ liệu form chỉnh sửa thành công.',
-                'data'    => $formData,
+                'data' => $formData,
             ], 200);
         }
 
@@ -130,8 +129,8 @@ class YTeNhanKhauController extends Controller
         $data['hoan_thanh_tiem_chung_mo_rong'] = $request->boolean('hoan_thanh_tiem_chung_mo_rong');
 
         if ($data['loai_bhyt'] === 'khong_co') {
-            $data['so_the_bhyt']           = null;
-            $data['ngay_cap_the_bhyt']     = null;
+            $data['so_the_bhyt'] = null;
+            $data['ngay_cap_the_bhyt'] = null;
             $data['ngay_het_han_the_bhyt'] = null;
             $data['noi_dang_ky_kham_chua_benh'] = null;
         }
@@ -142,7 +141,7 @@ class YTeNhanKhauController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Đã cập nhật hồ sơ y tế.',
-                'data'    => $yTeNhanKhau->fresh()->load('nhanKhau'),
+                'data' => $yTeNhanKhau->fresh()->load('nhanKhau'),
             ], 200);
         }
 
@@ -166,8 +165,6 @@ class YTeNhanKhauController extends Controller
             ->route('y-te-nhan-khau.index')
             ->with('status', 'Đã xoá hồ sơ y tế.');
     }
-
-
 
     private function formData(?YTeNhanKhau $record = null): array
     {
@@ -194,20 +191,20 @@ class YTeNhanKhauController extends Controller
         }
 
         return [
-            'modules'      => ModuleRegistry::all(),
+            'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('an-sinh-y-te-giao-duc'),
-            'record'       => $record,
-            'nhanKhau'     => $nhanKhau,
-            'loaiBhyt'     => YTeNhanKhau::LOAI_BHYT,
+            'record' => $record,
+            'nhanKhau' => $nhanKhau,
+            'loaiBhyt' => YTeNhanKhau::LOAI_BHYT,
         ];
     }
 
     private function stats(): array
     {
         return [
-            'tong_so'       => YTeNhanKhau::count(),
-            'co_bhyt'       => YTeNhanKhau::where('loai_bhyt', '!=', 'khong_co')->count(),
-            'het_han'       => YTeNhanKhau::where('loai_bhyt', '!=', 'khong_co')
+            'tong_so' => YTeNhanKhau::count(),
+            'co_bhyt' => YTeNhanKhau::where('loai_bhyt', '!=', 'khong_co')->count(),
+            'het_han' => YTeNhanKhau::where('loai_bhyt', '!=', 'khong_co')
                 ->whereNotNull('ngay_het_han_the_bhyt')
                 ->where('ngay_het_han_the_bhyt', '<', now())
                 ->count(),

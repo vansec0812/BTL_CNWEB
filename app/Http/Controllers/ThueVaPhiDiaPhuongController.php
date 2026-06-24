@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreThueVaPhiDiaPhuongRequest;
+use App\Http\Requests\UpdateThueVaPhiDiaPhuongRequest;
+use App\Models\DatDaiTaiSan;
 use App\Models\HoKhau;
 use App\Models\ThueVaPhiDiaPhuong;
 use App\Support\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreThueVaPhiDiaPhuongRequest;
-use App\Http\Requests\UpdateThueVaPhiDiaPhuongRequest;
 
 class ThueVaPhiDiaPhuongController extends Controller
 {
@@ -32,10 +33,10 @@ class ThueVaPhiDiaPhuongController extends Controller
 
         if ($request->filled('q')) {
             $q = $request->get('q');
-            $query->whereHas('hoKhau.chuHo', function($qBuilder) use ($q) {
+            $query->whereHas('hoKhau.chuHo', function ($qBuilder) use ($q) {
                 $qBuilder->where('ho_ten', 'like', "%{$q}%")
-                         ->orWhere('cccd_cmnd', 'like', "%{$q}%");
-            })->orWhereHas('hoKhau', function($qBuilder) use ($q) {
+                    ->orWhere('cccd_cmnd', 'like', "%{$q}%");
+            })->orWhereHas('hoKhau', function ($qBuilder) use ($q) {
                 $qBuilder->where('ma_ho', 'like', "%{$q}%");
             });
         }
@@ -58,6 +59,7 @@ class ThueVaPhiDiaPhuongController extends Controller
     public function create()
     {
         $hoKhaus = HoKhau::with('chuHo')->where('trang_thai', 'hoat_dong')->get();
+
         return view('thue-va-phi.create', [
             'hoKhaus' => $hoKhaus,
             'modules' => ModuleRegistry::all(),
@@ -69,7 +71,7 @@ class ThueVaPhiDiaPhuongController extends Controller
         $validated = $request->validated();
 
         $validated['trang_thai_thanh_toan'] = $this->determineStatus($validated['so_tien_phai_nop'], $validated['so_tien_da_nop']);
-        
+
         if ($validated['so_tien_da_nop'] > 0) {
             $validated['ngay_nop_thuc_te'] = now()->toDateString();
             $validated['nguoi_thu_id'] = auth()->id();
@@ -83,6 +85,7 @@ class ThueVaPhiDiaPhuongController extends Controller
     public function edit(ThueVaPhiDiaPhuong $thueVaPhi)
     {
         $hoKhaus = HoKhau::with('chuHo')->where('trang_thai', 'hoat_dong')->get();
+
         return view('thue-va-phi.edit', [
             'thueVaPhi' => $thueVaPhi,
             'hoKhaus' => $hoKhaus,
@@ -96,7 +99,7 @@ class ThueVaPhiDiaPhuongController extends Controller
 
         $validated['trang_thai_thanh_toan'] = $this->determineStatus($validated['so_tien_phai_nop'], $validated['so_tien_da_nop']);
 
-        if ($validated['so_tien_da_nop'] > 0 && !$thueVaPhi->ngay_nop_thuc_te) {
+        if ($validated['so_tien_da_nop'] > 0 && ! $thueVaPhi->ngay_nop_thuc_te) {
             $validated['ngay_nop_thuc_te'] = now()->toDateString();
             $validated['nguoi_thu_id'] = auth()->id();
         }
@@ -109,6 +112,7 @@ class ThueVaPhiDiaPhuongController extends Controller
     public function destroy(ThueVaPhiDiaPhuong $thueVaPhi)
     {
         $thueVaPhi->delete();
+
         return redirect()->route('thue-va-phi.index')->with('status', 'Đã xóa khoản thu!');
     }
 
@@ -119,7 +123,7 @@ class ThueVaPhiDiaPhuongController extends Controller
         $giaDat = 2000000; // 2,000,000 VND/m2 theo Quy định UBND TP Hà Nội áp dụng cho vùng ven/xã (Giá giả định mẫu)
         $thueSuat = 0.0003; // 0.03%
 
-        $datDais = \App\Models\DatDaiTaiSan::with('chuSoHuu')->where('loai_dat', 'dat_tho_cu')->get();
+        $datDais = DatDaiTaiSan::with('chuSoHuu')->where('loai_dat', 'dat_tho_cu')->get();
 
         $count = 0;
 
@@ -127,10 +131,12 @@ class ThueVaPhiDiaPhuongController extends Controller
         try {
             foreach ($datDais as $dat) {
                 $hoKhauId = $dat->chuSoHuu->ho_khau_id ?? null;
-                if (!$hoKhauId || $dat->dien_tich_m2 <= 0) continue;
+                if (! $hoKhauId || $dat->dien_tich_m2 <= 0) {
+                    continue;
+                }
 
                 $soTienPhaiNop = round($dat->dien_tich_m2 * $giaDat * $thueSuat);
-                
+
                 $thue = ThueVaPhiDiaPhuong::firstOrNew([
                     'ho_khau_id' => $hoKhauId,
                     'dat_dai_tai_san_id' => $dat->id,
@@ -140,21 +146,23 @@ class ThueVaPhiDiaPhuongController extends Controller
 
                 $thue->so_tien_phai_nop = $soTienPhaiNop;
                 // Không ghi đè số tiền đã nộp nếu người dân đã đóng
-                if (!$thue->exists) {
+                if (! $thue->exists) {
                     $thue->so_tien_da_nop = 0;
                     $thue->trang_thai_thanh_toan = 'chua_nop';
                 } else {
                     $thue->trang_thai_thanh_toan = $this->determineStatus($soTienPhaiNop, $thue->so_tien_da_nop);
                 }
-                $thue->ghi_chu = "Thuế thửa đất (GCN: {$dat->so_gcn_qsdd}). Diện tích: {$dat->dien_tich_m2} m2. Đơn giá: " . number_format($giaDat) . " đ/m2. Thuế: 0.03%";
+                $thue->ghi_chu = "Thuế thửa đất (GCN: {$dat->so_gcn_qsdd}). Diện tích: {$dat->dien_tich_m2} m2. Đơn giá: ".number_format($giaDat).' đ/m2. Thuế: 0.03%';
                 $thue->save();
                 $count++;
             }
             DB::commit();
+
             return redirect()->route('thue-va-phi.index')->with('status', "Đã quét và lập {$count} hóa đơn thuế đất tự động năm {$nam}!");
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Có lỗi xảy ra khi tính thuế: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Có lỗi xảy ra khi tính thuế: '.$e->getMessage()]);
         }
     }
 
@@ -165,6 +173,7 @@ class ThueVaPhiDiaPhuongController extends Controller
         } elseif ($daNop > 0) {
             return 'nop_mot_phan';
         }
+
         return 'chua_nop';
     }
 }

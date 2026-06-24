@@ -34,17 +34,17 @@ class YTeNhanKhauTest extends TestCase
         $nkId = $this->createNhanKhau('Nguyễn Thị Y Tế');
 
         DB::table('y_te_nhan_khau')->insert([
-            'nhan_khau_id'                  => $nkId,
-            'so_the_bhyt'                   => 'DN4001111111111',
-            'loai_bhyt'                     => 'bat_buoc',
-            'ngay_cap_the_bhyt'             => '2022-01-01',
-            'ngay_het_han_the_bhyt'         => '2026-12-31',
-            'noi_dang_ky_kham_chua_benh'    => 'Trạm y tế xã An Sinh',
+            'nhan_khau_id' => $nkId,
+            'so_the_bhyt' => 'DN4001111111111',
+            'loai_bhyt' => 'bat_buoc',
+            'ngay_cap_the_bhyt' => '2022-01-01',
+            'ngay_het_han_the_bhyt' => '2026-12-31',
+            'noi_dang_ky_kham_chua_benh' => 'Trạm y tế xã An Sinh',
             'hoan_thanh_tiem_chung_mo_rong' => false,
-            'lich_su_tiem_chung'            => null,
-            'ghi_chu_suc_khoe'              => null,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'lich_su_tiem_chung' => null,
+            'ghi_chu_suc_khoe' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->get(route('y-te-nhan-khau.index'))
@@ -60,19 +60,19 @@ class YTeNhanKhauTest extends TestCase
         $nk2 = $this->createNhanKhau('Người Không BHYT');
 
         DB::table('y_te_nhan_khau')->insert([
-            'nhan_khau_id'                  => $nk1,
-            'loai_bhyt'                     => 'tu_nguyen',
-            'ngay_het_han_the_bhyt'         => now()->addYear(),
+            'nhan_khau_id' => $nk1,
+            'loai_bhyt' => 'tu_nguyen',
+            'ngay_het_han_the_bhyt' => now()->addYear(),
             'hoan_thanh_tiem_chung_mo_rong' => true,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
         DB::table('y_te_nhan_khau')->insert([
-            'nhan_khau_id'                  => $nk2,
-            'loai_bhyt'                     => 'khong_co',
+            'nhan_khau_id' => $nk2,
+            'loai_bhyt' => 'khong_co',
             'hoan_thanh_tiem_chung_mo_rong' => false,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->get(route('y-te-nhan-khau.index'))
@@ -86,11 +86,11 @@ class YTeNhanKhauTest extends TestCase
         $takenNkId = $this->createNhanKhau('Đã Có Hồ Sơ');
 
         DB::table('y_te_nhan_khau')->insert([
-            'nhan_khau_id'                  => $takenNkId,
-            'loai_bhyt'                     => 'khong_co',
+            'nhan_khau_id' => $takenNkId,
+            'loai_bhyt' => 'khong_co',
             'hoan_thanh_tiem_chung_mo_rong' => false,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->get(route('y-te-nhan-khau.create'))
@@ -105,20 +105,20 @@ class YTeNhanKhauTest extends TestCase
         $nkId = $this->createNhanKhau('Người Mới Tạo');
 
         $this->post(route('y-te-nhan-khau.store'), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'tu_nguyen',
-            'so_the_bhyt'                   => 'DN4009988776655',
-            'ngay_cap_the_bhyt'             => '2023-01-01',
-            'ngay_het_han_the_bhyt'         => '2025-12-31',
-            'noi_dang_ky_kham_chua_benh'    => 'Bệnh viện huyện',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'tu_nguyen',
+            'so_the_bhyt' => 'DN4009988776655',
+            'ngay_cap_the_bhyt' => '2023-01-01',
+            'ngay_het_han_the_bhyt' => '2025-12-31',
+            'noi_dang_ky_kham_chua_benh' => 'Bệnh viện huyện',
             'hoan_thanh_tiem_chung_mo_rong' => '1',
-            'ghi_chu_suc_khoe'              => 'Không có bệnh nền',
+            'ghi_chu_suc_khoe' => 'Không có bệnh nền',
         ])->assertRedirect(route('y-te-nhan-khau.index'));
 
         $this->assertDatabaseHas('y_te_nhan_khau', [
             'nhan_khau_id' => $nkId,
-            'loai_bhyt'    => 'tu_nguyen',
-            'so_the_bhyt'  => 'DN4009988776655',
+            'loai_bhyt' => 'tu_nguyen',
+            'so_the_bhyt' => 'DN4009988776655',
         ]);
     }
 
@@ -127,17 +127,17 @@ class YTeNhanKhauTest extends TestCase
         $nkId = $this->createNhanKhau('Người Không Thẻ');
 
         $this->post(route('y-te-nhan-khau.store'), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'khong_co',
-            'so_the_bhyt'                   => 'IGNORE_ME',
-            'ngay_cap_the_bhyt'             => '2023-01-01',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'khong_co',
+            'so_the_bhyt' => 'IGNORE_ME',
+            'ngay_cap_the_bhyt' => '2023-01-01',
             'hoan_thanh_tiem_chung_mo_rong' => '0',
         ])->assertRedirect(route('y-te-nhan-khau.index'));
 
         $this->assertDatabaseHas('y_te_nhan_khau', [
             'nhan_khau_id' => $nkId,
-            'loai_bhyt'    => 'khong_co',
-            'so_the_bhyt'  => null,
+            'loai_bhyt' => 'khong_co',
+            'so_the_bhyt' => null,
         ]);
     }
 
@@ -146,16 +146,16 @@ class YTeNhanKhauTest extends TestCase
         $nkId = $this->createNhanKhau('Đã Có Hồ Sơ Rồi');
 
         DB::table('y_te_nhan_khau')->insert([
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'khong_co',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'khong_co',
             'hoan_thanh_tiem_chung_mo_rong' => false,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->post(route('y-te-nhan-khau.store'), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'tu_nguyen',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'tu_nguyen',
             'hoan_thanh_tiem_chung_mo_rong' => '0',
         ])->assertSessionHasErrors('nhan_khau_id');
     }
@@ -189,16 +189,16 @@ class YTeNhanKhauTest extends TestCase
         $id = $this->createYTeRecord($nkId, 'khong_co');
 
         $this->put(route('y-te-nhan-khau.update', $id), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'ho_ngheo',
-            'so_the_bhyt'                   => 'DN4009900112233',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'ho_ngheo',
+            'so_the_bhyt' => 'DN4009900112233',
             'hoan_thanh_tiem_chung_mo_rong' => '1',
         ])->assertRedirect(route('y-te-nhan-khau.index'));
 
         $this->assertDatabaseHas('y_te_nhan_khau', [
-            'id'           => $id,
-            'loai_bhyt'    => 'ho_ngheo',
-            'so_the_bhyt'  => 'DN4009900112233',
+            'id' => $id,
+            'loai_bhyt' => 'ho_ngheo',
+            'so_the_bhyt' => 'DN4009900112233',
         ]);
     }
 
@@ -207,20 +207,20 @@ class YTeNhanKhauTest extends TestCase
         $nkId = $this->createNhanKhau('Người Tắt Tiêm Chủng');
 
         $id = DB::table('y_te_nhan_khau')->insertGetId([
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'khong_co',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'khong_co',
             'hoan_thanh_tiem_chung_mo_rong' => true,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $this->put(route('y-te-nhan-khau.update', $id), [
             'nhan_khau_id' => $nkId,
-            'loai_bhyt'    => 'khong_co',
+            'loai_bhyt' => 'khong_co',
         ])->assertRedirect(route('y-te-nhan-khau.index'));
 
         $this->assertDatabaseHas('y_te_nhan_khau', [
-            'id'                            => $id,
+            'id' => $id,
             'hoan_thanh_tiem_chung_mo_rong' => false,
         ]);
     }
@@ -288,16 +288,16 @@ class YTeNhanKhauTest extends TestCase
         $nkId = $this->createNhanKhau('API Tạo Mới');
 
         $this->postJson(route('api.y-te-nhan-khau.store'), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'chinh_sach',
-            'so_the_bhyt'                   => 'DN4005544332211',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'chinh_sach',
+            'so_the_bhyt' => 'DN4005544332211',
             'hoan_thanh_tiem_chung_mo_rong' => false,
         ])->assertCreated()
-          ->assertJsonStructure(['success', 'message', 'data' => ['id', 'loai_bhyt']]);
+            ->assertJsonStructure(['success', 'message', 'data' => ['id', 'loai_bhyt']]);
 
         $this->assertDatabaseHas('y_te_nhan_khau', [
             'nhan_khau_id' => $nkId,
-            'loai_bhyt'    => 'chinh_sach',
+            'loai_bhyt' => 'chinh_sach',
         ]);
     }
 
@@ -307,11 +307,11 @@ class YTeNhanKhauTest extends TestCase
         $this->createYTeRecord($nkId);
 
         $this->postJson(route('api.y-te-nhan-khau.store'), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'khong_co',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'khong_co',
             'hoan_thanh_tiem_chung_mo_rong' => false,
         ])->assertStatus(422)
-          ->assertJsonValidationErrors(['nhan_khau_id']);
+            ->assertJsonValidationErrors(['nhan_khau_id']);
     }
 
     public function test_api_update_changes_record_and_returns_200(): void
@@ -320,16 +320,16 @@ class YTeNhanKhauTest extends TestCase
         $id = $this->createYTeRecord($nkId, 'khong_co');
 
         $this->putJson(route('api.y-te-nhan-khau.update', $id), [
-            'nhan_khau_id'                  => $nkId,
-            'loai_bhyt'                     => 'tu_nguyen',
-            'so_the_bhyt'                   => 'DN4001231231231',
+            'nhan_khau_id' => $nkId,
+            'loai_bhyt' => 'tu_nguyen',
+            'so_the_bhyt' => 'DN4001231231231',
             'hoan_thanh_tiem_chung_mo_rong' => true,
         ])->assertOk()
-          ->assertJsonFragment(['loai_bhyt' => 'tu_nguyen']);
+            ->assertJsonFragment(['loai_bhyt' => 'tu_nguyen']);
 
         $this->assertDatabaseHas('y_te_nhan_khau', [
-            'id'          => $id,
-            'loai_bhyt'   => 'tu_nguyen',
+            'id' => $id,
+            'loai_bhyt' => 'tu_nguyen',
             'so_the_bhyt' => 'DN4001231231231',
         ]);
     }
@@ -356,12 +356,12 @@ class YTeNhanKhauTest extends TestCase
         ?string $soTheBhyt = null
     ): int {
         return DB::table('y_te_nhan_khau')->insertGetId([
-            'nhan_khau_id'                  => $nhanKhauId,
-            'so_the_bhyt'                   => $soTheBhyt,
-            'loai_bhyt'                     => $loaiBhyt,
+            'nhan_khau_id' => $nhanKhauId,
+            'so_the_bhyt' => $soTheBhyt,
+            'loai_bhyt' => $loaiBhyt,
             'hoan_thanh_tiem_chung_mo_rong' => false,
-            'created_at'                    => now(),
-            'updated_at'                    => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
@@ -370,35 +370,35 @@ class YTeNhanKhauTest extends TestCase
         $hoKhauId = $this->createHoKhau('HK'.str()->random(8));
 
         return DB::table('nhan_khau')->insertGetId([
-            'ho_khau_id'        => $hoKhauId,
-            'ho_ten'            => $hoTen,
-            'cccd_cmnd'         => (string) random_int(100000000000, 999999999999),
-            'ngay_sinh'         => '1985-06-15',
-            'gioi_tinh'         => 'nam',
-            'dan_toc'           => 'Kinh',
-            'trinh_do_hoc_van'  => 'thpt',
+            'ho_khau_id' => $hoKhauId,
+            'ho_ten' => $hoTen,
+            'cccd_cmnd' => (string) random_int(100000000000, 999999999999),
+            'ngay_sinh' => '1985-06-15',
+            'gioi_tinh' => 'nam',
+            'dan_toc' => 'Kinh',
+            'trinh_do_hoc_van' => 'thpt',
             'tinh_trang_hon_nhan' => 'doc_than',
-            'quan_he_chu_ho'    => 'Chủ hộ',
-            'la_chu_ho'         => true,
-            'co_tien_an'        => false,
-            'trang_thai'        => $trangThai,
-            'created_at'        => now(),
-            'updated_at'        => now(),
+            'quan_he_chu_ho' => 'Chủ hộ',
+            'la_chu_ho' => true,
+            'co_tien_an' => false,
+            'trang_thai' => $trangThai,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 
     private function createHoKhau(string $soSoHoKhau, string $trangThai = 'hoat_dong'): int
     {
         return DB::table('ho_khau')->insertGetId([
-            'so_so_ho_khau'      => $soSoHoKhau,
-            'ma_ho'              => 'MH'.str()->random(8),
+            'so_so_ho_khau' => $soSoHoKhau,
+            'ma_ho' => 'MH'.str()->random(8),
             'dia_chi_thuong_tru' => 'Thôn 2, Xã An Sinh',
-            'thon_xom'           => 'Thôn 2',
-            'phan_loai'          => 'thuong_tru',
-            'so_thanh_vien'      => 1,
-            'trang_thai'         => $trangThai,
-            'created_at'         => now(),
-            'updated_at'         => now(),
+            'thon_xom' => 'Thôn 2',
+            'phan_loai' => 'thuong_tru',
+            'so_thanh_vien' => 1,
+            'trang_thai' => $trangThai,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

@@ -17,8 +17,8 @@ class CoSoVatChatController extends Controller
 
         // Xử lý bộ lọc
         if ($request->filled('search')) {
-            $query->where('ten_cong_trinh', 'like', '%' . $request->search . '%')
-                  ->orWhere('thon_xom', 'like', '%' . $request->search . '%');
+            $query->where('ten_cong_trinh', 'like', '%'.$request->search.'%')
+                ->orWhere('thon_xom', 'like', '%'.$request->search.'%');
         }
         if ($request->filled('phan_loai')) {
             $query->where('phan_loai', $request->phan_loai);
@@ -55,8 +55,8 @@ class CoSoVatChatController extends Controller
      */
     public function create()
     {
-        $danhSachThon = \App\Models\CoSoVatChat::DANH_SACH_THON;
-        
+        $danhSachThon = CoSoVatChat::DANH_SACH_THON;
+
         return view('co-so-vat-chat.create', [
             'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
@@ -71,11 +71,11 @@ class CoSoVatChatController extends Controller
     {
         $validated = $request->validate([
             'ten_cong_trinh' => 'required|string|max:255',
-            'phan_loai' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::PHAN_LOAI)),
+            'phan_loai' => 'required|string|in:'.implode(',', array_keys(CoSoVatChat::PHAN_LOAI)),
             'thon_xom' => 'nullable|string|max:100',
             'ngay_dua_vao_su_dung' => 'nullable|date',
             'kinh_phi_xay_dung' => 'nullable|numeric|min:0',
-            'tinh_trang' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::TINH_TRANG)),
+            'tinh_trang' => 'required|string|in:'.implode(',', array_keys(CoSoVatChat::TINH_TRANG)),
             'ghi_chu' => 'nullable|string',
         ]);
 
@@ -89,8 +89,8 @@ class CoSoVatChatController extends Controller
      */
     public function edit(CoSoVatChat $coSoVatChat)
     {
-        $danhSachThon = \App\Models\CoSoVatChat::DANH_SACH_THON;
-        
+        $danhSachThon = CoSoVatChat::DANH_SACH_THON;
+
         return view('co-so-vat-chat.edit', [
             'modules' => ModuleRegistry::all(),
             'parentModule' => ModuleRegistry::findBySlug('dat-dai-ha-tang'),
@@ -106,11 +106,11 @@ class CoSoVatChatController extends Controller
     {
         $validated = $request->validate([
             'ten_cong_trinh' => 'required|string|max:255',
-            'phan_loai' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::PHAN_LOAI)),
+            'phan_loai' => 'required|string|in:'.implode(',', array_keys(CoSoVatChat::PHAN_LOAI)),
             'thon_xom' => 'nullable|string|max:100',
             'ngay_dua_vao_su_dung' => 'nullable|date',
             'kinh_phi_xay_dung' => 'nullable|numeric|min:0',
-            'tinh_trang' => 'required|string|in:' . implode(',', array_keys(CoSoVatChat::TINH_TRANG)),
+            'tinh_trang' => 'required|string|in:'.implode(',', array_keys(CoSoVatChat::TINH_TRANG)),
             'ghi_chu' => 'nullable|string',
         ]);
 
@@ -125,6 +125,7 @@ class CoSoVatChatController extends Controller
     public function destroy(CoSoVatChat $coSoVatChat)
     {
         $coSoVatChat->delete();
+
         return redirect()->route('co-so-vat-chat.index')->with('success', 'Đã xóa công trình thành công.');
     }
 }

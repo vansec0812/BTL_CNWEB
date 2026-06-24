@@ -184,6 +184,9 @@ class HoKhauController extends Controller
                 ->get(['id', 'ho_ten', 'cccd_cmnd', 'ngay_sinh']),
             'phanLoai' => HoKhau::PHAN_LOAI,
             'trangThai' => HoKhau::TRANG_THAI,
+            'gioiTinh' => NhanKhau::GIOI_TINH,
+            'trinhDoHocVan' => NhanKhau::TRINH_DO_HOC_VAN,
+            'tinhTrangHonNhan' => NhanKhau::TINH_TRANG_HON_NHAN,
         ];
     }
 

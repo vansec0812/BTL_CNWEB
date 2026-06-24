@@ -87,10 +87,10 @@ class LocDongController extends Controller
             if ($trangThaiLd === 'khac') {
                 $query->where(function ($q) {
                     $q->whereDoesntHave('laoDong')
-                      ->orWhereHas('laoDong', function ($sub) {
-                          $sub->whereNotIn('trang_thai_lao_dong', ['co_viec_lam', 'that_nghiep'])
-                              ->orWhereNull('trang_thai_lao_dong');
-                      });
+                        ->orWhereHas('laoDong', function ($sub) {
+                            $sub->whereNotIn('trang_thai_lao_dong', ['co_viec_lam', 'that_nghiep'])
+                                ->orWhereNull('trang_thai_lao_dong');
+                        });
                 });
             } else {
                 $query->whereHas('laoDong', function ($q) use ($trangThaiLd) {

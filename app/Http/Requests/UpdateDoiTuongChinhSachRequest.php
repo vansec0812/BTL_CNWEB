@@ -29,7 +29,7 @@ class UpdateDoiTuongChinhSachRequest extends FormRequest
                         $query->orWhere('id', $currentNhanKhauId);
                     }
                 }),
-                'unique:doi_tuong_chinh_sach,nhan_khau_id,' . $id,
+                'unique:doi_tuong_chinh_sach,nhan_khau_id,'.$id,
             ],
             'loai_chinh_sach' => ['required', Rule::in(array_keys(DoiTuongChinhSach::LOAI_CHINH_SACH))],
             'so_quyet_dinh_cong_nhan' => ['nullable', 'string', 'max:100'],

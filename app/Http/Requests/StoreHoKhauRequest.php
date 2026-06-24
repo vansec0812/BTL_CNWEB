@@ -25,6 +25,18 @@ class StoreHoKhauRequest extends FormRequest
             'ngay_cap_nhat' => 'nullable|date',
             'ghi_chu' => 'nullable|string',
             'trang_thai' => 'required|in:hoat_dong,da_giai_the,chuyen_di',
+
+            'create_new_chu_ho' => 'nullable|boolean',
+            'chu_ho_ho_ten' => 'required_if:create_new_chu_ho,1|nullable|string|max:255',
+            'chu_ho_cccd_cmnd' => 'nullable|string|max:12|unique:nhan_khau,cccd_cmnd',
+            'chu_ho_ngay_sinh' => 'required_if:create_new_chu_ho,1|nullable|date',
+            'chu_ho_gioi_tinh' => 'required_if:create_new_chu_ho,1|nullable|in:nam,nu,khac',
+            'chu_ho_dan_toc' => 'required_if:create_new_chu_ho,1|nullable|string|max:50',
+            'chu_ho_ton_giao' => 'required_if:create_new_chu_ho,1|nullable|string|max:50',
+            'chu_ho_que_quan' => 'required_if:create_new_chu_ho,1|nullable|string|max:255',
+            'chu_ho_noi_sinh' => 'nullable|string|max:255',
+            'chu_ho_trinh_do_hoc_van' => 'required_if:create_new_chu_ho,1|nullable|in:mu_chu,tieu_hoc,thcs,thpt,trung_cap,cao_dang,dai_hoc,sau_dai_hoc',
+            'chu_ho_tinh_trang_hon_nhan' => 'required_if:create_new_chu_ho,1|nullable|in:doc_than,da_ket_hon,ly_hon,goa',
         ];
     }
 
@@ -64,6 +76,17 @@ class StoreHoKhauRequest extends FormRequest
 
             'trang_thai.required' => 'Trạng thái là bắt buộc.',
             'trang_thai.in' => 'Trạng thái không hợp lệ (chỉ chấp nhận: đang hoạt động, đã giải thể, chuyển đi).',
+
+            'chu_ho_nhan_khau_id.required_without' => 'Vui lòng chọn chủ hộ có sẵn hoặc chọn tạo mới chủ hộ.',
+            'chu_ho_ho_ten.required_if' => 'Họ tên chủ hộ mới là bắt buộc.',
+            'chu_ho_cccd_cmnd.unique' => 'Số CCCD/CMND này đã tồn tại trên hệ thống.',
+            'chu_ho_ngay_sinh.required_if' => 'Ngày sinh chủ hộ mới là bắt buộc.',
+            'chu_ho_gioi_tinh.required_if' => 'Giới tính chủ hộ mới là bắt buộc.',
+            'chu_ho_dan_toc.required_if' => 'Dân tộc chủ hộ mới là bắt buộc.',
+            'chu_ho_ton_giao.required_if' => 'Tôn giáo chủ hộ mới là bắt buộc.',
+            'chu_ho_que_quan.required_if' => 'Quê quán chủ hộ mới là bắt buộc.',
+            'chu_ho_trinh_do_hoc_van.required_if' => 'Trình độ học vấn chủ hộ mới là bắt buộc.',
+            'chu_ho_tinh_trang_hon_nhan.required_if' => 'Tình trạng hôn nhân chủ hộ mới là bắt buộc.',
         ];
     }
 }
