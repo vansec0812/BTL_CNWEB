@@ -200,14 +200,7 @@ Route::middleware('auth')->group(function () use ($modules) {
             ['label' => 'Thuế phí', 'value' => number_format($sum('thue_va_phi_dia_phuong', 'so_tien', 0), 0, ',', '.'), 'note' => 'Tổng phát sinh đã ghi nhận', 'variant' => 'warning'],
         ];
 
-        $tasks = [
-            ['title' => 'Xác minh danh sách chủ hộ mới', 'meta' => 'Hộ khẩu / Nhân khẩu', 'priority' => 'Cao'],
-            ['title' => 'Đối chiếu đợt trợ cấp tháng này', 'meta' => 'Bảo trợ xã hội', 'priority' => 'Trung bình'],
-            ['title' => 'Cập nhật trạng thái thu phí địa phương', 'meta' => 'Thuế và phí', 'priority' => 'Cao'],
-            ['title' => 'Kiểm tra hồ sơ tạm vắng quá hạn', 'meta' => 'Cư trú', 'priority' => 'Thấp'],
-        ];
-
-        return view('welcome', compact('modules', 'stats', 'tasks'));
+        return view('welcome', compact('modules', 'stats'));
     })->name('dashboard');
 
     Route::get('/modules/{module}', function (string $module) use ($modules) {

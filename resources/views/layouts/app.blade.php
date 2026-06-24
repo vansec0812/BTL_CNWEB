@@ -10,7 +10,11 @@
         :root {
             --admin-green: #0f5132;
             --admin-green-soft: #e9f5ef;
-            --admin-blue: #0d6efd;
+            --admin-neutral: #667085;
+            --admin-neutral-soft: #f2f4f7;
+            --admin-border: #d0d5dd;
+            --admin-danger: #b42318;
+            --admin-danger-soft: #fef3f2;
             --admin-bg: #f4f6f3;
         }
 
@@ -63,7 +67,7 @@
         }
 
         .page-hero {
-            background: linear-gradient(135deg, #0f5132, #146c43 58%, #0b5ed7);
+            background: linear-gradient(135deg, #0f5132, #146c43);
         }
 
         .module-card {
@@ -216,34 +220,113 @@
             font-size: 0.875rem;
         }
         .btn-action-view {
-            background-color: rgba(108, 117, 125, 0.08);
-            color: #6c757d;
-            border: 1px solid rgba(108, 117, 125, 0.3);
+            background-color: var(--admin-neutral-soft);
+            color: var(--admin-neutral);
+            border: 1px solid var(--admin-border);
         }
         .btn-action-view:hover {
-            background-color: #6c757d;
+            background-color: var(--admin-neutral);
             color: #ffffff;
-            border-color: #6c757d;
+            border-color: var(--admin-neutral);
         }
         .btn-action-edit {
-            background-color: rgba(13, 110, 253, 0.08);
-            color: #0d6efd;
-            border: 1px solid rgba(13, 110, 253, 0.3);
+            background-color: var(--admin-green-soft);
+            color: var(--admin-green);
+            border: 1px solid rgba(15, 81, 50, 0.22);
         }
         .btn-action-edit:hover {
-            background-color: #0d6efd;
+            background-color: var(--admin-green);
             color: #ffffff;
-            border-color: #0d6efd;
+            border-color: var(--admin-green);
         }
         .btn-action-delete {
-            background-color: rgba(220, 53, 69, 0.08);
-            color: #dc3545;
-            border: 1px solid rgba(220, 53, 69, 0.3);
+            background-color: var(--admin-danger-soft);
+            color: var(--admin-danger);
+            border: 1px solid rgba(180, 35, 24, 0.22);
         }
         .btn-action-delete:hover {
-            background-color: #dc3545;
+            background-color: var(--admin-danger);
             color: #ffffff;
-            border-color: #dc3545;
+            border-color: var(--admin-danger);
+        }
+
+        /* Global table palette: keep data screens calm with green + neutral only. */
+        .table .badge,
+        .card .table .badge,
+        .table span[class*="badge bg-"],
+        .table span[class*="badge text-bg-"] {
+            background-color: var(--admin-green-soft) !important;
+            border: 1px solid rgba(15, 81, 50, 0.14) !important;
+            color: var(--admin-green) !important;
+        }
+
+        .table .text-primary,
+        .table .text-success,
+        .table .text-warning,
+        .table .text-info,
+        .table .text-danger,
+        .stat-card .text-primary,
+        .stat-card .text-success,
+        .stat-card .text-warning,
+        .stat-card .text-info,
+        .stat-card .text-danger {
+            color: var(--admin-green) !important;
+        }
+
+        .table .bg-primary,
+        .table .bg-success,
+        .table .bg-warning,
+        .table .bg-info {
+            background-color: var(--admin-green-soft) !important;
+        }
+
+        .table .btn-outline-primary,
+        .table .btn-outline-success,
+        .table .btn-outline-warning,
+        .table .btn-outline-info,
+        .card .btn-outline-primary,
+        .card .btn-outline-success,
+        .card .btn-outline-warning,
+        .card .btn-outline-info {
+            color: var(--admin-green) !important;
+            border-color: rgba(15, 81, 50, 0.28) !important;
+            background-color: #ffffff !important;
+        }
+
+        .table .btn-outline-primary:hover,
+        .table .btn-outline-success:hover,
+        .table .btn-outline-warning:hover,
+        .table .btn-outline-info:hover,
+        .card .btn-outline-primary:hover,
+        .card .btn-outline-success:hover,
+        .card .btn-outline-warning:hover,
+        .card .btn-outline-info:hover {
+            color: #ffffff !important;
+            background-color: var(--admin-green) !important;
+            border-color: var(--admin-green) !important;
+        }
+
+        .card .btn-success,
+        .card .btn-primary,
+        .card .btn-warning,
+        .card .btn-info {
+            color: #ffffff !important;
+            background-color: var(--admin-green) !important;
+            border-color: var(--admin-green) !important;
+        }
+
+        .card .btn-outline-danger,
+        .table .btn-outline-danger {
+            color: var(--admin-danger) !important;
+            border-color: rgba(180, 35, 24, 0.32) !important;
+            background-color: #ffffff !important;
+        }
+
+        .card .btn-outline-danger:hover,
+        .table .btn-outline-danger:hover {
+            color: #ffffff !important;
+            background-color: var(--admin-danger) !important;
+            border-color: var(--admin-danger) !important;
         }
     </style>
 </head>
