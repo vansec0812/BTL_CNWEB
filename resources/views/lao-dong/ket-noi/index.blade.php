@@ -104,7 +104,6 @@
                         <th>Doanh nghiệp tuyển dụng</th>
                         <th>Vị trí giới thiệu</th>
                         <th>Ngày kết nối</th>
-                        <th>Cán bộ phụ trách</th>
                         <th>Kết quả</th>
                         <th class="text-end">Thao tác</th>
                     </tr>
@@ -128,9 +127,6 @@
                         </td>
                         <td>{{ $kn->vi_tri_gioi_thieu ?? '—' }}</td>
                         <td>{{ $kn->ngay_ket_noi ? $kn->ngay_ket_noi->format('d/m/Y') : '—' }}</td>
-                        <td>
-                            <div class="small fw-semibold">{{ $kn->nguoiPhuTrach->name ?? 'Hệ thống' }}</div>
-                        </td>
                         <td>
                             @php $res = $kn->ket_qua; @endphp
                             <span class="badge bg-{{ $res === 'duoc_nhan' ? 'success' : ($res === 'dang_cho_phan_hoi' ? 'warning' : 'danger') }} bg-opacity-10 text-{{ $res === 'duoc_nhan' ? 'success' : ($res === 'dang_cho_phan_hoi' ? 'warning' : 'danger') }}">
@@ -159,7 +155,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center text-muted py-5">
+                        <td colspan="8" class="text-center text-muted py-5">
                             <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                             Chưa thực hiện kết nối giới thiệu việc làm nào.
                         </td>
