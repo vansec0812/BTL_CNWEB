@@ -4,7 +4,7 @@
         @method($method)
     @endif
 
-    <div class="card-body">
+    <div class="card-body p-4">
         <div class="row g-3">
 
             {{-- Nhân khẩu --}}

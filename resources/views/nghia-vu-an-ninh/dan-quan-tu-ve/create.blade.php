@@ -28,7 +28,7 @@
                         <i class="bi bi-file-earmark-text-fill me-1"></i>Thông tin nhiệm kỳ
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <div class="mb-3">
                         <label for="chuc_vu" class="form-label fw-semibold">Chức vụ trong lực lượng</label>
                         <select name="chuc_vu" id="chuc_vu" class="form-select @error('chuc_vu') is-invalid @enderror">

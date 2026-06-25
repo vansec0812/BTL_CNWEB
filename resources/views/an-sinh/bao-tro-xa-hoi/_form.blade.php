@@ -4,7 +4,7 @@
         @method($method)
     @endif
 
-    <div class="card-body">
+    <div class="card-body p-4">
         <div class="row g-3">
             <div class="col-lg-6">
                 <label for="loai_bao_tro" class="form-label">Loại bảo trợ <span class="text-danger">*</span></label>

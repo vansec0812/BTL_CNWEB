@@ -4,7 +4,7 @@
         @method($method)
     @endif
 
-    <div class="card-body">
+    <div class="card-body p-4">
 
         <h5 class="fw-bold mb-3 text-success"><i class="bi bi-person-badge me-2"></i>Thông tin cơ bản</h5>
         <div class="row g-3 mb-4">
