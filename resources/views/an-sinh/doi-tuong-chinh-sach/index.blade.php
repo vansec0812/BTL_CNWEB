@@ -13,9 +13,9 @@
             Diện chính sách
         </div>
         <div class="d-flex align-items-center gap-2 mb-1">
-            <a href="{{ route('modules.show', $parentModule['slug']) }}" class="btn-back" title="Quay lại {{ $parentModule['title'] }}">
+            <!-- <a href="{{ route('modules.show', $parentModule['slug']) }}" class="btn-back" title="Quay lại {{ $parentModule['title'] }}">
                 <i class="bi bi-arrow-left"></i>
-            </a>
+            </a> -->
             <h2 class="fw-bold mb-0">Danh sách diện chính sách</h2>
         </div>
         <p class="text-secondary mb-0">Theo dõi thương binh, bệnh binh, thân nhân liệt sĩ và người có công với cách mạng.</p>

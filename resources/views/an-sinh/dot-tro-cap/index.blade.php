@@ -13,9 +13,9 @@
             Gói trợ cấp &amp; Quỹ từ thiện
         </div>
         <div class="d-flex align-items-center gap-2 mb-1">
-            <a href="{{ route('modules.show', $parentModule['slug']) }}" class="btn-back" title="Quay lại {{ $parentModule['title'] }}">
+            <!-- <a href="{{ route('modules.show', $parentModule['slug']) }}" class="btn-back" title="Quay lại {{ $parentModule['title'] }}">
                 <i class="bi bi-arrow-left"></i>
-            </a>
+            </a> -->
             <h2 class="fw-bold mb-0">Quản lý Gói trợ cấp &amp; Quỹ từ thiện</h2>
         </div>
         <p class="text-secondary mb-0">Quản lý các chiến dịch phát quà, đợt trợ cấp khó khăn và cứu trợ nhân dân trên địa bàn xã.</p>
