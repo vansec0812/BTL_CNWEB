@@ -175,12 +175,6 @@
             <form action="{{ route('users.change-password') }}" method="POST">
                 @csrf
                 <div class="modal-body p-4 pt-2">
-                    @if (session('status'))
-                        <div class="alert alert-success border-0 mb-3" style="border-radius: 8px;">
-                            <i class="bi bi-check-circle-fill me-1"></i> {{ session('status') }}
-                        </div>
-                    @endif
-
                     <div class="mb-3 text-start">
                         <label for="current_password" class="form-label fw-semibold text-secondary small mb-1">Mật khẩu hiện tại <span class="text-danger">*</span></label>
                         <div class="input-group">

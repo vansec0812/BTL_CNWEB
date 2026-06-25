@@ -66,10 +66,6 @@
     </div>
 </div>
 
-@if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm mb-4">{{ session('status') }}</div>
-@endif
-
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc tìm kiếm</div>
     <div class="card-body">

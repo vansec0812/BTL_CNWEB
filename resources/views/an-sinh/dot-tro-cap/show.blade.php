@@ -57,10 +57,6 @@
     </div>
 </div>
 
-@if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm mb-4">{{ session('status') }}</div>
-@endif
-
 
 
 <div class="row g-4">

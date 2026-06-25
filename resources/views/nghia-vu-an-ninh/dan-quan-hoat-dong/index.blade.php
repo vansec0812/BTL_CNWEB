@@ -51,10 +51,6 @@
     @endcan
 </div>
 
-@if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm mb-4">{{ session('status') }}</div>
-@endif
-
 <!-- Thống kê nhanh -->
 <div class="row g-3 mb-4">
     <div class="col-md-3">

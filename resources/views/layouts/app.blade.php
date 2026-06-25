@@ -1103,6 +1103,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    @include('layouts._flash_toasts')
     @include('layouts._delete_confirm_modal')
 </body>
 </html>

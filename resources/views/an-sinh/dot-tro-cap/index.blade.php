@@ -27,10 +27,6 @@
     @endcan
 </div>
 
-@if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm">{{ session('status') }}</div>
-@endif
-
 <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-5 g-3 mb-4">
     <div class="col">
         <div class="card stat-card h-100">

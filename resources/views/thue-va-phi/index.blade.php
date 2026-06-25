@@ -39,10 +39,6 @@
     </div>
 </div>
 
-@if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm">{{ session('status') }}</div>
-@endif
-
 <div class="row g-3 mb-4">
     <div class="col-md-4">
         <div class="card stat-card h-100"><div class="card-body"><p class="text-muted small mb-1">Tổng tiền phải thu</p><h4 class="fw-bold mb-0">{{ number_format($stats['tong_phai_thu']) }} đ</h4></div></div>

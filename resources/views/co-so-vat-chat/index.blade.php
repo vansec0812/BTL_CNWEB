@@ -29,10 +29,6 @@
     </div>
 </div>
 
-@if (session('success'))
-    <div class="alert alert-success border-0 shadow-sm">{{ session('success') }}</div>
-@endif
-
 <div class="row g-3 mb-4">
     <div class="col-md-4">
         <div class="card stat-card h-100"><div class="card-body"><p class="text-muted small mb-1">Tổng số công trình</p><h4 class="fw-bold mb-0">{{ number_format($stats['tong_cong_trinh']) }}</h4></div></div>
