@@ -28,8 +28,44 @@
 </div>
 
 @if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm">{{ session('status') }}</div>
+    <div class="alert alert-success border-0 shadow-sm mb-4">{{ session('status') }}</div>
 @endif
+
+<!-- Thống kê nhanh -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Tổng số lao động</p>
+                <h4 class="fw-bold mb-0">{{ $stats['tong_lao_dong'] }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Có việc làm</p>
+                <h4 class="fw-bold mb-0 text-success">{{ $stats['co_viec_lam'] }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Thất nghiệp</p>
+                <h4 class="fw-bold mb-0 text-danger">{{ $stats['that_nghiep'] }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Xuất khẩu lao động</p>
+                <h4 class="fw-bold mb-0 text-primary">{{ $stats['xkld'] }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc hồ sơ lao động</div>
@@ -82,7 +118,7 @@
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
                 <thead class="table-light">
                     <tr>
                         <th style="width: 50px;">STT</th>
@@ -104,7 +140,6 @@
                         <td class="fw-semibold text-success">HS-{{ str_pad($ld->id, 4, '0', STR_PAD_LEFT) }}</td>
                         <td>
                             <div class="fw-semibold">{{ $ld->nhanKhau->ho_ten }}</div>
-                            <div class="text-muted small">Tuổi: {{ $ld->nhanKhau->ngay_sinh ? $ld->nhanKhau->ngay_sinh->age : '—' }}</div>
                         </td>
                         <td>{{ $ld->nhanKhau->cccd_cmnd ?? '—' }}</td>
                         <td>{{ $ld->nhanKhau->hoKhau->thon_xom ?? '—' }}</td>
@@ -115,9 +150,12 @@
                             </span>
                         </td>
                         <td>
-                            <div>{{ $ld->nganhNgheLabel() }}</div>
-                            @if($ld->nghe_nghiep)
-                                <div class="text-muted small">{{ $ld->nghe_nghiep }}</div>
+                            @if($ld->nghe_nghiep && $ld->nganhNgheLabel() && $ld->nganhNgheLabel() !== '—')
+                                {{ $ld->nganhNgheLabel() }} ({{ $ld->nghe_nghiep }})
+                            @elseif($ld->nghe_nghiep)
+                                {{ $ld->nghe_nghiep }}
+                            @else
+                                {{ $ld->nganhNgheLabel() }}
                             @endif
                         </td>
                         <td>{{ $ld->loaiHinhLabel() }}</td>

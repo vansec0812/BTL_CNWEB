@@ -28,8 +28,36 @@
 </div>
 
 @if (session('status'))
-    <div class="alert alert-success border-0 shadow-sm">{{ session('status') }}</div>
+    <div class="alert alert-success border-0 shadow-sm mb-4">{{ session('status') }}</div>
 @endif
+
+<!-- Thống kê nhanh -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Tổng số cơ sở</p>
+                <h4 class="fw-bold mb-0">{{ $stats['tong_doanh_nghiep'] }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Đang hoạt động</p>
+                <h4 class="fw-bold mb-0 text-success">{{ $stats['dang_hoat_dong'] }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card h-100">
+            <div class="card-body">
+                <p class="text-muted small mb-1">Nhu cầu tuyển dụng</p>
+                <h4 class="fw-bold mb-0 text-primary">{{ $stats['tuyen_dung'] }} lao động</h4>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-header bg-white fw-semibold"><i class="bi bi-funnel me-1"></i>Bộ lọc doanh nghiệp</div>
