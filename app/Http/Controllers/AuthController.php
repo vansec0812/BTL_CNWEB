@@ -69,7 +69,7 @@ class AuthController extends Controller
                 ], 200);
             }
 
-            return redirect()->intended('/');
+            return redirect('/');
         }
 
         if ($request->expectsJson() || $request->is('api/*')) {
