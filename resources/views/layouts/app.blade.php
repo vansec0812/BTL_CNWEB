@@ -462,6 +462,11 @@
             border-bottom-color: rgba(15, 81, 50, .09);
         }
 
+        .table th,
+        .table td {
+            white-space: nowrap !important;
+        }
+
         .table thead th,
         .table-light th {
             background: #f7faf8 !important;
