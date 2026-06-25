@@ -226,4 +226,44 @@ class UserController extends Controller
             ->back()
             ->with('status', $message);
     }
+
+    /**
+     * Change password for the logged-in user.
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'string'],
+            'new_password' => ['required', 'string', 'min:6', 'confirmed'],
+        ], [
+            'current_password.required' => 'Mật khẩu hiện tại là bắt buộc.',
+            'new_password.required' => 'Mật khẩu mới là bắt buộc.',
+            'new_password.min' => 'Mật khẩu mới phải có tối thiểu :min ký tự.',
+            'new_password.confirmed' => 'Xác nhận mật khẩu mới không trùng khớp.',
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'Mật khẩu hiện tại không chính xác.',
+            ]);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->input('new_password')),
+        ]);
+
+        \App\Models\AuditLog::create([
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'action' => 'change_password',
+            'module' => 'he-thong',
+            'mo_ta' => 'Cán bộ [' . $user->name . '] thay đổi mật khẩu tài khoản thành công.',
+        ]);
+
+        return back()->with('status', 'Đổi mật khẩu thành công!');
+    }
 }

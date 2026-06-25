@@ -821,6 +821,7 @@ Route::middleware('auth')->group(function () use ($modules) {
         Route::post('he-thong/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     });
 
+    Route::post('he-thong/users/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
     Route::get('he-thong/users/{user}', [UserController::class, 'show'])->name('users.show');
 
     // --- Nhật ký hệ thống ---

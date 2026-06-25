@@ -76,8 +76,14 @@
                     @endif
                 </div>
 
-                @can('manage_users')
-                    <div class="d-flex gap-2 justify-content-center">
+                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                    @if($user->id === auth()->id())
+                        <button type="button" class="btn btn-warning btn-sm px-3 d-flex align-items-center gap-1" style="border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                            <i class="bi bi-key-fill"></i>
+                            <span>Đổi mật khẩu</span>
+                        </button>
+                    @endif
+                    @can('manage_users')
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm px-3 d-flex align-items-center gap-1" style="border-radius: 8px;">
                             <i class="bi bi-pencil-fill"></i>
                             <span>Chỉnh sửa</span>
@@ -96,8 +102,8 @@
                                 @endif
                             </form>
                         @endif
-                    </div>
-                @endcan
+                    @endcan
+                </div>
             </div>
         </div>
     </div>
@@ -154,4 +160,73 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Đổi mật khẩu -->
+@if($user->id === auth()->id())
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+            <div class="modal-header bg-warning bg-opacity-10 py-3 border-bottom-0">
+                <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="changePasswordModalLabel">
+                    <i class="bi bi-key-fill text-warning"></i> Đổi mật khẩu tài khoản
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('users.change-password') }}" method="POST">
+                @csrf
+                <div class="modal-body p-4 pt-2">
+                    @if (session('status'))
+                        <div class="alert alert-success border-0 mb-3" style="border-radius: 8px;">
+                            <i class="bi bi-check-circle-fill me-1"></i> {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <div class="mb-3 text-start">
+                        <label for="current_password" class="form-label fw-semibold text-secondary small mb-1">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-shield-lock"></i></span>
+                            <input type="password" name="current_password" id="current_password" class="form-control border-start-0 @error('current_password') is-invalid @enderror" placeholder="Nhập mật khẩu đang sử dụng" required>
+                        </div>
+                        @error('current_password')
+                            <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="mb-3 text-start">
+                        <label for="new_password" class="form-label fw-semibold text-secondary small mb-1">Mật khẩu mới <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-key"></i></span>
+                            <input type="password" name="new_password" id="new_password" class="form-control border-start-0 @error('new_password') is-invalid @enderror" placeholder="Tối thiểu 6 ký tự" required>
+                        </div>
+                        @error('new_password')
+                            <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label for="new_password_confirmation" class="form-label fw-semibold text-secondary small mb-1">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-key"></i></span>
+                            <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control border-start-0" placeholder="Nhập lại mật khẩu mới" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light p-3 border-top-0 d-flex gap-2" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+                    <button type="button" class="btn btn-outline-secondary px-4 py-2" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-success px-4 py-2" style="border-radius: 8px;">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    @if($errors->has('current_password') || $errors->has('new_password'))
+        var myModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+        myModal.show();
+    @endif
+});
+</script>
+@endif
 @endsection
