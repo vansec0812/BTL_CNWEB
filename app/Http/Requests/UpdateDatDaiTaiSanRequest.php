@@ -17,7 +17,7 @@ class UpdateDatDaiTaiSanRequest extends FormRequest
         $id = is_object($record) ? $record->id : $record;
 
         return [
-            'ho_khau_id' => 'required|exists:ho_khau,id',
+            'chu_so_huu_nhan_khau_id' => 'required|exists:nhan_khau,id',
             'so_to_ban_do' => 'nullable|string|max:50',
             'so_thua_dat' => 'nullable|string|max:50',
             'so_gcn_qsdd' => 'nullable|string|max:100|unique:dat_dai_tai_san,so_gcn_qsdd,'.$id,
@@ -35,8 +35,8 @@ class UpdateDatDaiTaiSanRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'ho_khau_id.required' => 'Sổ hộ khẩu liên kết là bắt buộc.',
-            'ho_khau_id.exists' => 'Sổ hộ khẩu được chọn không tồn tại.',
+            'chu_so_huu_nhan_khau_id.required' => 'Chủ sở hữu là bắt buộc.',
+            'chu_so_huu_nhan_khau_id.exists' => 'Chủ sở hữu không tồn tại.',
             'so_to_ban_do.max' => 'Số tờ bản đồ không được vượt quá 50 ký tự.',
             'so_thua_dat.max' => 'Số thửa đất không được vượt quá 50 ký tự.',
             'so_gcn_qsdd.max' => 'Số Giấy chứng nhận QSDĐ không được vượt quá 100 ký tự.',
