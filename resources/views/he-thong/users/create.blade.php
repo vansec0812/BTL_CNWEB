@@ -120,8 +120,8 @@
                 <div class="col-md-6">
                     <label for="trang_thai" class="form-label small fw-semibold text-secondary">Trạng thái tài khoản <span class="text-danger">*</span></label>
                     <select name="trang_thai" id="trang_thai" class="form-select form-select-sm" style="border-radius: 8px;">
-                        <option value="active" {{ old('trang_thai') === 'active' ? 'selected' : '' }}>Hoạt động (Active)</option>
-                        <option value="inactive" {{ old('trang_thai') === 'inactive' ? 'selected' : '' }}>Khóa tài khoản (Inactive)</option>
+                        <option value="active" {{ old('trang_thai') === 'active' ? 'selected' : '' }}>Không khóa (Active)</option>
+                        <option value="inactive" {{ old('trang_thai') === 'inactive' ? 'selected' : '' }}>Khóa (Inactive)</option>
                     </select>
                 </div>
 

@@ -67,11 +67,11 @@
                 <div class="mb-4">
                     @if($user->trang_thai === 'active')
                         <span class="badge bg-success text-white px-3 py-1.5" style="border-radius: 20px; font-size: 0.75rem;">
-                            <i class="bi bi-check-circle-fill me-1"></i> Đang hoạt động
+                            <i class="bi bi-check-circle-fill me-1"></i> Không khóa
                         </span>
                     @else
                         <span class="badge bg-danger text-white px-3 py-1.5" style="border-radius: 20px; font-size: 0.75rem;">
-                            <i class="bi bi-lock-fill me-1"></i> Tài khoản đã khóa
+                            <i class="bi bi-lock-fill me-1"></i> Khóa
                         </span>
                     @endif
                 </div>

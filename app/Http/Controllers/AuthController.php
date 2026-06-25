@@ -34,6 +34,21 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            if (Auth::user()->trang_thai !== 'active') {
+                Auth::logout();
+
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tài khoản của bạn đã bị khóa hoặc ngừng hoạt động.',
+                    ], 403);
+                }
+
+                return back()->withErrors([
+                    'email' => 'Tài khoản của bạn đã bị khóa hoặc ngừng hoạt động.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
             AuditLog::create([

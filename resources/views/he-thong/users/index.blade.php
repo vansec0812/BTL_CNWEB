@@ -85,8 +85,8 @@
                 <label for="trang_thai" class="form-label">Trạng thái</label>
                 <select name="trang_thai" id="trang_thai" class="form-select">
                     <option value="">— Trạng thái —</option>
-                    <option value="active" {{ request('trang_thai') === 'active' ? 'selected' : '' }}>Hoạt động</option>
-                    <option value="inactive" {{ request('trang_thai') === 'inactive' ? 'selected' : '' }}>Đã khóa</option>
+                    <option value="active" {{ request('trang_thai') === 'active' ? 'selected' : '' }}>Không khóa</option>
+                    <option value="inactive" {{ request('trang_thai') === 'inactive' ? 'selected' : '' }}>Khóa</option>
                 </select>
             </div>
             <div class="col-md-3 d-flex align-items-end gap-2">
@@ -150,11 +150,11 @@
                             <td class="py-3 text-center">
                                 @if($user->trang_thai === 'active')
                                     <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle px-2 py-1">
-                                        Hoạt động
+                                        Không khóa
                                     </span>
                                 @else
                                     <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle px-2 py-1">
-                                        Đã khóa
+                                        Khóa
                                     </span>
                                 @endif
                             </td>
